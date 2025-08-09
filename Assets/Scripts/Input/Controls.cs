@@ -13,7 +13,7 @@ public class Controls : MonoBehaviour, InputSystem_Actions.IPlayerActions
             if (instance)
                 return instance;
             else
-                return new GameObject().AddComponent<Controls>();
+                return new GameObject("_Controls").AddComponent<Controls>();
         }
     }
     private InputSystem_Actions.PlayerActions m_Player;
