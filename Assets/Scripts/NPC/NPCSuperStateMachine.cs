@@ -1,0 +1,59 @@
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class NPCSuperStateMachine : MonoBehaviour
+{
+    public enum SuperStateType { Calm, Panic, Attacking }
+
+    [SerializeField] SuperStateType startingState = SuperStateType.Calm;
+    [SerializeField] Transform player;
+
+
+    Rigidbody2D rb;
+    INPCSuperState currentState;
+
+    // States
+    public CalmState calmState { get; private set; }
+    public PanicState panicState { get; private set; }
+    public AttackingState attackingState { get; private set; }
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        if (!player)
+        {
+            var player = GameObject.FindGameObjectWithTag("Player");
+            if (player) this.player = player.transform;
+        }
+
+        // Instantiate state scripts, passing this machine and needed refs
+        calmState = new CalmState(this, rb, player);
+        panicState = new PanicState(this, rb, player);
+        attackingState = new AttackingState(this, rb, player);
+    }
+
+    void Start()
+    {
+        // Set initial state
+        SwitchState(startingState);
+    }
+
+    void Update()
+    {
+        currentState?.Tick();
+    }
+
+    public void SwitchState(SuperStateType newState)
+    {
+        currentState?.Exit();
+
+        switch (newState)
+        {
+            case SuperStateType.Calm: currentState = calmState; break;
+            case SuperStateType.Panic: currentState = panicState; break;
+            case SuperStateType.Attacking: currentState = attackingState; break;//this could also be called "hunting" state
+        }
+
+        currentState.Enter();
+    }
+}
