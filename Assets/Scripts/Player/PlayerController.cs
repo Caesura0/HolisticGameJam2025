@@ -55,6 +55,8 @@ public class PlayerController : MonoBehaviour
                 //Run Eating Animation
                 pickedItem.gameObject.SetActive(false);
                 Debug.Log($"Ate {pickedItem}");
+                int foodValue = 1;
+                HungerHandler.Instance.Feed(foodValue);
             }
             else
             {

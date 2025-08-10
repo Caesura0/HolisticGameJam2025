@@ -88,4 +88,11 @@ public class HungerHandler : MonoBehaviour
                 displayIcons[i].color = Color.white;
         }
     }
+    public void Feed(int foodValue)
+    {
+        foodValue = Mathf.Clamp(foodValue, 0, hungerLimit);
+        currentHunger += foodValue;
+        UpdateDisplay();
+        ResetTimer();
+    }
 }
