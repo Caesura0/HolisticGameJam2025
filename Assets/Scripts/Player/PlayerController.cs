@@ -92,7 +92,7 @@ public class PlayerController : MonoBehaviour
                     chosenItem = item;
                     continue;
                 }
-                
+
                 float itemDistance = Vector2.Distance(item.transform.position, transform.position);
                 if (itemDistance < distance)
                 {
@@ -132,5 +132,4 @@ public class PlayerController : MonoBehaviour
     private void TriggerThrow() => animator.SetTrigger(throwTriggerId);
     private void UpdateSpeed(float speed) => animator.SetFloat(speedBlendId, speed);
     #endregion
-
 }

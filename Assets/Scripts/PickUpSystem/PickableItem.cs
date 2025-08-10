@@ -11,11 +11,13 @@ public class PickableItem: MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
     }
+    
     private void Update()
     {
         if(beingHeld)
             transform.position = holder.position;
     }
+    
     public void PickUp(Transform assignedHolder)
     {
         rb.bodyType = RigidbodyType2D.Kinematic;
