@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -47,6 +49,7 @@ public class PlayerController : MonoBehaviour
             #region
             pickedItem.Throw(velocity.normalized * throwForce);
             pickedItem = null;
+            TriggerThrow();
             return;
             #endregion
         }
@@ -74,13 +77,12 @@ public class PlayerController : MonoBehaviour
                 }
             }
             pickedItem = chosenItem;
-            chosenItem.PickUp(itemHolder);
             TriggerPickUp();
+            chosenItem.PickUp(itemHolder);
             #endregion
         }
     }
     #endregion
-
     #region AnimationZone
     private const string SpeedString = "Speed";
     private const string ThrowString = "Throw";
