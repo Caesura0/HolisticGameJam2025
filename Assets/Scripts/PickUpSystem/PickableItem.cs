@@ -5,21 +5,34 @@ using UnityEngine;
 public class PickableItem: MonoBehaviour
 {
     Rigidbody2D rb;
+    Transform holder;
+    bool beingHeld = false;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
-    public void PickUp(Transform holder)
+    private void Update()
+    {
+        if(beingHeld)
+            transform.position = holder.position;
+    }
+    public void PickUp(Transform assignedHolder)
     {
         rb.bodyType = RigidbodyType2D.Kinematic;
-        transform.parent = holder.transform;
-        transform.position = holder.transform.position;
+        holder = assignedHolder;
+        beingHeld = true;
     } 
 
     public void Throw(Vector3 velocity)
     {
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        transform.parent = null;
+        Release();
         rb.AddForce (velocity, ForceMode2D.Impulse);
+    }
+
+    public void Release()
+    {
+        rb.bodyType = RigidbodyType2D.Dynamic;
+        holder = null;
+        beingHeld = false;
     }
 }

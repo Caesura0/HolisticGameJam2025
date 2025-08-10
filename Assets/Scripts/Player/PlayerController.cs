@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     {
         Controls.Instance.OnPlayerMove += UpdateVelocity;
         Controls.Instance.OnPlayerAttack += HandlePickUp;
+        FirstAttack = true;
     }
     private void Update()
     {
@@ -36,32 +37,43 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
-    #region PickUp
+    #region PickUp & Throw or Eat
     [SerializeField] private Transform itemHolder;
-    [SerializeField] private float pickUpRange = 1f;
+    [SerializeField] private float pickUpRange = .7f;
     [SerializeField] private LayerMask pickableItemsLayer;
     [SerializeField] private PickableItem pickedItem;
     [SerializeField] private float throwForce = 10f;
+    bool FirstAttack;
+
     private void HandlePickUp()
     {
         if (pickedItem)
         {
-            #region
-            pickedItem.Throw(velocity.normalized * throwForce);
+            if (pickedItem.TryGetComponent<IAttackable>(out _))
+            {
+                pickedItem.Release();
+                //Run Eating Animation
+                pickedItem.gameObject.SetActive(false);
+                Debug.Log($"Ate {pickedItem}");
+            }
+            else
+            {
+                pickedItem.Throw(velocity.normalized * throwForce);
+                TriggerThrow();
+                Debug.Log($"Threw {pickedItem}");
+            }
             pickedItem = null;
-            TriggerThrow();
             return;
-            #endregion
         }
         else
         {
             #region If holding nothing
             Collider2D[] others =
                 Physics2D.OverlapCircleAll(transform.position, pickUpRange, pickableItemsLayer);
-            Debug.Log(others);
+            
             if (others.Length == 0)
                 return;
-            Debug.Log("Found Items in range");
+            //Debug.Log($"Found {others} in range");
             PickableItem chosenItem = null;
             float distance = float.MaxValue;
             foreach (Collider2D other in others)
@@ -69,6 +81,18 @@ public class PlayerController : MonoBehaviour
                 if (!other.TryGetComponent<PickableItem>(out PickableItem item))
                     continue;
 
+                if (chosenItem
+                    && (chosenItem.TryGetComponent<IAttackable>(out _)
+                    && !other.TryGetComponent<IAttackable>(out _)))
+                    continue;
+                else if (chosenItem
+                    && (!chosenItem.TryGetComponent<IAttackable>(out _)
+                    && other.TryGetComponent<IAttackable>(out _)))
+                {
+                    chosenItem = item;
+                    continue;
+                }
+                
                 float itemDistance = Vector2.Distance(item.transform.position, transform.position);
                 if (itemDistance < distance)
                 {
@@ -79,10 +103,18 @@ public class PlayerController : MonoBehaviour
             pickedItem = chosenItem;
             TriggerPickUp();
             chosenItem.PickUp(itemHolder);
+            Debug.Log($"PickedUp {pickedItem}");
+
+            if(FirstAttack && pickedItem.TryGetComponent<IAttackable>(out _))
+            {
+                FirstAttack = false;
+                HandlePickUp();
+            }
             #endregion
         }
     }
     #endregion
+
     #region AnimationZone
     private const string SpeedString = "Speed";
     private const string ThrowString = "Throw";
@@ -100,4 +132,5 @@ public class PlayerController : MonoBehaviour
     private void TriggerThrow() => animator.SetTrigger(throwTriggerId);
     private void UpdateSpeed(float speed) => animator.SetFloat(speedBlendId, speed);
     #endregion
+
 }
