@@ -8,7 +8,7 @@ public class CalmState : INPCSuperState
 
     float speed = 0.8f;
 
-    public CalmState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player)
+    public CalmState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, Animator animator)
     {
         this.machine = machine;
         this.rb = rb;
@@ -26,6 +26,7 @@ public class CalmState : INPCSuperState
         // TODO: Wander or idle here
         // Example: step slightly away if player too close
         float dist = Vector2.Distance(rb.position, player.position);
+
         if (dist < 3f)
         {
             var dir = (rb.position - (Vector2)player.position).normalized;

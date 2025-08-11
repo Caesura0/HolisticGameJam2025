@@ -8,7 +8,7 @@ public class PanicState : INPCSuperState
 
     float runSpeed = 2.0f;
 
-    public PanicState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player)
+    public PanicState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, Animator animator)
     {
         this.machine = machine;
         this.rb = rb;
@@ -23,6 +23,9 @@ public class PanicState : INPCSuperState
 
     public void Tick()
     {
+
+        // In panic state, NPC runs away from player
+        //stretch goal, line of sight on player
         var dir = (rb.position - (Vector2)player.position).normalized;
         rb.MovePosition(rb.position + dir * runSpeed * Time.deltaTime);
     }

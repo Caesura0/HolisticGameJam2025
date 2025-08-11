@@ -11,6 +11,7 @@ public class NPCSuperStateMachine : MonoBehaviour
 
     Rigidbody2D rb;
     INPCSuperState currentState;
+    Animator animator;
 
     // States
     public CalmState calmState { get; private set; }
@@ -26,14 +27,15 @@ public class NPCSuperStateMachine : MonoBehaviour
             if (player) this.player = player.transform;
         }
 
-        // Instantiate state scripts, passing this machine and needed refs
-        calmState = new CalmState(this, rb, player);
-        panicState = new PanicState(this, rb, player);
-        attackingState = new AttackingState(this, rb, player);
     }
 
     void Start()
     {
+        animator = GetComponent<Animator>();
+        // Instantiate state scripts, passing this machine and needed refs
+        calmState = new CalmState(this, rb, player, animator);
+        panicState = new PanicState(this, rb, player, animator);
+        attackingState = new AttackingState(this, rb, player, animator);
         // Set initial state
         SwitchState(startingState);
     }

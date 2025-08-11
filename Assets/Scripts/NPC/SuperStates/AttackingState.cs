@@ -9,7 +9,7 @@ public class AttackingState : INPCSuperState
     float chaseSpeed = 1.5f;
     float attackRange = 2f;
 
-    public AttackingState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player)
+    public AttackingState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, Animator animator)
     {
         this.machine = machine;
         this.rb = rb;
