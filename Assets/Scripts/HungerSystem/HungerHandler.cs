@@ -75,13 +75,6 @@ public class HungerHandler : MonoBehaviour
         UpdateDisplay();
     }
 
-    public void Feed(int foodValue)
-    {
-        foodValue = Mathf.Clamp(foodValue, 0, hungerLimit);
-        currentHunger += foodValue;
-        UpdateDisplay();
-        ResetTimer();
-    }
 
     private void UpdateDisplay()
     {
