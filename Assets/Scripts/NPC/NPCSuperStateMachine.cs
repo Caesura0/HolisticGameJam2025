@@ -11,7 +11,7 @@ public class NPCSuperStateMachine : MonoBehaviour
 
     Rigidbody2D rb;
     INPCSuperState currentState;
-    Animator animator;
+    NPCAnimator animator;
 
     // States
     public CalmState calmState { get; private set; }
@@ -31,7 +31,7 @@ public class NPCSuperStateMachine : MonoBehaviour
 
     void Start()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponent<NPCAnimator>();
         // Instantiate state scripts, passing this machine and needed refs
         calmState = new CalmState(this, rb, player, animator);
         panicState = new PanicState(this, rb, player, animator);
