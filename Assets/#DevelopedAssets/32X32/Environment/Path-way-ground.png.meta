@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 06adae5074beceb42a1a577331922864
+guid: 780bf8254bdab8c4db3616c89038c5ba
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -110,7 +110,95 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: treestileset_0
+      name: Path-way-ground_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6a74398fd99b97b4fa3950ceb01b1b70
+      internalID: 1814514963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Path-way-ground_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98a5843f9711ab347b8fbdc43d3e89dd
+      internalID: 592773244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Path-way-ground_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 669830906b097be4894ae207780546fc
+      internalID: 867122983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Path-way-ground_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 42f514392baf20b42b0eb233ca420ed1
+      internalID: 1641407296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Path-way-ground_4
       rect:
         serializedVersion: 2
         x: 0
@@ -125,14 +213,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7b1b7a7c36ac20145987625ac6bfd711
-      internalID: 923431317
+      spriteID: 9148de05aff0e2d449df6f274b4e7826
+      internalID: 1214929871
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_1
+      name: Path-way-ground_5
       rect:
         serializedVersion: 2
         x: 32
@@ -147,14 +235,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7060e9c445f73bc48938c3a9a7ae7005
-      internalID: -1690122651
+      spriteID: 700cea01c60ace249bb02143f586e4c9
+      internalID: -1608268139
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_2
+      name: Path-way-ground_6
       rect:
         serializedVersion: 2
         x: 64
@@ -169,14 +257,36 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e07d8303f5ea6c4fa0dc8e3b71b37c6
-      internalID: 2135702304
+      spriteID: 88b1a05f72bb1b345a55356f082ea057
+      internalID: 1936817646
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_3
+      name: Path-way-ground_7
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 044bcd5895b4e7b4fa08d67562d538ca
+      internalID: -438770876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Path-way-ground_8
       rect:
         serializedVersion: 2
         x: 0
@@ -191,14 +301,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 354ae8d46dedcfa4a8b516171cdf61bb
-      internalID: -361189126
+      spriteID: 2b3b2d6232f0fe74daa7a9e357c1e721
+      internalID: -732514387
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_4
+      name: Path-way-ground_9
       rect:
         serializedVersion: 2
         x: 32
@@ -213,8 +323,30 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb97a54ebae747a4ea5e4e374d422498
-      internalID: 1843001802
+      spriteID: 7b49de22744b5d144a28a74712eb95e3
+      internalID: 1045045625
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Path-way-ground_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c06d5b08c94ca3428a80d7c4046d63d
+      internalID: -1664197812
       vertices: []
       indices: 
       edges: []
@@ -235,11 +367,17 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      treestileset_0: 923431317
-      treestileset_1: -1690122651
-      treestileset_2: 2135702304
-      treestileset_3: -361189126
-      treestileset_4: 1843001802
+      Path-way-ground_0: 1814514963
+      Path-way-ground_1: 592773244
+      Path-way-ground_10: -1664197812
+      Path-way-ground_2: 867122983
+      Path-way-ground_3: 1641407296
+      Path-way-ground_4: 1214929871
+      Path-way-ground_5: -1608268139
+      Path-way-ground_6: 1936817646
+      Path-way-ground_7: -438770876
+      Path-way-ground_8: -732514387
+      Path-way-ground_9: 1045045625
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
