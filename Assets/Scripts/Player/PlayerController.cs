@@ -13,27 +13,40 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         HandleMovement();
+        HandleHungerNotification();
     }
 
     #region MovementZone
     [SerializeField]
     private float movementSpeed = 2;
+    private int directionIndex;
     private Vector3 velocity = Vector3.zero;
     private void UpdateVelocity(Vector2 input)
     {
         Vector2 direction = input.normalized;
         velocity = direction * movementSpeed;
+
+        if (direction.y > .3f)
+            directionIndex = 1;
+        else if (direction.x > .3f)
+            directionIndex = 2;
+        else if (direction.x < -.3f)
+            directionIndex = 4;
+        else if (direction.y < -.3f)
+            directionIndex = 3;
+
+        UpdateSpeed(GetSpeedFractionized());
+        UpdateDirection(directionIndex);
     }
 
     private void HandleMovement()
     {
         transform.position += velocity * Time.deltaTime;
-        UpdateSpeed(GetSpeedNormalized());
     }
-    private float GetSpeedNormalized()
+    private float GetSpeedFractionized()
     {
         float magnitude = velocity.magnitude;
-        return magnitude > 0 ? movementSpeed / magnitude : magnitude;
+        return magnitude > 0 ? (1 + movementSpeed / (magnitude)) : 1;
     }
     #endregion
 
@@ -105,8 +118,8 @@ public class PlayerController : MonoBehaviour
             pickedItem = chosenItem;
             TriggerPickUp();
             chosenItem.PickUp(itemHolder);
+            notificationHandler.PlayNotification(NotificationType.Alert);
             Debug.Log($"PickedUp {pickedItem}");
-
             if(FirstAttack && pickedItem.TryGetComponent<IAttackable>(out _))
             {
                 FirstAttack = false;
@@ -117,12 +130,36 @@ public class PlayerController : MonoBehaviour
     }
     #endregion
 
+    #region Notification
+    [SerializeField] private NotificationHandler notificationHandler;
+    private void PlayNotification(NotificationType type) => 
+        notificationHandler.PlayNotification(type);
+    [SerializeField] private float hungerNotificationTimer = 3f;
+    private float hungerNotificationTime = 0f;
+    private void HandleHungerNotification()
+    {
+        if (hungerNotificationTime > 0f)
+        {
+            hungerNotificationTime -= Time.deltaTime;
+            return;
+        }
+
+        if (HungerHandler.Instance.InHungerRage())
+        {
+            hungerNotificationTime = hungerNotificationTimer;
+            PlayNotification(NotificationType.Hunger);
+        }
+    }
+    #endregion
+
     #region AnimationZone
     private const string SpeedString = "Speed";
+    private const string DirectionString = "Direction";
     private const string ThrowString = "Throw";
     private const string AttackString = "Attack";
     private const string PickUpString = "PickUp";
     private int speedBlendId = Animator.StringToHash(SpeedString);
+    private int directionId = Animator.StringToHash(DirectionString);
     private int throwTriggerId = Animator.StringToHash(ThrowString);
     private int attackTriggerId = Animator.StringToHash(AttackString);
     private int pickUpTriggerId = Animator.StringToHash(PickUpString);
@@ -133,5 +170,6 @@ public class PlayerController : MonoBehaviour
     private void TriggerPickUp() => animator.SetTrigger(pickUpTriggerId);
     private void TriggerThrow() => animator.SetTrigger(throwTriggerId);
     private void UpdateSpeed(float speed) => animator.SetFloat(speedBlendId, speed);
+    private void UpdateDirection(int direction) => animator.SetInteger(directionId, direction);
     #endregion
 }
