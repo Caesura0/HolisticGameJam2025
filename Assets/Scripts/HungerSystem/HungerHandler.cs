@@ -75,6 +75,7 @@ public class HungerHandler : MonoBehaviour
         UpdateDisplay();
     }
 
+
     private void UpdateDisplay()
     {
         for (int i = 0; i < hungerLimit; i++)

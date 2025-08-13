@@ -8,7 +8,7 @@ public class PanicState : INPCSuperState
 
     float runSpeed = 2.0f;
 
-    public PanicState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, Animator animator)
+    public PanicState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, NPCAnimator animator)
     {
         this.machine = machine;
         this.rb = rb;
