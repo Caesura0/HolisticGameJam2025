@@ -86,7 +86,7 @@ public class HungerHandler : MonoBehaviour
                 displayIcons[i].gameObject.SetActive(true);
 
             if (currentHunger <= hungerRagePoint)
-                displayIcons[i].color = Color.red;
+                displayIcons[i].color = new Color32(255, 140, 140, 255);
             else
                 displayIcons[i].color = Color.white;
         }
