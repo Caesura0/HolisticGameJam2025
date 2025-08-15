@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6529581856493849807}
   - component: {fileID: 2488399781898151959}
   - component: {fileID: 6086866717076491251}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: NPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &3809134946355924265
 MonoBehaviour:
   m_ObjectHideFlags: 0
