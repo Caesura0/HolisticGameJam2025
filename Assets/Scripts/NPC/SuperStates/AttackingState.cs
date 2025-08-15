@@ -24,6 +24,12 @@ public class AttackingState : INPCSuperState
 
     public void Tick()
     {
+
+        // In hunting state, wanders looking for the player
+        // If player is within attack range, chase and attack
+        // if gets hit by slime/projectile, switch to panic state and drop weapon
+
+
         float dist = Vector2.Distance(rb.position, player.position);
         if (dist > attackRange)
         {

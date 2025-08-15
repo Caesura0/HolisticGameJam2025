@@ -25,7 +25,9 @@ public class PanicState : INPCSuperState
     {
 
         // In panic state, NPC runs away from player
-        //stretch goal, line of sight on player
+        // catches breath
+        //stunned/slowed by player throwing slime or other projectile
+
         var dir = (rb.position - (Vector2)player.position).normalized;
         rb.MovePosition(rb.position + dir * runSpeed * Time.deltaTime);
     }
