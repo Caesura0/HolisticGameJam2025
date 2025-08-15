@@ -60,6 +60,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandlePickUp()
     {
+        StaminaHandler staminaHandler = StaminaHandler.Instance;
         if (pickedItem)
         {
             if (pickedItem.TryGetComponent<IAttackable>(out _))
@@ -73,8 +74,12 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                if (!staminaHandler || !staminaHandler.HasStamina())
+                    return;
+
                 pickedItem.Throw(velocity.normalized * throwForce);
                 TriggerThrow();
+                staminaHandler.SpendStamina();
                 Debug.Log($"Threw {pickedItem}");
             }
             pickedItem = null;
@@ -83,6 +88,9 @@ public class PlayerController : MonoBehaviour
         else
         {
             #region If holding nothing
+            if (!staminaHandler || !staminaHandler.HasStamina())
+                return;
+
             Collider2D[] others =
                 Physics2D.OverlapCircleAll(transform.position, pickUpRange, pickableItemsLayer);
             
@@ -117,6 +125,7 @@ public class PlayerController : MonoBehaviour
             }
             pickedItem = chosenItem;
             TriggerPickUp();
+            staminaHandler.SpendStamina();
             chosenItem.PickUp(itemHolder);
             notificationHandler.PlayNotification(NotificationType.Alert);
             Debug.Log($"PickedUp {pickedItem}");
