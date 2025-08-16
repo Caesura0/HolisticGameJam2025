@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class HungerHandler : MonoBehaviour
 {
@@ -27,6 +25,7 @@ public class HungerHandler : MonoBehaviour
     public int currentHunger { get; private set; }
     public float remainingResetTime { get; private set; }
     public bool InHungerRage() => currentHunger <= hungerRagePoint;
+    public bool IsDead() => currentHunger == 0;
 
     private void Awake()
     {
@@ -43,6 +42,9 @@ public class HungerHandler : MonoBehaviour
 
     private void Update()
     {
+        if (IsDead())
+            return;
+
         if (remainingResetTime > 0)
             remainingResetTime -= Time.deltaTime;
         else
@@ -80,6 +82,9 @@ public class HungerHandler : MonoBehaviour
 
     public void Feed(int foodValue)
     {
+        if (IsDead())
+            return;
+
         foodValue = Mathf.Clamp(foodValue, 0, displayIcons.Length);
         currentHunger += foodValue;
         UpdateDisplay();

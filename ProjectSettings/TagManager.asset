@@ -53,5 +53,8 @@ TagManager:
   - name: Player
     uniqueID: 2684192369
     locked: 0
+  - name: Notifications
+    uniqueID: 2573681915
+    locked: 0
   m_RenderingLayers:
   - Default

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 06adae5074beceb42a1a577331922864
+guid: ab3168f2f9c447c48bc93c0cf99dd9ed
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -48,7 +48,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 16
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -106,11 +106,37 @@ TextureImporter:
     ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WindowsStoreApps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: treestileset_0
+      name: SP_Attack_0
       rect:
         serializedVersion: 2
         x: 0
@@ -118,26 +144,21 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: -9, y: -14}
-        - {x: 9, y: -14}
-        - {x: 5, y: -8}
-        - {x: 0, y: -8}
-        - {x: -5, y: -8}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7b1b7a7c36ac20145987625ac6bfd711
-      internalID: 923431317
+      spriteID: 5ee9212f0202e1a4db54ebea01ce6500
+      internalID: -1303294624
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_1
+      name: SP_Attack_1
       rect:
         serializedVersion: 2
         x: 32
@@ -145,21 +166,21 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7060e9c445f73bc48938c3a9a7ae7005
-      internalID: -1690122651
+      spriteID: bc702d8bddb70604ca039cde974b7fc1
+      internalID: 828558839
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_2
+      name: SP_Attack_2
       rect:
         serializedVersion: 2
         x: 64
@@ -167,21 +188,21 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7e07d8303f5ea6c4fa0dc8e3b71b37c6
-      internalID: 2135702304
+      spriteID: b8ccf614fac8f2b46b2b81bd219d2b8f
+      internalID: 626120972
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_3
+      name: SP_Attack_3
       rect:
         serializedVersion: 2
         x: 0
@@ -189,21 +210,21 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 354ae8d46dedcfa4a8b516171cdf61bb
-      internalID: -361189126
+      spriteID: 65acadd04f25d2448bddf188d3c2eb03
+      internalID: -1298627217
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: treestileset_4
+      name: SP_Attack_4
       rect:
         serializedVersion: 2
         x: 32
@@ -211,15 +232,37 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fb97a54ebae747a4ea5e4e374d422498
-      internalID: 1843001802
+      spriteID: 0b6994f94ebe1e94c93eb486ce164335
+      internalID: 2020881236
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SP_Attack_5
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c103bc61aa347364696e254ddccb919a
+      internalID: -1749325707
       vertices: []
       indices: 
       edges: []
@@ -238,13 +281,14 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":1,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":3.0,"y":2.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      treestileset_0: 923431317
-      treestileset_1: -1690122651
-      treestileset_2: 2135702304
-      treestileset_3: -361189126
-      treestileset_4: 1843001802
+      SP_Attack_0: -1303294624
+      SP_Attack_1: 828558839
+      SP_Attack_2: 626120972
+      SP_Attack_3: -1298627217
+      SP_Attack_4: 2020881236
+      SP_Attack_5: -1749325707
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
