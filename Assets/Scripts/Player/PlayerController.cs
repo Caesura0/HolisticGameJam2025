@@ -12,6 +12,9 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        if (HungerHandler.Instance.IsDead())
+            return;
+
         HandleMovement();
         HandleHungerNotification();
     }
@@ -19,24 +22,18 @@ public class PlayerController : MonoBehaviour
     #region MovementZone
     [SerializeField]
     private float movementSpeed = 2;
-    private int directionIndex;
     private Vector3 velocity = Vector3.zero;
+
     private void UpdateVelocity(Vector2 input)
     {
         Vector2 direction = input.normalized;
         velocity = direction * movementSpeed;
-
-        if (direction.y > .3f)
-            directionIndex = 1;
-        else if (direction.x > .3f)
-            directionIndex = 2;
-        else if (direction.x < -.3f)
-            directionIndex = 4;
-        else if (direction.y < -.3f)
-            directionIndex = 3;
-
+        float errorMargin = .3f;
+        UpdateDirection(directionUpId, direction.y >= errorMargin);
+        UpdateDirection(directionRightId, direction.x >= errorMargin);
+        UpdateDirection(directionDownId, direction.y <= -errorMargin);
+        UpdateDirection(directionLeftId, direction.x <= -errorMargin);
         UpdateSpeed(GetSpeedFractionized());
-        UpdateDirection(directionIndex);
     }
 
     private void HandleMovement()
@@ -68,7 +65,7 @@ public class PlayerController : MonoBehaviour
                 pickedItem.Release();
                 //Run Eating Animation
                 pickedItem.gameObject.SetActive(false);
-                Debug.Log($"Ate {pickedItem}");
+                TriggerAttack();
                 int foodValue = 1;
                 HungerHandler.Instance.Feed(foodValue);
             }
@@ -78,9 +75,9 @@ public class PlayerController : MonoBehaviour
                     return;
 
                 pickedItem.Throw(velocity.normalized * throwForce);
-                TriggerThrow();
+                //TriggerThrow();
                 staminaHandler.SpendStamina();
-                Debug.Log($"Threw {pickedItem}");
+                //Debug.Log($"Threw {pickedItem.name}");
             }
             pickedItem = null;
             return;
@@ -124,11 +121,11 @@ public class PlayerController : MonoBehaviour
                 }
             }
             pickedItem = chosenItem;
-            TriggerPickUp();
+            //TriggerPickUp();
             staminaHandler.SpendStamina();
             chosenItem.PickUp(itemHolder);
             notificationHandler.PlayNotification(NotificationType.Alert);
-            Debug.Log($"PickedUp {pickedItem}");
+            //Debug.Log($"PickedUp {pickedItem.name}");
             if(FirstAttack && pickedItem.TryGetComponent<IAttackable>(out _))
             {
                 FirstAttack = false;
@@ -163,22 +160,28 @@ public class PlayerController : MonoBehaviour
 
     #region AnimationZone
     private const string SpeedString = "Speed";
-    private const string DirectionString = "Direction";
-    private const string ThrowString = "Throw";
+    private const string UpString = "Up";
+    private const string RightString = "Right";
+    private const string DownString = "Down";
+    private const string LeftString = "Left";
+    //private const string ThrowString = "Throw";
     private const string AttackString = "Attack";
-    private const string PickUpString = "PickUp";
+    //private const string PickUpString = "PickUp";
     private int speedBlendId = Animator.StringToHash(SpeedString);
-    private int directionId = Animator.StringToHash(DirectionString);
-    private int throwTriggerId = Animator.StringToHash(ThrowString);
+    private int directionUpId = Animator.StringToHash(UpString);
+    private int directionRightId = Animator.StringToHash(RightString);
+    private int directionDownId = Animator.StringToHash(DownString);
+    private int directionLeftId = Animator.StringToHash(LeftString);
+    //private int throwTriggerId = Animator.StringToHash(ThrowString);
     private int attackTriggerId = Animator.StringToHash(AttackString);
-    private int pickUpTriggerId = Animator.StringToHash(PickUpString);
+    //private int pickUpTriggerId = Animator.StringToHash(PickUpString);
 
     [SerializeField] private Animator animator;
 
     private void TriggerAttack() => animator.SetTrigger(attackTriggerId);
-    private void TriggerPickUp() => animator.SetTrigger(pickUpTriggerId);
-    private void TriggerThrow() => animator.SetTrigger(throwTriggerId);
+    //private void TriggerPickUp() => animator.SetTrigger(pickUpTriggerId);
+    //private void TriggerThrow() => animator.SetTrigger(throwTriggerId);
     private void UpdateSpeed(float speed) => animator.SetFloat(speedBlendId, speed);
-    private void UpdateDirection(int direction) => animator.SetInteger(directionId, direction);
+    private void UpdateDirection(int direction, bool value) => animator.SetBool(direction, value);
     #endregion
 }

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c40a66253a300b541a98c5f7b776936d
+guid: 60c9ac0431fbf144ab5bc9cd7a1acc4b
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,7 +136,95 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Path-way-ground_0
+      name: SP_Slow_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7cd9fd0265dadb3428f3c00de9627881
+      internalID: 858888561
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SP_Slow_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 99a00190a878d3247b961fe50bd84d58
+      internalID: 219708052
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SP_Slow_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 259330a876372ac44b746c1a9bd3d809
+      internalID: 1040730624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SP_Slow_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9b9265e8a801f8f44baa41635cc24fd9
+      internalID: 850609134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SP_Slow_4
       rect:
         serializedVersion: 2
         x: 0
@@ -151,14 +239,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9b58154cad47bd8498571122b246d67c
-      internalID: -1413308711
+      spriteID: 115c30f0dc856e240a912d05e6b19735
+      internalID: 999742558
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_1
+      name: SP_Slow_5
       rect:
         serializedVersion: 2
         x: 32
@@ -173,14 +261,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 15ba22473292eb44ea26470e3a88cffb
-      internalID: -1949350453
+      spriteID: a7683c945421fb843968b5bab750b1c3
+      internalID: 217047363
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_2
+      name: SP_Slow_6
       rect:
         serializedVersion: 2
         x: 64
@@ -195,14 +283,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5f851a0b9481b24397ce46bdfab822f
-      internalID: -1354815998
+      spriteID: bebdcbb375d7fd04da32f4241eafa93b
+      internalID: -138823024
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_3
+      name: SP_Slow_7
       rect:
         serializedVersion: 2
         x: 96
@@ -217,14 +305,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2829a668f9452d644a800446607ac599
-      internalID: 1399290279
+      spriteID: b602d0b840fdec64c93e6e4126d9dd18
+      internalID: -514937675
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_4
+      name: SP_Slow_8
       rect:
         serializedVersion: 2
         x: 0
@@ -239,14 +327,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ba5804be7e3d5a94f96e26a142342bcd
-      internalID: -460531729
+      spriteID: b5a016f0ba128524f8b94144b476af65
+      internalID: 74309732
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_5
+      name: SP_Slow_9
       rect:
         serializedVersion: 2
         x: 32
@@ -261,14 +349,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 58d42ebcc156dd54f8e5c66cabb68c03
-      internalID: 852542852
+      spriteID: 0613808d4503ac041b5e779d771c8bb1
+      internalID: 191354214
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_6
+      name: SP_Slow_10
       rect:
         serializedVersion: 2
         x: 64
@@ -283,14 +371,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: efd99d42d89339f45964fb8c9eef5c76
-      internalID: -628405797
+      spriteID: 0e8b18344e0cd7b4c924af51ed1e19e7
+      internalID: -2087433514
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_7
+      name: SP_Slow_11
       rect:
         serializedVersion: 2
         x: 96
@@ -305,14 +393,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 62873c08ed13a3b49bf5a5afe0825000
-      internalID: -1450031685
+      spriteID: 2b7dab49e418db0489ac80ebe8d5db85
+      internalID: 1610871666
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_8
+      name: SP_Slow_12
       rect:
         serializedVersion: 2
         x: 0
@@ -327,14 +415,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 09da7bbc853ee0e4db59b17590361809
-      internalID: 983573336
+      spriteID: d95f77dfb4257da4cbba3be5a5215685
+      internalID: 479453668
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_9
+      name: SP_Slow_13
       rect:
         serializedVersion: 2
         x: 32
@@ -349,14 +437,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 118712b6434331b44b3c1fffc3314707
-      internalID: -1840267695
+      spriteID: ebba610f4b5868d4aab97ac33a50157c
+      internalID: -97724701
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_10
+      name: SP_Slow_14
       rect:
         serializedVersion: 2
         x: 64
@@ -371,14 +459,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db518962764d32f4a9f86431bacbcc39
-      internalID: -1675121561
+      spriteID: abe8d90f033b8bd46b0012bc7cf5645b
+      internalID: 269260603
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Path-way-ground_11
+      name: SP_Slow_15
       rect:
         serializedVersion: 2
         x: 96
@@ -393,8 +481,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f0ab4ed8adb58c74db2b2496984fc75f
-      internalID: 1404441873
+      spriteID: 1f54615793968224287d55f473747bb3
+      internalID: 1997077641
       vertices: []
       indices: 
       edges: []
@@ -413,20 +501,24 @@ TextureImporter:
     spriteCustomMetadata:
       entries:
       - key: SpriteEditor.SliceSettings
-        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":3.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":4.0,"y":4.0},"gridSpriteSize":{"x":32.0,"y":32.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Path-way-ground_0: -1413308711
-      Path-way-ground_1: -1949350453
-      Path-way-ground_10: -1675121561
-      Path-way-ground_11: 1404441873
-      Path-way-ground_2: -1354815998
-      Path-way-ground_3: 1399290279
-      Path-way-ground_4: -460531729
-      Path-way-ground_5: 852542852
-      Path-way-ground_6: -628405797
-      Path-way-ground_7: -1450031685
-      Path-way-ground_8: 983573336
-      Path-way-ground_9: -1840267695
+      SP_Slow_0: 858888561
+      SP_Slow_1: 219708052
+      SP_Slow_10: -2087433514
+      SP_Slow_11: 1610871666
+      SP_Slow_12: 479453668
+      SP_Slow_13: -97724701
+      SP_Slow_14: 269260603
+      SP_Slow_15: 1997077641
+      SP_Slow_2: 1040730624
+      SP_Slow_3: 850609134
+      SP_Slow_4: 999742558
+      SP_Slow_5: 217047363
+      SP_Slow_6: -138823024
+      SP_Slow_7: -514937675
+      SP_Slow_8: 74309732
+      SP_Slow_9: 191354214
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
