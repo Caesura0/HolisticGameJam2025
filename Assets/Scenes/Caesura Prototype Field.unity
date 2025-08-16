@@ -74194,7 +74194,6 @@ Transform:
   - {fileID: 1613310755}
   - {fileID: 1010018166}
   - {fileID: 1566996077}
-  - {fileID: 2083484649}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2066988209
@@ -74264,7 +74263,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2083484649}
   m_Layer: 12
-  m_Name: GameObject
+  m_Name: NPCs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -74291,7 +74290,7 @@ Transform:
   - {fileID: 1763238390}
   - {fileID: 1144236530}
   - {fileID: 572395379}
-  m_Father: {fileID: 2018865399}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2129709317
 PrefabInstance:
@@ -75353,3 +75352,4 @@ SceneRoots:
   - {fileID: 928566943}
   - {fileID: 337728438}
   - {fileID: 1403450791}
+  - {fileID: 2083484649}
