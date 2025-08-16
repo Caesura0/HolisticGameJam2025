@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using TMPro;
@@ -20,12 +21,14 @@ public class HungerHandler : MonoBehaviour
     public event Action<int> OnHungerUpdate;
 
     [SerializeField] private TextMeshProUGUI timerUI;
-    [SerializeField] private RectTransform hungerIconDisplayContainer;
-    private IconDisplay[] displayIcons;
+    [SerializeField] private GameObject hungerIconPrefab;
+    [SerializeField] private GameObject hungerIconHolder;
+    [SerializeField] private int hungerLimit;
     [SerializeField] private int hungerRagePoint;
     [SerializeField] private float hungerResetTime;
     public int currentHunger { get; private set; }
     public float remainingResetTime { get; private set; }
+
     public bool InHungerRage() => currentHunger <= hungerRagePoint;
 
     private void Awake()
@@ -38,7 +41,9 @@ public class HungerHandler : MonoBehaviour
             return;
         }
 
-        InitializeHandler();
+        currentHunger = hungerLimit;
+        ResetTimer();
+        InitializeDisplay();
     }
 
     private void Update()
@@ -57,30 +62,40 @@ public class HungerHandler : MonoBehaviour
 
     private void ResetTimer() => remainingResetTime = hungerResetTime;
 
-    private void InitializeHandler()
+    private Image[] displayIcons;
+    private void InitializeDisplay()
     {
-        displayIcons = hungerIconDisplayContainer.GetComponentsInChildren<IconDisplay>(true);
-        currentHunger = displayIcons.Length;
+        List<Image> icons = new List<Image>();
+        for (int i = 0; i < hungerLimit; i++)
+        {
+            Image display =
+                Instantiate(hungerIconPrefab, hungerIconHolder.transform).GetComponent<Image>();
+            icons.Add(display);
+        }
+        displayIcons = icons.ToArray();
+
         UpdateDisplay();
-        ResetTimer();
     }
+
 
     private void UpdateDisplay()
     {
-        for (int i = 0; i < displayIcons.Length; i++)
+        for (int i = 0; i < hungerLimit; i++)
         {
             if (i > currentHunger - 1)
-                displayIcons[i].HideIcon();
+                displayIcons[i].gameObject.SetActive(false);
             else
-                displayIcons[i].ShowIcon();
+                displayIcons[i].gameObject.SetActive(true);
 
-            displayIcons[i].IsBlinkActive(currentHunger <= hungerRagePoint);
+            if (currentHunger <= hungerRagePoint)
+                displayIcons[i].color = new Color32(255, 140, 140, 255);
+            else
+                displayIcons[i].color = Color.white;
         }
     }
-
     public void Feed(int foodValue)
     {
-        foodValue = Mathf.Clamp(foodValue, 0, displayIcons.Length);
+        foodValue = Mathf.Clamp(foodValue, 0, hungerLimit);
         currentHunger += foodValue;
         UpdateDisplay();
         ResetTimer();
