@@ -36,7 +36,10 @@ public class PickableItem: MonoBehaviour
     public void Throw(Vector3 velocity)
     {
         Release();
-        rb.AddForce (velocity, ForceMode2D.Impulse);
+        if (velocity.magnitude > stopThreshold)
+            rb.AddForce(velocity, ForceMode2D.Impulse);
+        else
+            OnStopMoving();
         //activate trigger collider
     }
 
@@ -66,9 +69,5 @@ public class PickableItem: MonoBehaviour
         }
     }
 
-    void OnStopMoving()
-    {
-
-        collision.enabled = true; 
-    }
+    void OnStopMoving() => collision.enabled = true;
 }

@@ -77,7 +77,7 @@ public class PlayerController : MonoBehaviour
                 pickedItem.Throw(velocity.normalized * throwForce);
                 //TriggerThrow();
                 staminaHandler.SpendStamina();
-                //Debug.Log($"Threw {pickedItem.name}");
+                Debug.Log($"Threw {pickedItem.name}");
             }
             pickedItem = null;
             return;
