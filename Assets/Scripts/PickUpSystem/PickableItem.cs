@@ -68,7 +68,7 @@ public class PickableItem: MonoBehaviour
 
     void OnStopMoving()
     {
-
+        Debug.Log("Item has stopped moving.");
         collision.enabled = true; 
     }
 }
