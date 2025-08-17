@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class NPCSuperStateMachine : MonoBehaviour
@@ -7,6 +8,16 @@ public class NPCSuperStateMachine : MonoBehaviour
 
     [SerializeField] SuperStateType startingState = SuperStateType.Calm;
     [SerializeField] Transform player;
+
+    // New
+    [Header("Hit Events")]
+    public UnityEvent onSlimeHit;
+    public UnityEvent onStunned;
+    public UnityEvent OnPlayerCaught;
+
+    // Custom UnityEvents
+    public class SlimeHitEvent : UnityEvent<float> { }
+    public SlimeHitEvent onSlimeHitWithDuration;
 
 
     Rigidbody2D rb;
@@ -58,4 +69,57 @@ public class NPCSuperStateMachine : MonoBehaviour
 
         currentState.Enter();
     }
+
+    // Hit Handling
+
+    public void OnSlimeHit(float duration = 2f)
+    {
+        // Fire any desired events (vfx, sfx, etc)
+        onSlimeHit?.Invoke();
+        onSlimeHitWithDuration?.Invoke(duration);
+
+        // handle states
+        if (currentState == attackingState)
+        {
+            Debug.Log("Dropping weapon and panicking!");
+            SwitchState(SuperStateType.Panic);
+            panicState.ApplySlime(duration);
+        }
+        else if (currentState == panicState)
+        {
+            // already panicking; just apply slime.
+            panicState.ApplySlime(duration);
+        } else if (currentState == calmState)
+        {
+            // Surprise! Time to panic.
+            SwitchState(SuperStateType.Panic);
+            panicState.ApplySlime(duration);
+        }
+    }
+
+    public void OnCaughtByPlayer()
+    {
+        OnPlayerCaught?.Invoke();
+        // Handle being eaten!
+        Debug.Log("Oh no; I'm dead");
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Slime"))
+        {
+            Debug.Log("In collider w/ Slime tag");
+            // Get slow from projectile or just hardcode that mf otherwise.
+            var projectile = other.GetComponent<SlimeProjectile>();
+            float duration = projectile ? projectile.slowDuration : 2f;
+
+            OnSlimeHit(duration);
+            Destroy(other.gameObject);
+        }
+        else if (other.CompareTag("Player")) {
+            OnCaughtByPlayer();
+        }
+    }
+
+
 }
