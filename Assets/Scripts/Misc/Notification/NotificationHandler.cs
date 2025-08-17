@@ -3,14 +3,17 @@ using UnityEngine;
 public enum NotificationType
 {
     Alert,
-    Hunger
+    Hunger,
+    Eat
 }
 public class NotificationHandler : MonoBehaviour
 {
     private const string AlertString = "Alert";
     private const string HungerString = "Hunger";
+    private const string EatString = "Eat";
     private int AlertTriggerId = Animator.StringToHash(AlertString);
     private int HungerTriggerId = Animator.StringToHash(HungerString);
+    private int EatTriggerId = Animator.StringToHash(EatString);
 
     [SerializeField] private Animator animator;
     private bool initialized;
@@ -34,6 +37,9 @@ public class NotificationHandler : MonoBehaviour
                 break;
             case NotificationType.Hunger:
                 chosenId = HungerTriggerId;
+                break;
+            case NotificationType.Eat:
+                chosenId = EatTriggerId;
                 break;
         }
 
