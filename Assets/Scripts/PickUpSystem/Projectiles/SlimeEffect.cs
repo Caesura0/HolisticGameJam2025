@@ -14,7 +14,7 @@ public class SlimeEffect : MonoBehaviour, IProjectileEffect
 
         // Force panic and apply slow
         target.SwitchState(NPCSuperStateMachine.SuperStateType.Panic);
-        target.panicState.ApplySlime(slowDuration);
+        target.OnSlimeHit(slowDuration);
     }
 
     public string GetEffectDescription() => "Slime: Disarm + Slow";

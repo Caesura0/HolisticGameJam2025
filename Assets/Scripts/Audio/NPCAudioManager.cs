@@ -16,8 +16,9 @@ public class NPCAudioHandler : MonoBehaviour
         stateMachine.onSlimeHitWithDuration.AddListener(OnSlimeHitWithDuration);
     }
 
-    void OnSlimeHit()
+    public void OnSlimeHit()
     {
+        Debug.Log("Slime sound should play if exists");
         // Use existing hit sound as placeholder
         AudioManager.Instance?.PlayHitSound();
         // Or play a specific sound when you add it
