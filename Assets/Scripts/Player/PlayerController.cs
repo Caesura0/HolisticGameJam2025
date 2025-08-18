@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -8,8 +6,10 @@ public class PlayerController : MonoBehaviour
     {
         Controls.Instance.OnPlayerMove += UpdateVelocity;
         Controls.Instance.OnPlayerAttack += HandlePickUp;
+        HungerHandler.Instance.OnDeathTrigger += HandleDeathTrigger;
         FirstAttack = true;
     }
+
     private void Update()
     {
         if (HungerHandler.Instance.IsDead())
@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleHungerNotification();
     }
+    private void HandleDeathTrigger() => TriggerDeath();
 
     #region MovementZone
     [SerializeField]
@@ -63,7 +64,7 @@ public class PlayerController : MonoBehaviour
             if (pickedItem.TryGetComponent<IAttackable>(out _))
             {
                 pickedItem.Release();
-                //Run Eating Animation
+                notificationHandler.PlayNotification(NotificationType.Eat);
                 pickedItem.gameObject.SetActive(false);
                 TriggerAttack();
                 int foodValue = 1;
@@ -179,6 +180,7 @@ public class PlayerController : MonoBehaviour
     private const string LeftString = "Left";
     //private const string ThrowString = "Throw";
     private const string AttackString = "Attack";
+    private const string DieString = "Die";
     //private const string PickUpString = "PickUp";
     private int speedBlendId = Animator.StringToHash(SpeedString);
     private int directionUpId = Animator.StringToHash(UpString);
@@ -187,11 +189,13 @@ public class PlayerController : MonoBehaviour
     private int directionLeftId = Animator.StringToHash(LeftString);
     //private int throwTriggerId = Animator.StringToHash(ThrowString);
     private int attackTriggerId = Animator.StringToHash(AttackString);
+    private int deathTriggerId = Animator.StringToHash(DieString);
     //private int pickUpTriggerId = Animator.StringToHash(PickUpString);
 
     [SerializeField] private Animator animator;
 
     private void TriggerAttack() => animator.SetTrigger(attackTriggerId);
+    private void TriggerDeath() => animator.SetTrigger(deathTriggerId);
     //private void TriggerPickUp() => animator.SetTrigger(pickUpTriggerId);
     //private void TriggerThrow() => animator.SetTrigger(throwTriggerId);
     private void UpdateSpeed(float speed) => animator.SetFloat(speedBlendId, speed);

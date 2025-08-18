@@ -16,7 +16,7 @@ public class HungerHandler : MonoBehaviour
     }
 
     public event Action<int> OnHungerUpdate;
-
+    public event Action OnDeathTrigger;
     [SerializeField] private TextMeshProUGUI timerUI;
     [SerializeField] private RectTransform hungerIconDisplayContainer;
     private IconDisplay[] displayIcons;
@@ -51,6 +51,8 @@ public class HungerHandler : MonoBehaviour
         {
             ResetTimer();
             currentHunger--;
+            if (IsDead())
+                OnDeathTrigger?.Invoke();
             UpdateDisplay();
             OnHungerUpdate?.Invoke(currentHunger);
         }
