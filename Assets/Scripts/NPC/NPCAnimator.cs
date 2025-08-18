@@ -9,6 +9,10 @@ public class NPCAnimator : MonoBehaviour
     {
         animator.SetFloat("Direction", direction);
         animator.SetFloat("Speed", speed);
+    }
 
+    public void SetIsCatchingBreath(bool isCatchingBreath)
+    {
+        animator.SetBool("IsCatchingBreath", isCatchingBreath);
     }
 }
