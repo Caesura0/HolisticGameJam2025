@@ -18,22 +18,22 @@ public class AttackingState : INPCSuperState
     AttackBehaviorType behaviorType;
     float lightStaminaDrainRate = 5f;
 
-    // Hunter behavior variables
-    float hunterSpeed = 6f;           // Faster pursuit speed
+    // Hunter behavior
+    float hunterSpeed = 6f;
     float hunterDetectionRange = 10f; // Longer detection range
-    float hunterLoseRange = 18f;      // When to give up chase
+    float hunterLoseRange = 18f;
 
-    // Guardian behavior variables  
-    float guardianSpeed = 4f;         // Slower patrol speed
-    float guardianDetectionRange = 8f; // Shorter detection range
-    float guardianPatrolRadius = 6f;   // Area to patrol around
-    Vector2 guardianHomeBase;          // Center point to guard
-    Vector2 guardianPatrolTarget;      // Current patrol destination
+    // Guardian behavior  
+    float guardianSpeed = 4f;         
+    float guardianDetectionRange = 8f; 
+    float guardianPatrolRadius = 6f;   
+    Vector2 guardianHomeBase; // Center point to guard
+    Vector2 guardianPatrolTarget; // Current patrol destination
 
     // Current behavior state
     bool isPlayerDetected = false;
     float lastPlayerSightTime = 0f;
-    float maxChaseTime = 8f; // How long to remember player location
+    float maxChaseTime = 8f;
 
     public AttackingState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player,
         NPCAnimator animator, float staminaDrainRate, AttackBehaviorType behaviorType)
@@ -201,12 +201,6 @@ public class AttackingState : INPCSuperState
             {
                 SetNewPatrolTarget();
             }
-
-            // Occasionally brandish weapon while patrolling
-            if (Random.value < 0.005f)
-            {
-                machine.currentWeapon?.StartSwing();
-            }
         }
 
         // If too far from home base, return (prevents guardian from being lured away)
@@ -232,10 +226,6 @@ public class AttackingState : INPCSuperState
     public void Exit()
     {
         Debug.Log($"Exiting Attacking State ({behaviorType})");
-
-        // End any weapon animation
-        machine.currentWeapon?.EndSwing();
-
         isPlayerDetected = false;
     }
 

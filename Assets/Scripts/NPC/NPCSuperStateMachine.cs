@@ -11,20 +11,20 @@ public class NPCSuperStateMachine : MonoBehaviour
     [SerializeField] Transform player;
 
     [Header("Stamina Configuration")]
-    [SerializeField] bool useStamina = true; // NEW: Toggle stamina system on/off
+    [SerializeField] bool useStamina = true;
     [SerializeField] float maxStamina = 100f;
-    [SerializeField] float staminaDrainRatePanic = 15f; // per second while running
-    [SerializeField] float staminaDrainRateAttack = 5f; // per second while being threatening
-    [SerializeField] float staminaRefillRate = 30f; // per second while catching breath
-    [SerializeField] float catchBreathThreshold = 5f; // stamina level that triggers catch breath
+    [SerializeField] float staminaDrainRatePanic = 15f;
+    [SerializeField] float staminaDrainRateAttack = 5f;
+    [SerializeField] float staminaRefillRate = 30f;
+    [SerializeField] float catchBreathThreshold = 5f;
 
     [Header("Weapon Configuration")]
     [SerializeField] bool startWithWeapon = true;
     [SerializeField] GameObject pickaxePrefab; // Prefab to spawn if starting with weapon
-    [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter; // NEW: Behavior type
+    [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter;
     [SerializeField] float weaponDetectionRadius = 3f;
     [SerializeField] Transform weaponAnchorPoint; // Child transform for weapon position
-    [SerializeField] Vector2 weaponOffset = new Vector2(0.5f, 0.5f); // Offset from NPC origin
+    [SerializeField] Vector2 weaponOffset = new Vector2(0, 0); // Offset from NPC origin
 
     // Current stamina (public for state access)
     public float currentStamina { get; private set; }
@@ -132,7 +132,7 @@ public class NPCSuperStateMachine : MonoBehaviour
                 new Rect(0, 0, 4, 4),
                 new Vector2(0.5f, 0.5f));
             sr.color = new Color(0.5f, 0.3f, 0.1f); // Brown
-            weaponObj.transform.localScale = new Vector3(0.3f, 1f, 1f); // Stick shape
+            weaponObj.transform.localScale = new Vector3(10f, 2f, 1f); // Stick shape
 
             // Subscribe to weapon events
             weapon.OnWeaponLost += OnWeaponLost;

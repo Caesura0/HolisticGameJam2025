@@ -7,7 +7,7 @@ public class NPCPickaxeWeapon : MonoBehaviour
 {
     [Header("Weapon Configuration")]
     [SerializeField] float dropForce = 3f;
-    [SerializeField] Vector2 heldOffset = new Vector2(0.5f, 0.3f);
+    [SerializeField] Vector2 heldOffset = new Vector2(0f, 0.5f);
 
     Transform holder;
     bool isHeld = false;
@@ -29,7 +29,7 @@ public class NPCPickaxeWeapon : MonoBehaviour
         if (!rb)
         {
             rb = gameObject.AddComponent<Rigidbody2D>();
-            rb.gravityScale = 0; // Top-down game, no gravity
+            //rb.gravityScale = 0;
         }
 
         // Set up trigger for player interaction
@@ -95,41 +95,6 @@ public class NPCPickaxeWeapon : MonoBehaviour
         Debug.Log("Pickaxe dropped!");
     }
 
-    // Simplified swing for visual threat only
-    public void StartSwing()
-    {
-        if (!isHeld) return;
-
-        // Just a simple visual animation - no complex combat
-        StartCoroutine(SimpleSwingAnimation());
-    }
-
-    public void EndSwing()
-    {
-        // Stop any ongoing swing animation
-        StopAllCoroutines();
-        if (isHeld)
-        {
-            transform.rotation = Quaternion.identity;
-        }
-    }
-
-    System.Collections.IEnumerator SimpleSwingAnimation()
-    {
-        float startRotation = transform.rotation.eulerAngles.z;
-        float swingAngle = 45f;
-        float duration = 0.3f;
-
-        for (float t = 0; t < duration; t += Time.deltaTime)
-        {
-            float angle = Mathf.Sin(t / duration * Mathf.PI) * swingAngle;
-            transform.rotation = Quaternion.Euler(0, 0, startRotation + angle);
-            yield return null;
-        }
-
-        transform.rotation = Quaternion.Euler(0, 0, startRotation);
-    }
-
     public bool IsHeld()
     {
         return isHeld;
@@ -148,19 +113,5 @@ public class NPCPickaxeWeapon : MonoBehaviour
 
         Debug.Log("NPC disarmed by slime!");
         Drop(); // This will trigger OnWeaponLost event
-    }
-
-    // Handle interaction with player - this is where the capture prevention happens!
-    void OnTriggerStay2D(Collider2D other)
-    {
-        if (other.CompareTag("Player") && isHeld)
-        {
-            // Player is trying to capture an armed NPC!
-            // The player controller should handle:
-            // 1. Drain stamina as normal
-            // 2. Fail the capture attempt
-            // 3. Show feedback that the NPC is armed
-            Debug.Log("Player attempting to capture armed NPC - this should fail and cost stamina!");
-        }
     }
 }
