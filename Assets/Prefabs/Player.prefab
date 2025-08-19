@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 74429435402801748}
   - component: {fileID: 31013483395101908}
   - component: {fileID: 1089969363505527838}
+  - component: {fileID: 3918970639846697843}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -50,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 2
+  rb: {fileID: 3918970639846697843}
   itemHolder: {fileID: 5244851791686211444}
   pickUpRange: 1
   pickableItemsLayer:
@@ -90,13 +92,40 @@ CapsuleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.6, y: 0.8}
+  m_Offset: {x: 0.04096067, y: -0.04096055}
+  m_Size: {x: 0.6351092, y: 0.7648908}
   m_Direction: 0
+--- !u!50 &3918970639846697843
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011787412301937386}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1000
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &3662995950041507386
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,6 +415,18 @@ PrefabInstance:
     - target: {fileID: 4192894094880029505, guid: d7e20b2ecb846e24ab53fc5789c9e5e7, type: 3}
       propertyPath: m_Name
       value: NotificationHandler
+      objectReference: {fileID: 0}
+    - target: {fileID: 5618226568796529232, guid: d7e20b2ecb846e24ab53fc5789c9e5e7, type: 3}
+      propertyPath: m_SortingLayer
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5618226568796529232, guid: d7e20b2ecb846e24ab53fc5789c9e5e7, type: 3}
+      propertyPath: m_SortingOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5618226568796529232, guid: d7e20b2ecb846e24ab53fc5789c9e5e7, type: 3}
+      propertyPath: m_SortingLayerID
+      value: -1721285381
       objectReference: {fileID: 0}
     - target: {fileID: 7144484505169398730, guid: d7e20b2ecb846e24ab53fc5789c9e5e7, type: 3}
       propertyPath: m_LocalPosition.x

@@ -2,11 +2,6 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private void Awake()
-    {
-
-    }
-
     private void Start()
     {
         Controls.Instance.OnPlayerMove += UpdateVelocity;
@@ -30,6 +25,8 @@ public class PlayerController : MonoBehaviour
     private float movementSpeed = 2;
     private Vector3 velocity = Vector3.zero;
 
+    [SerializeField] private Rigidbody2D rb;
+
     private void UpdateVelocity(Vector2 input)
     {
         Vector2 direction = input.normalized;
@@ -44,7 +41,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleMovement()
     {
-        transform.position += velocity * Time.deltaTime;
+        rb.linearVelocity = velocity;
     }
     private float GetSpeedFractionized()
     {
@@ -129,26 +126,32 @@ public class PlayerController : MonoBehaviour
             pickedItem = chosenItem;
             //TriggerPickUp();
             staminaHandler.SpendStamina();
-
-            // Check if npc has weapon to prevent capture (After stamina cause we still want cost associated with action)
-            if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine comp))
+            if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
             {
-                if (!comp.IsCapturable())
+                if (!enemy.IsCapturable())
                 {
-                    // reset pickedItem
-                    comp.OnNPCCounter.Invoke();
-                    pickedItem = null;
-                    return;
+                    Debug.Log("Shouldn't capture");
+                    pickedItem = null;  // Clear the picked item
+                    return;  // Exit the entire method
+                }
+
+                // Only pick up if capturable
+                chosenItem.PickUp(itemHolder);
+
+                if (FirstAttack)
+                {
+                    FirstAttack = false;
+                    HandlePickUp();
                 }
             }
-            // Otherwise Pickup
-            chosenItem.PickUp(itemHolder);
-            notificationHandler.PlayNotification(NotificationType.Alert);
-            //Debug.Log($"PickedUp {pickedItem.name}");
-            if(FirstAttack && pickedItem.TryGetComponent<IAttackable>(out _))
+            else
             {
-                FirstAttack = false;
-                HandlePickUp();
+                chosenItem.PickUp(itemHolder);
+                notificationHandler.PlayNotification(NotificationType.Alert);
+            }
+            //Debug.Log($"PickedUp {pickedItem.name}");
+            if (FirstAttack && pickedItem.TryGetComponent<IAttackable>(out _))
+            {
             }
             #endregion
         }
