@@ -1,48 +1,63 @@
-// Attacking State with Hunter and Guardian Behavior Types
 using UnityEngine;
 
 public class AttackingState : INPCSuperState
 {
     public enum AttackBehaviorType
     {
-        Hunter,     // Actively pursues player, forces movement
-        Guardian    // Guards area, patrols, creates denial zones
+        Hunter,     // Aggressive pursuit
+        Guardian    // Area denial
+    }
+
+    enum AttackPhase
+    {
+        Pursuing,      // Actively chasing
+        Circling,      // Close-range intimidation
+        Recovering,    // Brief cooldown
+        Searching,     // Lost sight
+        Guarding       // Guardian-specific patrol
     }
 
     NPCSuperStateMachine machine;
     Rigidbody2D rb;
     Transform player;
     NPCAnimator animator;
-
-    // Behavior configuration
     AttackBehaviorType behaviorType;
-    float lightStaminaDrainRate = 5f;
 
-    // Hunter behavior
+    // Current state
+    AttackPhase currentPhase;
+    float phaseEndTime;
+    bool playerDetected = false;
+
+    // Hunter configuration
     float hunterSpeed = 6f;
-    float hunterDetectionRange = 10f; // Longer detection range
-    float hunterLoseRange = 18f;
+    float hunterPursuitDuration = 6f;
+    float hunterCircleDuration = 2f;
+    float hunterRecoveryDuration = 1.5f;
+    float hunterSearchDuration = 3f;
+    float hunterDetectRange = 10f;
+    float hunterLoseRange = 15f;
 
-    // Guardian behavior  
-    float guardianSpeed = 4f;         
-    float guardianDetectionRange = 8f; 
-    float guardianPatrolRadius = 6f;   
-    Vector2 guardianHomeBase; // Center point to guard
-    Vector2 guardianPatrolTarget; // Current patrol destination
+    // Guardian configuration  
+    float guardianSpeed = 4f;
+    float guardianPatrolDuration = 4f;
+    float guardianInterceptDuration = 3f;
+    float guardianDetectRange = 8f;
+    float guardianPatrolRadius = 6f;
+    Vector2 guardianHomeBase;
+    Vector2 guardianPatrolTarget;
+    float patrolAngle = 0f;
 
-    // Current behavior state
-    bool isPlayerDetected = false;
-    float lastPlayerSightTime = 0f;
-    float maxChaseTime = 8f;
+    // Shared configuration
+    float circleDistance = 3f;
+    float circleAngle = 0f;
 
     public AttackingState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player,
-        NPCAnimator animator, float staminaDrainRate, AttackBehaviorType behaviorType)
+        NPCAnimator animator, AttackBehaviorType behaviorType)
     {
         this.machine = machine;
         this.rb = rb;
         this.player = player;
         this.animator = animator;
-        this.lightStaminaDrainRate = staminaDrainRate > 0 ? staminaDrainRate : 5f;
         this.behaviorType = behaviorType;
     }
 
@@ -50,202 +65,283 @@ public class AttackingState : INPCSuperState
     {
         Debug.Log($"Entering Attacking State as {behaviorType}!");
 
-        // Check if we have a weapon
+        // Weapon check
         if (!machine.currentWeapon)
         {
-            Debug.Log("No weapon! Returning to calm state.");
-            machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
+            Debug.Log("No weapon! Switching to panic!");
+            machine.SwitchState(NPCSuperStateMachine.SuperStateType.Panic);
             return;
         }
 
-        // Initialize based on behavior type
-        switch (behaviorType)
+        // Initialize based on type
+        if (behaviorType == AttackBehaviorType.Guardian)
         {
-            case AttackBehaviorType.Hunter:
-                Debug.Log("Hunter mode: Will actively pursue player!");
-                break;
-            case AttackBehaviorType.Guardian:
-                Debug.Log("Guardian mode: Will protect this area!");
-                guardianHomeBase = rb.position; // Set current position as home base
-                SetNewPatrolTarget();
-                break;
+            guardianHomeBase = rb.position;
+            SetNewPatrolTarget();
+            StartPhase(AttackPhase.Guarding);
         }
-
-        isPlayerDetected = false;
-        lastPlayerSightTime = 0f;
+        else
+        {
+            StartPhase(AttackPhase.Searching);
+        }
     }
 
     public void Tick()
     {
         if (!player) return;
 
-        // If we lost our weapon somehow and we're not already transitioning states, handle it
+        // Lost weapon check
         if (!machine.currentWeapon)
         {
-            // Let OnSlimeHit or other systems handle state transitions if they need to
-            // Only default to panic if no other system is handling it
-            Debug.Log("Weapon lost in attacking state - defaulting to panic.");
+            Debug.Log("Weapon lost! Panicking!");
             machine.SwitchState(NPCSuperStateMachine.SuperStateType.Panic);
             return;
         }
 
-        // Only drain stamina if stamina system is enabled
-        if (machine.IsStaminaEnabled())
-        {
-            machine.DrainStamina(lightStaminaDrainRate * Time.deltaTime);
-
-            // If exhausted while attacking, panic!
-            if (machine.IsExhausted())
-            {
-                Debug.Log("Exhausted while attacking! Too tired to be threatening - panicking!");
-                machine.SwitchState(NPCSuperStateMachine.SuperStateType.Panic);
-                return;
-            }
-        }
+        float distToPlayer = Vector2.Distance(rb.position, player.position);
 
         // Behavior-specific logic
-        switch (behaviorType)
+        if (behaviorType == AttackBehaviorType.Hunter)
         {
-            case AttackBehaviorType.Hunter:
-                HandleHunterBehavior();
-                break;
-            case AttackBehaviorType.Guardian:
-                HandleGuardianBehavior();
-                break;
-        }
-    }
-
-    void HandleHunterBehavior()
-    {
-        float distToPlayer = Vector2.Distance(rb.position, player.position);
-
-        // Detection logic
-        if (distToPlayer <= hunterDetectionRange)
-        {
-            isPlayerDetected = true;
-            lastPlayerSightTime = Time.time;
-        }
-
-        // Give up chase if player escapes for too long
-        if (isPlayerDetected && (distToPlayer > hunterLoseRange || Time.time - lastPlayerSightTime > maxChaseTime))
-        {
-            Debug.Log("Hunter lost track of player, returning to calm.");
-            machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
-            return;
-        }
-
-        if (isPlayerDetected)
-        {
-            // Active pursuit!
-            Vector2 dirToPlayer = ((Vector2)player.position - rb.position).normalized;
-            rb.MovePosition(rb.position + dirToPlayer * hunterSpeed * Time.deltaTime);
-
-            // Face the player and look aggressive
-            animator?.SetAnimationParameters(dirToPlayer.x, 1f);
-
-            Debug.DrawLine(rb.position, player.position, Color.red); // Debug visualization
+            HandleHunterBehavior(distToPlayer);
         }
         else
         {
-            // Patrol/search behavior when not detected
-            Vector2 searchMovement = Random.insideUnitCircle.normalized * (hunterSpeed * 0.5f) * Time.deltaTime;
-            rb.MovePosition(rb.position + searchMovement);
-            animator?.SetAnimationParameters(searchMovement.x, 0.5f);
+            HandleGuardianBehavior(distToPlayer);
         }
     }
 
-    void HandleGuardianBehavior()
+    void HandleHunterBehavior(float distToPlayer)
     {
-        float distToPlayer = Vector2.Distance(rb.position, player.position);
+        // Detection check
+        if (distToPlayer <= hunterDetectRange && !playerDetected)
+        {
+            playerDetected = true;
+            StartPhase(AttackPhase.Pursuing);
+        }
+
+        switch (currentPhase)
+        {
+            case AttackPhase.Pursuing:
+                if (distToPlayer <= circleDistance)
+                {
+                    StartPhase(AttackPhase.Circling);
+                }
+                else if (distToPlayer > hunterLoseRange)
+                {
+                    StartPhase(AttackPhase.Searching);
+                }
+                else if (Time.time >= phaseEndTime)
+                {
+                    StartPhase(AttackPhase.Recovering);
+                }
+                else
+                {
+                    // Chase the player
+                    Vector2 chaseDir = ((Vector2)player.position - rb.position).normalized;
+                    rb.MovePosition(rb.position + chaseDir * hunterSpeed * Time.deltaTime);
+                    animator?.SetAnimationParameters(chaseDir.x, 1f);
+                }
+                break;
+
+            case AttackPhase.Circling:
+                if (Time.time >= phaseEndTime || distToPlayer > circleDistance * 2)
+                {
+                    StartPhase(AttackPhase.Pursuing);
+                }
+                else
+                {
+                    CircleStrafe(distToPlayer, hunterSpeed);
+                }
+                break;
+
+            case AttackPhase.Recovering:
+                if (Time.time >= phaseEndTime)
+                {
+                    StartPhase(distToPlayer <= hunterDetectRange ? AttackPhase.Pursuing : AttackPhase.Searching);
+                }
+                else
+                {
+                    // Stand still or back away slowly
+                    animator?.SetAnimationParameters(0, 0);
+                }
+                break;
+
+            case AttackPhase.Searching:
+                if (distToPlayer <= hunterDetectRange)
+                {
+                    playerDetected = true;
+                    StartPhase(AttackPhase.Pursuing);
+                }
+                else if (Time.time >= phaseEndTime)
+                {
+                    Debug.Log("Lost player, returning to calm");
+                    machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
+                }
+                else
+                {
+                    // Random search movement
+                    SearchPattern();
+                }
+                break;
+        }
+    }
+
+    void HandleGuardianBehavior(float distToPlayer)
+    {
         float distToHome = Vector2.Distance(rb.position, guardianHomeBase);
 
-        // Detection logic (shorter range than hunter)
-        if (distToPlayer <= guardianDetectionRange)
+        // Detection within guardian range
+        if (distToPlayer <= guardianDetectRange && !playerDetected)
         {
-            isPlayerDetected = true;
-            lastPlayerSightTime = Time.time;
+            playerDetected = true;
+            StartPhase(AttackPhase.Pursuing);
         }
 
-        // Stop detecting if player gets far enough away
-        if (isPlayerDetected && distToPlayer > guardianDetectionRange * 1.5f)
+        switch (currentPhase)
         {
-            isPlayerDetected = false;
-            Debug.Log("Guardian lost sight of player, returning to patrol.");
+            case AttackPhase.Guarding:
+                if (distToPlayer <= guardianDetectRange)
+                {
+                    StartPhase(AttackPhase.Pursuing);
+                }
+                else
+                {
+                    // Patrol around home base
+                    PatrolAroundBase();
+                }
+                break;
+
+            case AttackPhase.Pursuing:
+                // Guardian pursuit is more about interception
+                if (Time.time >= phaseEndTime || distToPlayer > guardianDetectRange * 1.5f)
+                {
+                    playerDetected = false;
+                    StartPhase(AttackPhase.Guarding);
+                }
+                else if (distToHome > guardianPatrolRadius * 2f)
+                {
+                    // Don't chase too far from home
+                    StartPhase(AttackPhase.Guarding);
+                }
+                else
+                {
+                    // Intercept player
+                    Vector2 interceptDir = ((Vector2)player.position - guardianHomeBase).normalized;
+                    Vector2 interceptPos = guardianHomeBase + interceptDir * (guardianPatrolRadius * 0.8f);
+
+                    Vector2 moveDir = (interceptPos - rb.position).normalized;
+                    rb.MovePosition(rb.position + moveDir * guardianSpeed * Time.deltaTime);
+                    animator?.SetAnimationParameters(moveDir.x, 0.8f);
+                }
+                break;
         }
+    }
 
-        if (isPlayerDetected)
+    void CircleStrafe(float currentDistance, float speed)
+    {
+        // Circle around player at current distance
+        circleAngle += Time.deltaTime * 1.5f; // Rotation speed
+
+        Vector2 offset = new Vector2(Mathf.Cos(circleAngle), Mathf.Sin(circleAngle)) * circleDistance;
+        Vector2 targetPos = (Vector2)player.position + offset;
+
+        Vector2 moveDir = (targetPos - rb.position).normalized;
+        rb.MovePosition(rb.position + moveDir * speed * Time.deltaTime);
+
+        // Face player while circling
+        float faceDir = player.position.x > rb.position.x ? 1 : -1;
+        animator?.SetAnimationParameters(faceDir, 0.7f);
+    }
+
+    void PatrolAroundBase()
+    {
+        Vector2 toTarget = guardianPatrolTarget - rb.position;
+
+        if (toTarget.magnitude < 1f)
         {
-            // Push player away from guarded area
-            Vector2 pushDirection = ((Vector2)player.position - guardianHomeBase).normalized;
-            Vector2 interceptPosition = guardianHomeBase + pushDirection * (guardianPatrolRadius * 0.8f);
-
-            Vector2 moveDirection = (interceptPosition - rb.position).normalized;
-            rb.MovePosition(rb.position + moveDirection * guardianSpeed * Time.deltaTime);
-
-            // Face the player threateningly
-            float directionX = player.position.x > rb.position.x ? 1 : -1;
-            animator?.SetAnimationParameters(directionX, 0.8f);
-
-            Debug.DrawLine(guardianHomeBase, interceptPosition, Color.yellow); // Debug visualization
+            SetNewPatrolTarget();
         }
         else
         {
-            // Patrol around home base
-            Vector2 dirToPatrolTarget = (guardianPatrolTarget - rb.position).normalized;
-            rb.MovePosition(rb.position + dirToPatrolTarget * guardianSpeed * Time.deltaTime);
-
-            animator?.SetAnimationParameters(dirToPatrolTarget.x, 0.6f);
-
-            // Reached patrol target, set new one
-            if (Vector2.Distance(rb.position, guardianPatrolTarget) < 1f)
-            {
-                SetNewPatrolTarget();
-            }
+            Vector2 moveDir = toTarget.normalized;
+            rb.MovePosition(rb.position + moveDir * guardianSpeed * 0.5f * Time.deltaTime);
+            animator?.SetAnimationParameters(moveDir.x, 0.5f);
         }
+    }
 
-        // If too far from home base, return (prevents guardian from being lured away)
-        if (distToHome > guardianPatrolRadius * 2f)
-        {
-            Debug.Log("Guardian too far from home, returning to base.");
-            guardianPatrolTarget = guardianHomeBase;
-        }
+    void SearchPattern()
+    {
+        // Simple wandering search
+        float searchSpeed = behaviorType == AttackBehaviorType.Hunter ? hunterSpeed * 0.5f : guardianSpeed * 0.5f;
+        Vector2 searchDir = new Vector2(Mathf.Sin(Time.time * 2f), Mathf.Cos(Time.time * 2f));
+        rb.MovePosition(rb.position + searchDir * searchSpeed * Time.deltaTime);
+        animator?.SetAnimationParameters(searchDir.x, 0.3f);
     }
 
     void SetNewPatrolTarget()
     {
-        // Random point around home base
-        float randomAngle = Random.Range(0f, Mathf.PI * 2f);
-        float randomDistance = Random.Range(guardianPatrolRadius * 0.3f, guardianPatrolRadius);
-
+        patrolAngle += Random.Range(1f, 2f);
+        float radius = Random.Range(guardianPatrolRadius * 0.5f, guardianPatrolRadius);
         guardianPatrolTarget = guardianHomeBase + new Vector2(
-            Mathf.Cos(randomAngle) * randomDistance,
-            Mathf.Sin(randomAngle) * randomDistance
+            Mathf.Cos(patrolAngle) * radius,
+            Mathf.Sin(patrolAngle) * radius
         );
+    }
+
+    void StartPhase(AttackPhase newPhase)
+    {
+        currentPhase = newPhase;
+
+        switch (newPhase)
+        {
+            case AttackPhase.Pursuing:
+                phaseEndTime = Time.time + (behaviorType == AttackBehaviorType.Hunter ?
+                    hunterPursuitDuration : guardianInterceptDuration);
+                Debug.Log("Starting pursuit!");
+                break;
+            case AttackPhase.Circling:
+                phaseEndTime = Time.time + hunterCircleDuration;
+                circleAngle = Mathf.Atan2(rb.position.y - player.position.y,
+                                          rb.position.x - player.position.x);
+                Debug.Log("Circling player!");
+                break;
+            case AttackPhase.Recovering:
+                phaseEndTime = Time.time + hunterRecoveryDuration;
+                Debug.Log("Catching breath...");
+                break;
+            case AttackPhase.Searching:
+                phaseEndTime = Time.time + hunterSearchDuration;
+                Debug.Log("Searching for player...");
+                break;
+            case AttackPhase.Guarding:
+                phaseEndTime = Time.time + guardianPatrolDuration;
+                Debug.Log("Returning to guard duty");
+                break;
+        }
     }
 
     public void Exit()
     {
         Debug.Log($"Exiting Attacking State ({behaviorType})");
-        isPlayerDetected = false;
+        playerDetected = false;
     }
 
-    // Debug visualization
     public void OnDrawGizmosSelected()
     {
         if (behaviorType == AttackBehaviorType.Hunter)
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(rb.position, hunterDetectionRange);
-            Gizmos.color = Color.darkRed;
-            Gizmos.DrawWireSphere(rb.position, hunterLoseRange);
+            Gizmos.DrawWireSphere(rb.position, hunterDetectRange);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(rb.position, circleDistance);
         }
-        else if (behaviorType == AttackBehaviorType.Guardian)
+        else
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(guardianHomeBase, guardianPatrolRadius);
             Gizmos.color = Color.orange;
-            Gizmos.DrawWireSphere(rb.position, guardianDetectionRange);
-            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(rb.position, guardianDetectRange);
         }
     }
 }

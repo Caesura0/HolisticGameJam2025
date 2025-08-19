@@ -9,7 +9,7 @@ public class SlimeEffect : MonoBehaviour, IProjectileEffect
         if (disarmsWeapon && target.currentWeapon != null)
         {
             Debug.Log("Slime disarming weapon!");
-            target.currentWeapon.DisarmNPC();
+            target.currentWeapon.Drop();
         }
 
         // Force panic and apply slow

@@ -8,7 +8,7 @@ public class TableEffect : MonoBehaviour, IProjectileEffect
     {
         if (disarmsWeapon && target.currentWeapon != null)
         {
-            target.currentWeapon.DisarmNPC();
+            target.currentWeapon.Drop();
         }
 
         target.OnStunHit(stunDuration);
