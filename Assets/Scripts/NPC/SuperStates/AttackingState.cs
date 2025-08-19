@@ -35,7 +35,7 @@ public class AttackingState : INPCSuperState
     float hunterRecoveryDuration = 1.5f;
     float hunterSearchDuration = 3f;
     float hunterDetectRange = 10f;
-    float hunterLoseRange = 15f;
+    float hunterLoseRange = 12f;
 
     // Guardian configuration  
     float guardianSpeed = 4f;

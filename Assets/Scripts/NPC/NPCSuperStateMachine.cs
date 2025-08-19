@@ -50,7 +50,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     // Obstacle avoidance
     [Header("Obstacle Avoidance")]
     [SerializeField] public LayerMask obstacleLayerMask; // Set in Inspector to include desired blockers.
-    [SerializeField] private float obstacleCheckDistance = 1.5f;
+    [SerializeField] private float obstacleCheckDistance = 10f;
 
     Rigidbody2D rb;
     INPCSuperState currentState;

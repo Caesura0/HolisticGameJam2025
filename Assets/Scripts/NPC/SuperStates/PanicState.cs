@@ -14,7 +14,7 @@ public class PanicState : INPCSuperState
     Transform player;
     NPCAnimator animator;
 
-    float safeDistance = 12f;
+    float safeDistance = 8f;
 
     // Phase timing
     float fleeingDuration = 3f;
@@ -83,42 +83,99 @@ public class PanicState : INPCSuperState
 
     void HandleFleeing(float distToPlayer)
     {
-        // Calculate ideal flee direction
+        // Get ideal flee direction (away from player)
         Vector2 idealFleeDirection = (rb.position - (Vector2)player.position).normalized;
 
-        // Get obstacle-avoided direction
-        currentFleeDirection = machine.GetObstacleAvoidedDirection(idealFleeDirection);
+        // Check if we're cornered (multiple rays to detect walls behind us)
+        bool isCornered = CheckIfCornered(idealFleeDirection);
 
-        // Store for catch breath phase
-        lastFleeDirection = currentFleeDirection;
+        Vector2 actualFleeDirection;
 
-        // Use the machine's speed with multiplier
+        if (isCornered)
+        {
+            // We're trapped! Find escape route (might be toward player!)
+            actualFleeDirection = FindEscapeDirection(idealFleeDirection, distToPlayer);
+            Debug.Log("Cornered! Finding escape route...");
+        }
+        else
+        {
+            // Normal fleeing with obstacle avoidance
+            actualFleeDirection = machine.GetObstacleAvoidedDirection(idealFleeDirection);
+        }
+
+        lastFleeDirection = actualFleeDirection;
         float currentSpeed = machine.GetMovementSpeedPanicked();
 
         if (currentSpeed > 0)
         {
-            // Additional close-range check for walls
-            RaycastHit2D wallCheck = Physics2D.Raycast(rb.position, currentFleeDirection, 0.5f, machine.obstacleLayerMask);
-
-            if (wallCheck.collider != null)
-            {
-                // Wall sliding behavior when too close
-                Vector2 slideDirection = Vector2.Perpendicular(wallCheck.normal);
-
-                // Choose slide direction that moves away from player
-                if (Vector2.Dot(slideDirection, idealFleeDirection) < 0)
-                    slideDirection = -slideDirection;
-
-                currentFleeDirection = slideDirection;
-            }
-
-            rb.MovePosition(rb.position + currentFleeDirection * currentSpeed * Time.deltaTime);
+            rb.MovePosition(rb.position + actualFleeDirection * currentSpeed * Time.deltaTime);
         }
 
-        // Update animation
-        float animSpeed = currentSpeed > 0 ? (currentSpeed / machine.GetMovementSpeedPanicked()) : 0;
-        animator?.SetAnimationParameters(currentFleeDirection.x, animSpeed);
+        animator?.SetAnimationParameters(actualFleeDirection.x, currentSpeed > 0 ? 1f : 0);
         animator?.SetIsCatchingBreath(false);
+    }
+
+    bool CheckIfCornered(Vector2 fleeDirection)
+    {
+        // Check behind us in a cone
+        int blockedDirections = 0;
+        float[] angles = { 0f, 30f, -30f };
+
+        foreach (float angle in angles)
+        {
+            Vector2 checkDir = Quaternion.Euler(0, 0, angle) * fleeDirection;
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, checkDir, 1.5f, machine.obstacleLayerMask);
+
+            if (hit.collider != null)
+                blockedDirections++;
+        }
+
+        // If 2+ directions blocked, we're likely cornered
+        return blockedDirections >= 2;
+    }
+
+    Vector2 FindEscapeDirection(Vector2 idealFleeDir, float distToPlayer)
+    {
+        // Try all directions, even toward player if necessary
+        Vector2 bestDirection = idealFleeDir;
+        float bestScore = -1f;
+
+        // Check 8 directions around us
+        for (int i = 0; i < 8; i++)
+        {
+            float angle = i * 45f;
+            Vector2 testDir = Quaternion.Euler(0, 0, angle) * Vector2.right;
+
+            // Check if this direction is clear
+            RaycastHit2D hit = Physics2D.Raycast(rb.position, testDir, 2f, machine.obstacleLayerMask);
+
+            if (hit.collider == null)
+            {
+                // Score based on: 
+                // 1. How far we can go in this direction
+                // 2. Preference for away from player (but not absolute)
+                float clearDistance = 2f; // Max check distance
+                float dotToPlayer = Vector2.Dot(testDir, -idealFleeDir); // -1 = toward player, 1 = away
+
+                // Score calculation (escape is priority over direction)
+                float score = clearDistance + (dotToPlayer * 0.5f); // Escape weighted more than direction
+
+                // Special case: if very close to player, prefer lateral movement
+                if (distToPlayer < 2f)
+                {
+                    float lateralness = 1f - Mathf.Abs(dotToPlayer); // 1 = perpendicular, 0 = direct
+                    score += lateralness * 0.5f;
+                }
+
+                if (score > bestScore)
+                {
+                    bestScore = score;
+                    bestDirection = testDir;
+                }
+            }
+        }
+
+        return bestDirection;
     }
 
     public void RecalculatePath()
