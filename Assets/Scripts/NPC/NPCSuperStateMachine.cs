@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class NPCSuperStateMachine : MonoBehaviour
+public class NPCSuperStateMachine : MonoBehaviour, IWeapon
 {
     public enum SuperStateType { Calm, Panic, Attacking }
 
