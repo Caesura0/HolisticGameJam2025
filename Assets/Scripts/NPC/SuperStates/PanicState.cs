@@ -10,7 +10,7 @@ public class PanicState : INPCSuperState
     // Base configuration
     float panicDuration = 4f;
     float safeDistance = 12f;
-    float panicSpeed = 10f;
+    float panicSpeed = 9f;
 
     // State tracking
     float panicEndTime;
