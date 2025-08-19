@@ -2,30 +2,37 @@ using UnityEngine;
 
 public class PanicState : INPCSuperState
 {
+    enum PanicPhase
+    {
+        Fleeing,        // Running away at full speed
+        CatchingBreath, // Brief pause to recover
+        Recovering      // Getting ready to flee again
+    }
+
     NPCSuperStateMachine machine;
     Rigidbody2D rb;
     Transform player;
     NPCAnimator animator;
 
-    // Base configuration
-    float panicDuration = 4f;
     float safeDistance = 12f;
-    float panicSpeed = 9f;
+
+    // Phase timing
+    float fleeingDuration = 3f;
+    float catchBreathDuration = 1.5f;
+    float recoveryDuration = 0.5f;
 
     // State tracking
-    float panicEndTime;
+    PanicPhase currentPhase;
+    float phaseEndTime;
+    float totalPanicEndTime;
 
-    // Slime effect
-    bool isSlimed = false;
-    float slimeSlowMultiplier = 0.4f;
-    float slimeEndTime = 0f;
+    // Catch breath movement
+    Vector2 lastFleeDirection;
+    float catchBreathSpeed = 1.5f; // Slow stumble while catching breath
 
-    // Stun effect
-    bool isStunned = false;
-    float stunEndTime = 0f;
-
-    [SerializeField]
-    float SafeDistance = 10f;
+    // Obstacle avoidance
+    private int recalculateCounter = 0;
+    private Vector2 currentFleeDirection;
 
     public PanicState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, NPCAnimator animator)
     {
@@ -38,74 +45,205 @@ public class PanicState : INPCSuperState
     public void Enter()
     {
         Debug.Log("Entering Panic State");
-        panicEndTime = Time.time + panicDuration;
-        // Don't reset effects - they might have been applied before entering
+        totalPanicEndTime = Time.time + 10f; // Overall panic duration
+        StartPhase(PanicPhase.Fleeing);
     }
 
     public void Tick()
     {
         if (!player) return;
 
-        // CHECK IF PANIC SHOULD END
         float distToPlayer = Vector2.Distance(rb.position, player.position);
-        bool canEndPanic = Time.time >= panicEndTime && !isSlimed && !isStunned;
 
-        if (canEndPanic)
+        if (ShouldExitPanic(distToPlayer))
         {
-            // Check distance or just end panic
-            if (distToPlayer >= safeDistance)
-            {
-                Debug.Log("Panic ended - reached safe distance");
-                machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
-                return;
-            }
-            else if (Time.time >= panicEndTime + 2f) // Grace period
-            {
-                Debug.Log("Panic ended - timeout");
-                machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
-                return;
-            }
+            Debug.Log("Panic ended - safe distance or timeout");
+            machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
+            return;
         }
 
-        // FLEE BEHAVIOR
-        Vector2 fleeDirection = (rb.position - (Vector2)player.position).normalized;
-        float currentSpeed = isSlimed ? panicSpeed * slimeSlowMultiplier : panicSpeed;
+        switch (currentPhase)
+        {
+            case PanicPhase.Fleeing:
+                HandleFleeing(distToPlayer);
+                break;
+            case PanicPhase.CatchingBreath:
+                HandleCatchingBreath(distToPlayer);
+                break;
+            case PanicPhase.Recovering:
+                HandleRecovering(distToPlayer);
+                break;
+        }
 
-        rb.MovePosition(rb.position + fleeDirection * currentSpeed * Time.deltaTime);
+        if (Time.time >= phaseEndTime)
+        {
+            TransitionToNextPhase(distToPlayer);
+        }
+    }
+
+    void HandleFleeing(float distToPlayer)
+    {
+        // Calculate ideal flee direction
+        Vector2 idealFleeDirection = (rb.position - (Vector2)player.position).normalized;
+
+        // Get obstacle-avoided direction
+        currentFleeDirection = machine.GetObstacleAvoidedDirection(idealFleeDirection);
+
+        // Store for catch breath phase
+        lastFleeDirection = currentFleeDirection;
+
+        // Use the machine's speed with multiplier
+        float currentSpeed = machine.GetMovementSpeedPanicked();
+
+        if (currentSpeed > 0)
+        {
+            // Additional close-range check for walls
+            RaycastHit2D wallCheck = Physics2D.Raycast(rb.position, currentFleeDirection, 0.5f, machine.obstacleLayerMask);
+
+            if (wallCheck.collider != null)
+            {
+                // Wall sliding behavior when too close
+                Vector2 slideDirection = Vector2.Perpendicular(wallCheck.normal);
+
+                // Choose slide direction that moves away from player
+                if (Vector2.Dot(slideDirection, idealFleeDirection) < 0)
+                    slideDirection = -slideDirection;
+
+                currentFleeDirection = slideDirection;
+            }
+
+            rb.MovePosition(rb.position + currentFleeDirection * currentSpeed * Time.deltaTime);
+        }
 
         // Update animation
-        animator?.SetAnimationParameters(fleeDirection.x, isSlimed ? 0.5f : 1f);
+        float animSpeed = currentSpeed > 0 ? (currentSpeed / machine.GetMovementSpeedPanicked()) : 0;
+        animator?.SetAnimationParameters(currentFleeDirection.x, animSpeed);
+        animator?.SetIsCatchingBreath(false);
+    }
+
+    public void RecalculatePath()
+    {
+        // Called when stuck is detected
+        recalculateCounter++;
+
+        // Force a new direction calculation
+        if (currentPhase == PanicPhase.Fleeing)
+        {
+            // Add some randomness to break out of stuck patterns
+            Vector2 randomOffset = Random.insideUnitCircle * 0.3f;
+            lastFleeDirection = (lastFleeDirection + randomOffset).normalized;
+        }
+    }
+
+    void HandleCatchingBreath(float distToPlayer)
+    {
+        // Optional: If player gets too close during catch breath, immediately flee again
+        // Check if we're not stunned (speedMultiplier > 0)
+        if (distToPlayer < 3f && machine.GetMovementSpeedPanicked() > 0.1f)
+        {
+            Debug.Log("Player too close! Interrupting catch breath!");
+            StartPhase(PanicPhase.Fleeing);
+            return;
+        }
+
+        // Apply catch breath speed with the machine's multiplier
+        float currentSpeed = catchBreathSpeed * machine.speedMultiplier;
+
+        // Move slowly or not at all
+        if (currentSpeed > 0)
+        {
+            rb.MovePosition(rb.position + lastFleeDirection * currentSpeed * Time.deltaTime);
+        }
+
+        // Update animation - catching breath
+        animator?.SetAnimationParameters(lastFleeDirection.x, 0.2f);
+        animator?.SetIsCatchingBreath(true);
+    }
+
+    void HandleRecovering(float distToPlayer)
+    {
+        // Brief transition phase - NPC is getting ready to run again
+        Vector2 lookDirection = ((Vector2)player.position - rb.position).normalized;
+
+        // Stand still but face away from player
+        animator?.SetAnimationParameters(-lookDirection.x, 0.1f);
+        animator?.SetIsCatchingBreath(false);
+    }
+
+    void TransitionToNextPhase(float distToPlayer)
+    {
+        // If stunned, stay in catch breath phase
+        if (machine.speedMultiplier == 0)
+        {
+            StartPhase(PanicPhase.CatchingBreath);
+            return;
+        }
+
+        switch (currentPhase)
+        {
+            case PanicPhase.Fleeing:
+                // After fleeing, catch breath (unless player is very close)
+                if (distToPlayer > 4f)
+                {
+                    StartPhase(PanicPhase.CatchingBreath);
+                }
+                else
+                {
+                    // Keep running if player is close
+                    StartPhase(PanicPhase.Fleeing);
+                }
+                break;
+
+            case PanicPhase.CatchingBreath:
+                // After catching breath, brief recovery then flee again
+                StartPhase(PanicPhase.Recovering);
+                break;
+
+            case PanicPhase.Recovering:
+                // After recovery, start fleeing again
+                StartPhase(PanicPhase.Fleeing);
+                break;
+        }
+    }
+
+    void StartPhase(PanicPhase newPhase)
+    {
+        currentPhase = newPhase;
+
+        switch (newPhase)
+        {
+            case PanicPhase.Fleeing:
+                phaseEndTime = Time.time + fleeingDuration;
+                Debug.Log("Fleeing!");
+                break;
+            case PanicPhase.CatchingBreath:
+                phaseEndTime = Time.time + catchBreathDuration;
+                Debug.Log("Catching breath...");
+                break;
+            case PanicPhase.Recovering:
+                phaseEndTime = Time.time + recoveryDuration;
+                Debug.Log("Getting ready to run again...");
+                break;
+        }
+    }
+
+    bool ShouldExitPanic(float distToPlayer)
+    {
+        // Don't exit if still debuffed (the machine is handling this)
+        if (machine.debuffed) return false;
+
+        // Exit if we've reached safe distance
+        if (distToPlayer >= safeDistance) return true;
+
+        // Exit if total panic time exceeded (with grace period)
+        if (Time.time >= totalPanicEndTime) return true;
+
+        return false;
     }
 
     public void Exit()
     {
         Debug.Log("Exiting Panic State");
-        // Clear effects on exit
-        isSlimed = false;
-        isStunned = false;
-    }
-
-    // Effect application methods
-    public void ApplySlime(float duration)
-    {
-        isSlimed = true;
-        slimeEndTime = Time.time + duration;
-        ExtendPanic(duration); // Also extend panic duration
-        Debug.Log($"Slimed for {duration} seconds!");
-    }
-
-    public void ApplyStun(float duration)
-    {
-        isStunned = true;
-        stunEndTime = Time.time + duration;
-        ExtendPanic(duration); // Also extend panic duration
-        Debug.Log($"Stunned for {duration} seconds!");
-    }
-
-    public void ExtendPanic(float additionalTime)
-    {
-        // Extend panic time but don't reduce it
-        float newEndTime = Time.time + additionalTime;
-        panicEndTime = Mathf.Max(panicEndTime, newEndTime);
+        animator?.SetIsCatchingBreath(false);
     }
 }

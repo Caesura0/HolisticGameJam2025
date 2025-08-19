@@ -51,6 +51,9 @@ public class AttackingState : INPCSuperState
     float circleDistance = 3f;
     float circleAngle = 0f;
 
+    // Path recalculation
+    private Vector2 currentMoveDirection;
+
     public AttackingState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player,
         NPCAnimator animator, AttackBehaviorType behaviorType)
     {
@@ -137,10 +140,20 @@ public class AttackingState : INPCSuperState
                 }
                 else
                 {
-                    // Chase the player
-                    Vector2 chaseDir = ((Vector2)player.position - rb.position).normalized;
-                    rb.MovePosition(rb.position + chaseDir * hunterSpeed * Time.deltaTime);
-                    animator?.SetAnimationParameters(chaseDir.x, 1f);
+                    // Chase with obstacle avoidance
+                    Vector2 idealChaseDir = ((Vector2)player.position - rb.position).normalized;
+                    currentMoveDirection = machine.GetObstacleAvoidedDirection(idealChaseDir, 2f);
+
+                    // Check for dynamic obstacle prediction (where player might be)
+                    Vector2 predictedPlayerPos = (Vector2)player.position + (player.GetComponent<Rigidbody2D>()?.linearVelocity ?? Vector2.zero) * 0.5f;
+                    Vector2 predictiveDir = (predictedPlayerPos - rb.position).normalized;
+
+                    // Blend predictive and current
+                    currentMoveDirection = Vector2.Lerp(currentMoveDirection,
+                        machine.GetObstacleAvoidedDirection(predictiveDir), 0.3f).normalized;
+
+                    rb.MovePosition(rb.position + currentMoveDirection * hunterSpeed * Time.deltaTime);
+                    animator?.SetAnimationParameters(currentMoveDirection.x, 1f);
                 }
                 break;
 
@@ -151,7 +164,7 @@ public class AttackingState : INPCSuperState
                 }
                 else
                 {
-                    CircleStrafe(distToPlayer, hunterSpeed);
+                    CircleStrafeWithAvoidance(distToPlayer, hunterSpeed);
                 }
                 break;
 
@@ -238,20 +251,37 @@ public class AttackingState : INPCSuperState
         }
     }
 
-    void CircleStrafe(float currentDistance, float speed)
+    void CircleStrafeWithAvoidance(float currentDistance, float speed)
     {
-        // Circle around player at current distance
-        circleAngle += Time.deltaTime * 1.2f; // Rotation speed
+        circleAngle += Time.deltaTime * 1.2f;
 
         Vector2 offset = new Vector2(Mathf.Cos(circleAngle), Mathf.Sin(circleAngle)) * circleDistance;
         Vector2 targetPos = (Vector2)player.position + offset;
 
-        Vector2 moveDir = (targetPos - rb.position).normalized;
-        rb.MovePosition(rb.position + moveDir * speed * Time.deltaTime);
+        Vector2 idealMoveDir = (targetPos - rb.position).normalized;
+        Vector2 actualMoveDir = machine.GetObstacleAvoidedDirection(idealMoveDir, 1f);
 
-        // Face player while circling
+        // If we can't circle, adjust the angle
+        if (Vector2.Dot(actualMoveDir, idealMoveDir) < 0.5f)
+        {
+            // Reverse circle direction if blocked
+            circleAngle -= Time.deltaTime * 2.4f;
+        }
+
+        rb.MovePosition(rb.position + actualMoveDir * speed * Time.deltaTime);
+
         float faceDir = player.position.x > rb.position.x ? 1 : -1;
         animator?.SetAnimationParameters(faceDir, 0.7f);
+    }
+
+    public void RecalculatePath()
+    {
+        // Called when stuck - add some variation
+        if (currentPhase == AttackPhase.Circling)
+        {
+            // Reverse circling direction
+            circleAngle += Mathf.PI;
+        }
     }
 
     void PatrolAroundBase()
@@ -308,7 +338,7 @@ public class AttackingState : INPCSuperState
                 break;
             case AttackPhase.Recovering:
                 phaseEndTime = Time.time + hunterRecoveryDuration;
-                Debug.Log("Catching breath...");
+                Debug.Log("Cooldown Recovery...");
                 break;
             case AttackPhase.Searching:
                 phaseEndTime = Time.time + hunterSearchDuration;
@@ -325,23 +355,5 @@ public class AttackingState : INPCSuperState
     {
         Debug.Log($"Exiting Attacking State ({behaviorType})");
         playerDetected = false;
-    }
-
-    public void OnDrawGizmosSelected()
-    {
-        if (behaviorType == AttackBehaviorType.Hunter)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(rb.position, hunterDetectRange);
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(rb.position, circleDistance);
-        }
-        else
-        {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(guardianHomeBase, guardianPatrolRadius);
-            Gizmos.color = Color.orange;
-            Gizmos.DrawWireSphere(rb.position, guardianDetectRange);
-        }
     }
 }

@@ -33,6 +33,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
+      propertyPath: obstacleLayerMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: onStunned.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -94,7 +98,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4991977505083280278, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: m_Name
-      value: NPCHunter Variant
+      value: NPCHunter
       objectReference: {fileID: 0}
     - target: {fileID: 8996746559158353417, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: m_LocalPosition.x
