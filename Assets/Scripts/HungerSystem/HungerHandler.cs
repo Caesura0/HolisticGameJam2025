@@ -87,8 +87,8 @@ public class HungerHandler : MonoBehaviour
         if (IsDead())
             return;
 
-        foodValue = Mathf.Clamp(foodValue, 0, displayIcons.Length);
-        currentHunger += foodValue;
+        foodValue = Math.Abs(foodValue);
+        currentHunger = Mathf.Clamp(currentHunger + foodValue, 0, displayIcons.Length);
         UpdateDisplay();
         ResetTimer();
     }

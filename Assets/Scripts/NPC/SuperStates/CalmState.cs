@@ -16,7 +16,6 @@ public class CalmState : INPCSuperState
 
     CalmSubState currentSubState;
 
-    float speed = 4;
 
 
     float secondsToWaitInIdle = 0;
@@ -91,16 +90,14 @@ public class CalmState : INPCSuperState
         float randomX = Random.Range(-movementRadius, movementRadius);
         float randomY = Random.Range(-movementRadius, movementRadius);
         locationToMoveTo = new Vector2(rb.position.x + randomX, rb.position.y + randomY);
-        
     }
-
 
     private void WalkAround()
     {
         //find direction
         float directionX = locationToMoveTo.x - rb.position.x;
         Animator.SetAnimationParameters(directionX, 1); // Set walk animation parameters
-        rb.MovePosition(Vector2.MoveTowards(rb.position, locationToMoveTo, speed * Time.deltaTime));
+        rb.MovePosition(Vector2.MoveTowards(rb.position, locationToMoveTo, machine.GetMovementSpeed() * Time.deltaTime));
         if(Vector2.Distance(rb.position, locationToMoveTo) < 0.1f)
         {
             SwitchState(CalmSubState.Idle);
@@ -117,8 +114,4 @@ public class CalmState : INPCSuperState
             SwitchState(CalmSubState.WalkAround);
         }
     }
-
-
-
-
 }
