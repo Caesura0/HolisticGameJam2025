@@ -156,7 +156,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.020452797, y: -0.21222162}
+  m_Offset: {x: 0.003403902, y: -0.10803318}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -166,7 +166,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.7336818, y: 0.25842476}
+  m_Size: {x: 0.80566645, y: 0.46680164}
   m_EdgeRadius: 0
 --- !u!50 &1414793418109804569
 Rigidbody2D:
@@ -176,7 +176,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7205306052997855084}
-  m_BodyType: 0
+  m_BodyType: 2
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -207,3 +207,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6fc1d0921aaa743942ace42888e6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <DestroyOnHitNPC>k__BackingField: 0
+  <effectType>k__BackingField: 2
+  <effectDuration>k__BackingField: 5

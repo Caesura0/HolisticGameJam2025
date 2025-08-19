@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,12 +11,21 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     [SerializeField] SuperStateType startingState = SuperStateType.Calm;
     [SerializeField] Transform player;
     [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter;
+    [SerializeField] NotificationHandler notificationHandler;
+    [SerializeField] private float movementSpeed = 4f;
+    [SerializeField] private float panickedMovementSpeed = 10f;
 
+    private float speedMultiplier = 1f;
+    public float GetMovementSpeed() => movementSpeed * speedMultiplier;
+    public float GetMovementSpeedPanicked() => panickedMovementSpeed * speedMultiplier;
+
+    private float debuffTimer;
+    private bool debuffed;
+    // New
     [Header("Hit Events")]
-    public UnityEvent onSlimeHit = new UnityEvent();
-    public UnityEvent onStunned = new UnityEvent();
-    public UnityEvent OnPlayerCaught = new UnityEvent();
-    public UnityEvent OnNPCCounter = new UnityEvent();
+    public UnityEvent onSlimeHit;
+    public UnityEvent onStunned;
+    public UnityEvent OnPlayerCaught;
 
     [Header("Weapon Configuration")]
     [SerializeField] bool startWithWeapon = true;
@@ -45,8 +55,8 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
 
         if (!player)
         {
-            var playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj) this.player = playerObj.transform;
+            var player = FindFirstObjectByType<PlayerController>().transform;
+            if (player) this.player = player.transform;
         }
     }
 
@@ -92,6 +102,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     void Update()
     {
         currentState?.Tick();
+        HandleDebuffState();
     }
 
     public void DropWeapon()
@@ -135,49 +146,106 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         currentState.Enter();
     }
 
-    public void OnSlimeHit(float duration = 2f)
+    // Hit Handling
+
+    public void ApplySlow(float duration = 2f)
     {
+        Debug.Log("PlayerHit by thrown item");
+        // Fire any desired events (vfx, sfx, etc)
         onSlimeHit?.Invoke();
         onSlimeHitWithDuration?.Invoke(duration);
 
-        if (currentWeapon != null)
-        {
-            currentWeapon.Drop();
-            currentWeapon = null;
-            Debug.Log("Weapon knocked away by slime!");
-        }
+        //exit since already in panic mode
+        if (currentState == panicState)
+            return;
 
+        //Switch to panic state from whatever other state
         SwitchState(SuperStateType.Panic);
-        panicState?.ApplySlime(duration);
+
+        //Drops weapon if in attack state
+        if (currentState == attackingState)
+        {
+            Debug.Log("Dropping Weapon");
+            //Drop Weapon Logic
+        }
     }
 
-    public void OnStunHit(float duration = 1.5f)
+    public bool TryCapture()
     {
-        onStunned?.Invoke();
-        onStunnedWithDuration?.Invoke(duration);
-
-
-        if (currentWeapon != null)
+        if (IsWeaponEquipped())
         {
-            currentWeapon.Drop();
-            currentWeapon = null;
-            Debug.Log("Weapon knocked away by stun!");
+            notificationHandler.PlayNotification(NotificationType.KO, false);
+            notificationHandler.PlayNotification(NotificationType.Attack);
+            return false;
         }
-
-        SwitchState(SuperStateType.Panic);
-        panicState?.ApplyStun(duration);
+        else
+        {
+            Debug.Log("Oh no; I'm dead");
+            OnPlayerCaught?.Invoke();
+            return true;
+        }
     }
+
+    private bool IsWeaponEquipped() => currentState == attackingState;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check for ANY projectile effect
-        IProjectileEffect effect = other.GetComponent<IProjectileEffect>();
-        if (effect != null)
-        {
-            Debug.Log($"Hit by projectile: {effect.GetEffectDescription()}");
-            effect.ApplyEffect(this);
-            Destroy(other.gameObject);
+        if (!other.TryGetComponent<PickableItem>(out PickableItem item))
             return;
+
+        if (item.BeingHeld)
+            return;
+
+        if (item.effectType == StatusEffectType.None)
+            return;
+
+        switch (item.effectType)
+        {
+            case StatusEffectType.None:
+                break;
+            case StatusEffectType.Stunned:
+                {
+                    OverwriteStatusEffect(item.effectDuration);
+                    speedMultiplier = 0;
+                    notificationHandler.PlayNotification(NotificationType.KO);
+                    Debug.Log($"{gameObject.name} stunned");
+                }
+                break;
+            case StatusEffectType.Slowed:
+                {
+                    OverwriteStatusEffect(item.effectDuration);
+                    speedMultiplier = .4f;
+                    notificationHandler.PlayNotification(NotificationType.Slow);
+                    Debug.Log($"{gameObject.name} slowed");
+                }
+                break;
         }
+
+        if (item.DestroyOnHitNPC)
+            Destroy(other.gameObject);
+    }
+
+    private void OverwriteStatusEffect(float duration)
+    {
+        debuffed = true;
+        debuffTimer = duration;
+    }
+
+    private void HandleDebuffState()
+    {
+        if (!debuffed)
+            return;
+
+        if (debuffTimer > 0)
+            debuffTimer -= Time.deltaTime;
+        else
+            RemoveDebuff();
+    }
+
+    private void RemoveDebuff()
+    {
+        speedMultiplier = 1.0f;
+        debuffed = false;
+        notificationHandler.ClearNotification();
     }
 }

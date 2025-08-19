@@ -24,6 +24,9 @@ public class PanicState : INPCSuperState
     bool isStunned = false;
     float stunEndTime = 0f;
 
+    [SerializeField]
+    float SafeDistance = 10f;
+
     public PanicState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, NPCAnimator animator)
     {
         this.machine = machine;
@@ -42,32 +45,6 @@ public class PanicState : INPCSuperState
     public void Tick()
     {
         if (!player) return;
-
-        // STUN CHECK - Complete immobilization
-        if (isStunned)
-        {
-            stunEndTime -= Time.deltaTime;
-            if (stunEndTime <= Time.time)
-            {
-                isStunned = false;
-                Debug.Log("Stun wore off!");
-            }
-
-            // No movement while stunned
-            rb.linearVelocity = Vector2.zero;
-            animator?.SetAnimationParameters(0, 0);
-            return; // Skip everything else
-        }
-
-        // SLIME CHECK - Slow effect
-        if (isSlimed)
-        {
-            if (Time.time >= slimeEndTime)
-            {
-                isSlimed = false;
-                Debug.Log("Slime wore off!");
-            }
-        }
 
         // CHECK IF PANIC SHOULD END
         float distToPlayer = Vector2.Distance(rb.position, player.position);
