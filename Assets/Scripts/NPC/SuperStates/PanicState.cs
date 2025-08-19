@@ -7,17 +7,22 @@ public class PanicState : INPCSuperState
     Transform player;
     NPCAnimator animator;
 
-    [SerializeField]
-    float speed = 10f; 
-    [SerializeField]
-    float SafeDistance = 10f;
-    
-    float currentSpeed;
+    // Base configuration
+    float panicDuration = 4f;
+    float safeDistance = 12f;
+    float panicSpeed = 9f;
+
+    // State tracking
+    float panicEndTime;
 
     // Slime effect
     bool isSlimed = false;
     float slimeSlowMultiplier = 0.4f;
-    float slimeTimer = 0f;
+    float slimeEndTime = 0f;
+
+    // Stun effect
+    bool isStunned = false;
+    float stunEndTime = 0f;
 
     public PanicState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, NPCAnimator animator)
     {
@@ -30,57 +35,100 @@ public class PanicState : INPCSuperState
     public void Enter()
     {
         Debug.Log("Entering Panic State");
-        currentSpeed = speed;
+        panicEndTime = Time.time + panicDuration;
+        // Don't reset effects - they might have been applied before entering
     }
 
     public void Tick()
     {
         if (!player) return;
-        // Update slime timer
+
+        // STUN CHECK - Complete immobilization
+        if (isStunned)
+        {
+            stunEndTime -= Time.deltaTime;
+            if (stunEndTime <= Time.time)
+            {
+                isStunned = false;
+                Debug.Log("Stun wore off!");
+            }
+
+            // No movement while stunned
+            rb.linearVelocity = Vector2.zero;
+            animator?.SetAnimationParameters(0, 0);
+            return; // Skip everything else
+        }
+
+        // SLIME CHECK - Slow effect
         if (isSlimed)
         {
-            Debug.Log("slimed");
-            slimeTimer -= Time.deltaTime;
-            if (slimeTimer <= 0)
+            if (Time.time >= slimeEndTime)
             {
                 isSlimed = false;
                 Debug.Log("Slime wore off!");
             }
         }
 
-        // Calculate flee target position (opposite direction from player)
-        Vector2 directionAwayFromPlayer = (rb.position - (Vector2)player.position).normalized;
-        Vector2 targetPosition = rb.position + directionAwayFromPlayer * SafeDistance;
+        // CHECK IF PANIC SHOULD END
+        float distToPlayer = Vector2.Distance(rb.position, player.position);
+        bool canEndPanic = Time.time >= panicEndTime && !isSlimed && !isStunned;
 
-        // Apply speed (with slime slow if applicable)
-        float actualSpeed = isSlimed ? currentSpeed * slimeSlowMultiplier : currentSpeed;
-
-        rb.MovePosition(Vector2.MoveTowards(rb.position, targetPosition, actualSpeed * Time.deltaTime));
-
-        if (animator != null)
+        if (canEndPanic)
         {
-            float directionX = targetPosition.x - rb.position.x;
-            animator.SetAnimationParameters(directionX, 1);
+            // Check distance or just end panic
+            if (distToPlayer >= safeDistance)
+            {
+                Debug.Log("Panic ended - reached safe distance");
+                machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
+                return;
+            }
+            else if (Time.time >= panicEndTime + 2f) // Grace period
+            {
+                Debug.Log("Panic ended - timeout");
+                machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
+                return;
+            }
         }
 
-        // Check if we've escaped far enough
-        float distanceToPlayer = Vector2.Distance(rb.position, player.position);
-        if (distanceToPlayer > SafeDistance && !isSlimed)
-        {
-            machine.SwitchState(NPCSuperStateMachine.SuperStateType.Calm);
-        }
+        // FLEE BEHAVIOR
+        Vector2 fleeDirection = (rb.position - (Vector2)player.position).normalized;
+        float currentSpeed = isSlimed ? panicSpeed * slimeSlowMultiplier : panicSpeed;
+
+        rb.MovePosition(rb.position + fleeDirection * currentSpeed * Time.deltaTime);
+
+        // Update animation
+        animator?.SetAnimationParameters(fleeDirection.x, isSlimed ? 0.5f : 1f);
     }
 
     public void Exit()
     {
         Debug.Log("Exiting Panic State");
+        // Clear effects on exit
         isSlimed = false;
+        isStunned = false;
     }
 
+    // Effect application methods
     public void ApplySlime(float duration)
     {
         isSlimed = true;
-        slimeTimer = duration;
+        slimeEndTime = Time.time + duration;
+        ExtendPanic(duration); // Also extend panic duration
         Debug.Log($"Slimed for {duration} seconds!");
+    }
+
+    public void ApplyStun(float duration)
+    {
+        isStunned = true;
+        stunEndTime = Time.time + duration;
+        ExtendPanic(duration); // Also extend panic duration
+        Debug.Log($"Stunned for {duration} seconds!");
+    }
+
+    public void ExtendPanic(float additionalTime)
+    {
+        // Extend panic time but don't reduce it
+        float newEndTime = Time.time + additionalTime;
+        panicEndTime = Mathf.Max(panicEndTime, newEndTime);
     }
 }

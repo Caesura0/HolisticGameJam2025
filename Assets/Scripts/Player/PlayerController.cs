@@ -129,6 +129,19 @@ public class PlayerController : MonoBehaviour
             pickedItem = chosenItem;
             //TriggerPickUp();
             staminaHandler.SpendStamina();
+
+            // Check if npc has weapon to prevent capture (After stamina cause we still want cost associated with action)
+            if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine comp))
+            {
+                if (!comp.IsCapturable())
+                {
+                    // reset pickedItem
+                    comp.OnNPCCounter.Invoke();
+                    pickedItem = null;
+                    return;
+                }
+            }
+            // Otherwise Pickup
             chosenItem.PickUp(itemHolder);
             notificationHandler.PlayNotification(NotificationType.Alert);
             //Debug.Log($"PickedUp {pickedItem.name}");

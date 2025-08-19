@@ -2,23 +2,33 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class NPCSuperStateMachine : MonoBehaviour
+public class NPCSuperStateMachine : MonoBehaviour, IWeapon
 {
     public enum SuperStateType { Calm, Panic, Attacking }
 
+    [Header("State Configuration")]
     [SerializeField] SuperStateType startingState = SuperStateType.Calm;
     [SerializeField] Transform player;
+    [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter;
 
-    // New
     [Header("Hit Events")]
-    public UnityEvent onSlimeHit;
-    public UnityEvent onStunned;
-    public UnityEvent OnPlayerCaught;
+    public UnityEvent onSlimeHit = new UnityEvent();
+    public UnityEvent onStunned = new UnityEvent();
+    public UnityEvent OnPlayerCaught = new UnityEvent();
+    public UnityEvent OnNPCCounter = new UnityEvent();
+
+    [Header("Weapon Configuration")]
+    [SerializeField] bool startWithWeapon = true;
+    [SerializeField] GameObject weaponPrefab;
+    // Weapon reference
+    public NPCWeapon currentWeapon { get; private set; }
 
     // Custom UnityEvents
-    public class SlimeHitEvent : UnityEvent<float> { }
+    public class SlimeHitEvent : UnityEvent<float> {}
     public SlimeHitEvent onSlimeHitWithDuration;
 
+    public class StunHitEvent : UnityEvent<float> {}
+    public StunHitEvent onStunnedWithDuration;
 
     Rigidbody2D rb;
     INPCSuperState currentState;
@@ -32,23 +42,51 @@ public class NPCSuperStateMachine : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
         if (!player)
         {
-            var player = GameObject.FindGameObjectWithTag("Player");
-            if (player) this.player = player.transform;
+            var playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj) this.player = playerObj.transform;
         }
-
     }
 
     void Start()
     {
         animator = GetComponent<NPCAnimator>();
-        // Instantiate state scripts, passing this machine and needed refs
+
         calmState = new CalmState(this, rb, player, animator);
         panicState = new PanicState(this, rb, player, animator);
-        attackingState = new AttackingState(this, rb, player, animator);
-        // Set initial state
+        attackingState = new AttackingState(this, rb, player, animator, attackBehaviorType);
+
+        // Spawn with weapon if configured
+        if (startWithWeapon)
+        {
+            SpawnAndEquipWeapon();
+        }
+
         SwitchState(startingState);
+    }
+
+    void SpawnAndEquipWeapon()
+    {
+        if (!weaponPrefab)
+        {
+            Debug.LogWarning($"{gameObject.name}: No weapon prefab assigned!");
+            SwitchState(startingState);
+            return;
+        }
+
+        GameObject weaponObj = Instantiate(weaponPrefab, transform.position, Quaternion.identity);
+        NPCWeapon weapon = weaponObj.GetComponent<NPCWeapon>();
+
+        if (weapon)
+        {
+            currentWeapon = weapon;
+            weapon.Pickup(transform); // Will position above head
+
+            Debug.Log($"{gameObject.name} is armed!");
+            SwitchState(SuperStateType.Attacking);
+        }
     }
 
     void Update()
@@ -56,70 +94,90 @@ public class NPCSuperStateMachine : MonoBehaviour
         currentState?.Tick();
     }
 
+    public void DropWeapon()
+    {
+        if (!currentWeapon) return;
+        currentWeapon.Drop();
+        currentWeapon = null;
+        Debug.Log($"{gameObject.name} dropped weapon!");
+    }
+ 
+    public void OnWeaponLost()
+    {
+        Debug.Log("Weapon was lost! NPC becomes capturable again.");
+        if (currentWeapon != null)
+        {
+            currentWeapon = null;
+        }
+
+        Debug.Log("Weapon cleared, NPC is now capturable.");
+    }
+
+    public bool IsCapturable() => currentWeapon == null;
+
     public void SwitchState(SuperStateType newState)
     {
         currentState?.Exit();
 
         switch (newState)
         {
-            case SuperStateType.Calm: currentState = calmState; break;
-            case SuperStateType.Panic: currentState = panicState; break;
-            case SuperStateType.Attacking: currentState = attackingState; break;//this could also be called "hunting" state
+            case SuperStateType.Calm:
+                currentState = calmState;
+                break;
+            case SuperStateType.Panic:
+                currentState = panicState;
+                break;
+            case SuperStateType.Attacking:
+                currentState = attackingState;
+                break;
         }
 
         currentState.Enter();
     }
 
-    // Hit Handling
-
     public void OnSlimeHit(float duration = 2f)
     {
-        // Fire any desired events (vfx, sfx, etc)
         onSlimeHit?.Invoke();
         onSlimeHitWithDuration?.Invoke(duration);
 
-        // handle states
-        if (currentState == attackingState)
+        if (currentWeapon != null)
         {
-            Debug.Log("Dropping weapon and panicking!");
-            SwitchState(SuperStateType.Panic);
-            panicState.ApplySlime(duration);
+            currentWeapon.Drop();
+            currentWeapon = null;
+            Debug.Log("Weapon knocked away by slime!");
         }
-        else if (currentState == panicState)
-        {
-            // already panicking; just apply slime.
-            panicState.ApplySlime(duration);
-        } else if (currentState == calmState)
-        {
-            // Surprise! Time to panic.
-            SwitchState(SuperStateType.Panic);
-            panicState.ApplySlime(duration);
-        }
+
+        SwitchState(SuperStateType.Panic);
+        panicState?.ApplySlime(duration);
     }
 
-    public void OnCaughtByPlayer()
+    public void OnStunHit(float duration = 1.5f)
     {
-        OnPlayerCaught?.Invoke();
-        // Handle being eaten!
-        Debug.Log("Oh no; I'm dead");
+        onStunned?.Invoke();
+        onStunnedWithDuration?.Invoke(duration);
+
+
+        if (currentWeapon != null)
+        {
+            currentWeapon.Drop();
+            currentWeapon = null;
+            Debug.Log("Weapon knocked away by stun!");
+        }
+
+        SwitchState(SuperStateType.Panic);
+        panicState?.ApplyStun(duration);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Slime"))
+        // Check for ANY projectile effect
+        IProjectileEffect effect = other.GetComponent<IProjectileEffect>();
+        if (effect != null)
         {
-            Debug.Log("In collider w/ Slime tag");
-            // Get slow from projectile or just hardcode that mf otherwise.
-            var projectile = other.GetComponent<SlimeProjectile>();
-            float duration = projectile ? projectile.slowDuration : 2f;
-
-            OnSlimeHit(duration);
+            Debug.Log($"Hit by projectile: {effect.GetEffectDescription()}");
+            effect.ApplyEffect(this);
             Destroy(other.gameObject);
-        }
-        else if (other.CompareTag("Player")) {
-            OnCaughtByPlayer();
+            return;
         }
     }
-
-
 }

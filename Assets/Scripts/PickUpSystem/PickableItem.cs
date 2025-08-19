@@ -21,7 +21,6 @@ public class PickableItem: MonoBehaviour
     {
         if(beingHeld)
             transform.position = holder.position;
-        CheckIfStopped();
     }
     
     public void PickUp(Transform assignedHolder)
@@ -38,6 +37,7 @@ public class PickableItem: MonoBehaviour
         Release();
         rb.AddForce (velocity, ForceMode2D.Impulse);
         //activate trigger collider
+        collision.enabled = true;
     }
 
     public void Release()
@@ -45,30 +45,5 @@ public class PickableItem: MonoBehaviour
         rb.bodyType = RigidbodyType2D.Dynamic;
         holder = null;
         beingHeld = false;
-    }
-
-
-
-    void CheckIfStopped()
-    {
-        // Only check if Rigidbody2D is dynamic
-        if (rb.bodyType == RigidbodyType2D.Dynamic)
-        {
-            if (rb.linearVelocity.magnitude > stopThreshold)
-            {
-                wasMoving = true;
-            }
-            else if (wasMoving)
-            {
-                wasMoving = false;
-                OnStopMoving();
-            }
-        }
-    }
-
-    void OnStopMoving()
-    {
-        Debug.Log("Item has stopped moving.");
-        collision.enabled = true; 
     }
 }
