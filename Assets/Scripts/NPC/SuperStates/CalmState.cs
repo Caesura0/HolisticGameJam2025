@@ -109,11 +109,20 @@ public class CalmState : INPCSuperState
 
     private void WalkAround()
     {
-        // Find direction
-        float directionX = locationToMoveTo.x - rb.position.x;
-        Animator.SetAnimationParameters(directionX, 1); // Set walk animation parameters
-        rb.MovePosition(Vector2.MoveTowards(rb.position, locationToMoveTo, machine.GetMovementSpeed() * Time.deltaTime));
-        if(Vector2.Distance(rb.position, locationToMoveTo) < 0.1f)
+        // Get ideal direction
+        Vector2 directionToTarget = (locationToMoveTo - rb.position).normalized;
+
+        // Use the helper we already have!
+        Vector2 actualDirection = machine.GetObstacleAvoidedDirection(directionToTarget, 1f);
+
+        // Move with the avoided direction
+        float directionX = actualDirection.x;
+        Animator.SetAnimationParameters(directionX, 1);
+        rb.MovePosition(rb.position + actualDirection * machine.GetMovementSpeed() * Time.deltaTime);
+
+        // Check if reached destination OR if we're stuck going wrong way
+        if (Vector2.Distance(rb.position, locationToMoveTo) < 0.1f ||
+           Vector2.Dot(actualDirection, directionToTarget) < 0) // Going backwards = blocked
         {
             SwitchState(CalmSubState.Idle);
         }
