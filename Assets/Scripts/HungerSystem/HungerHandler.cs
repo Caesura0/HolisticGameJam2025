@@ -5,6 +5,7 @@ using UnityEngine;
 public class HungerHandler : MonoBehaviour
 {
     private static HungerHandler instance;
+
     public static HungerHandler Instance
     {
         get
@@ -14,6 +15,9 @@ public class HungerHandler : MonoBehaviour
             return instance = new GameObject("_HungerHandler").AddComponent<HungerHandler>();
         }
     }
+
+
+
 
     public event Action<int> OnHungerUpdate;
     public event Action OnDeathTrigger;
