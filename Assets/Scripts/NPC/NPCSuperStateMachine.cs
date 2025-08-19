@@ -161,13 +161,6 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
 
         //Switch to panic state from whatever other state
         SwitchState(SuperStateType.Panic);
-
-        //Drops weapon if in attack state
-        if (currentState == attackingState)
-        {
-            Debug.Log("Dropping Weapon");
-            //Drop Weapon Logic
-        }
     }
 
     public bool TryCapture()
@@ -186,7 +179,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         }
     }
 
-    private bool IsWeaponEquipped() => currentState == attackingState;
+    private bool IsWeaponEquipped() => currentWeapon != null;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -209,6 +202,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
                     speedMultiplier = 0;
                     notificationHandler.PlayNotification(NotificationType.KO);
                     Debug.Log($"{gameObject.name} stunned");
+                    DropWeapon();
                 }
                 break;
             case StatusEffectType.Slowed:
@@ -217,6 +211,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
                     speedMultiplier = .4f;
                     notificationHandler.PlayNotification(NotificationType.Slow);
                     Debug.Log($"{gameObject.name} slowed");
+                    DropWeapon();
                 }
                 break;
         }

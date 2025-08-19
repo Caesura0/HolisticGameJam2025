@@ -126,11 +126,16 @@ public class PlayerController : MonoBehaviour
             pickedItem = chosenItem;
             //TriggerPickUp();
             staminaHandler.SpendStamina();
-            if (chosenItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
+            if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
             {
                 if (!enemy.IsCapturable())
-                    return;
+                {
+                    Debug.Log("Shouldn't capture");
+                    pickedItem = null;  // Clear the picked item
+                    return;  // Exit the entire method
+                }
 
+                // Only pick up if capturable
                 chosenItem.PickUp(itemHolder);
 
                 if (FirstAttack)
@@ -145,7 +150,7 @@ public class PlayerController : MonoBehaviour
                 notificationHandler.PlayNotification(NotificationType.Alert);
             }
             //Debug.Log($"PickedUp {pickedItem.name}");
-            if(FirstAttack && pickedItem.TryGetComponent<IAttackable>(out _))
+            if (FirstAttack && pickedItem.TryGetComponent<IAttackable>(out _))
             {
             }
             #endregion
