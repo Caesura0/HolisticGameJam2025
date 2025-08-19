@@ -241,7 +241,7 @@ public class AttackingState : INPCSuperState
     void CircleStrafe(float currentDistance, float speed)
     {
         // Circle around player at current distance
-        circleAngle += Time.deltaTime * 1.5f; // Rotation speed
+        circleAngle += Time.deltaTime * 1.2f; // Rotation speed
 
         Vector2 offset = new Vector2(Mathf.Cos(circleAngle), Mathf.Sin(circleAngle)) * circleDistance;
         Vector2 targetPos = (Vector2)player.position + offset;

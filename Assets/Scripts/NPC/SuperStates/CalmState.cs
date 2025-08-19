@@ -11,12 +11,17 @@ public class CalmState : INPCSuperState
     NPCSuperStateMachine machine;
     Rigidbody2D rb;
     Transform player;
+    NPCAnimator Animator;
+
     CalmSubState currentSubState;
+    
     float speed = 4;
     float secondsToWaitInIdle = 0;
+    float movementRadius = 5;
+    [SerializeField]
+    float panicDistance = 4f;
+
     Vector2 locationToMoveTo;
-    float movementRadius = 4;
-    NPCAnimator Animator;
 
     public CalmState(NPCSuperStateMachine machine, Rigidbody2D rb, Transform player, NPCAnimator animator)
     {
@@ -50,16 +55,26 @@ public class CalmState : INPCSuperState
 
     public void Tick()
     {
-        // Check if we have a weapon and player is nearby - time to attack!
-        if (machine.currentWeapon && player)
+        if (!player) return;
+
+        float distToPlayer = Vector2.Distance(rb.position, player.position);
+
+        // ARMED: Attack when player detected
+        if (machine.currentWeapon)
         {
-            float distToPlayer = Vector2.Distance(rb.position, player.position);
             if (distToPlayer < 8f) // Detection range for armed NPCs
             {
-                Debug.Log("Armed and player detected! Switching to attack!");
+                Debug.Log("Armed and player detected! Attacking!");
                 machine.SwitchState(NPCSuperStateMachine.SuperStateType.Attacking);
                 return;
             }
+        }
+        // UNARMED: Panic when player gets too close!
+        else if (distToPlayer < panicDistance)
+        {
+            Debug.Log("Player too close! Panicking!");
+            machine.SwitchState(NPCSuperStateMachine.SuperStateType.Panic);
+            return;
         }
 
         switch (currentSubState)
