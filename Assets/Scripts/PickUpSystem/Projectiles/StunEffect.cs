@@ -1,5 +1,5 @@
 using UnityEngine;
-public class TableEffect : MonoBehaviour, IProjectileEffect
+public class StunEffect : MonoBehaviour, IProjectileEffect
 {
     [SerializeField] float stunDuration = 3f;
     [SerializeField] bool disarmsWeapon = true;
