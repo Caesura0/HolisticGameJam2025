@@ -12,10 +12,10 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter;
 
     [Header("Hit Events")]
-    public UnityEvent onSlimeHit;
-    public UnityEvent onStunned;
-    public UnityEvent OnPlayerCaught;
-    public UnityEvent OnNPCCounter; // When NPC's have weapon and can't be captured.
+    public UnityEvent onSlimeHit = new UnityEvent();
+    public UnityEvent onStunned = new UnityEvent();
+    public UnityEvent OnPlayerCaught = new UnityEvent();
+    public UnityEvent OnNPCCounter = new UnityEvent();
 
     [Header("Weapon Configuration")]
     [SerializeField] bool startWithWeapon = true;
