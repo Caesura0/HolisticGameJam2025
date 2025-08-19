@@ -4,6 +4,11 @@ public class PlayerController : MonoBehaviour
 {
     private void Awake()
     {
+
+    }
+
+    private void Start()
+    {
         Controls.Instance.OnPlayerMove += UpdateVelocity;
         Controls.Instance.OnPlayerAttack += HandlePickUp;
         HungerHandler.Instance.OnDeathTrigger += HandleDeathTrigger;
