@@ -33,7 +33,7 @@ public class PickableItem: MonoBehaviour
             transform.position = holder.position;
     }
     
-    public void PickUp(Transform assignedHolder)
+    public void Grab(Transform assignedHolder)
     {
         rb.bodyType = RigidbodyType2D.Dynamic;
         holder = assignedHolder;

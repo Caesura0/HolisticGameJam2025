@@ -4,6 +4,7 @@ public enum NotificationType
 {
     Alert,
     Hunger,
+    Capture,
     Eat,
     KO,
     Slow,
@@ -13,12 +14,14 @@ public class NotificationHandler : MonoBehaviour
 {
     private const string AlertString = "Alert";
     private const string HungerString = "Hunger";
+    private const string CaptureString = "Capture";
     private const string EatString = "Eat";
     private const string KOString = "KO";
     private const string SlowString = "Slow";
     private const string AttackString = "Attack";
     private int AlertTriggerId = Animator.StringToHash(AlertString);
     private int HungerTriggerId = Animator.StringToHash(HungerString);
+    private int CaptureTriggerId = Animator.StringToHash(CaptureString);
     private int EatTriggerId = Animator.StringToHash(EatString);
     private int KOTriggerId = Animator.StringToHash(KOString);
     private int SlowTriggerId = Animator.StringToHash(SlowString);
@@ -50,6 +53,9 @@ public class NotificationHandler : MonoBehaviour
                 break;
             case NotificationType.Hunger:
                 TriggerAnimation(HungerTriggerId);
+                break;
+            case NotificationType.Capture:
+                TriggerAnimation(CaptureTriggerId);
                 break;
             case NotificationType.Eat:
                 TriggerAnimation(EatTriggerId);
