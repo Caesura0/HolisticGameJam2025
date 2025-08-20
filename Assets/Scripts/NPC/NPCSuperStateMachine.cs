@@ -12,8 +12,8 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     [SerializeField] Transform player;
     [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter;
     [SerializeField] NotificationHandler notificationHandler;
-    [SerializeField] private float movementSpeed = 4f;
-    [SerializeField] private float panickedMovementSpeed = 10f;
+    [SerializeField] private float movementSpeed = 1f;
+    [SerializeField] private float panickedMovementSpeed = 2.2f;
 
     public float speedMultiplier = 1f;
     public float GetMovementSpeed() => movementSpeed * speedMultiplier;

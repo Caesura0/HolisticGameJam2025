@@ -108,7 +108,9 @@ public class PanicState : INPCSuperState
 
         if (currentSpeed > 0)
         {
-            rb.MovePosition(rb.position + actualFleeDirection * currentSpeed * Time.deltaTime);
+            //rb.MovePosition(rb.position + actualFleeDirection * currentSpeed * Time.deltaTime);
+            rb.linearVelocity = actualFleeDirection * currentSpeed;
+            Debug.Log($"Fleeing in direction: {actualFleeDirection} at speed: {currentSpeed}");
         }
 
         animator?.SetAnimationParameters(actualFleeDirection.x, currentSpeed > 0 ? 1f : 0);
@@ -209,7 +211,8 @@ public class PanicState : INPCSuperState
         // Move slowly or not at all
         if (currentSpeed > 0)
         {
-            rb.MovePosition(rb.position + lastFleeDirection * currentSpeed * Time.deltaTime);
+            //rb.MovePosition(rb.position + lastFleeDirection * currentSpeed * Time.deltaTime);
+            rb.linearVelocity = lastFleeDirection * currentSpeed;
         }
 
         // Update animation - catching breath

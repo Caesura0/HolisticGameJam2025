@@ -193,7 +193,7 @@ public class NPCStateBehavior : MonoBehaviour
     {
         var dir = (worldPos - rb.position);
         var step = dir.normalized * speed;
-        rb.MovePosition(rb.position + step * Time.fixedDeltaTime);
+        rb.MovePosition(rb.position + step * Time.deltaTime);
         if (dir.sqrMagnitude > 0.01f) Face(worldPos);
     }
 

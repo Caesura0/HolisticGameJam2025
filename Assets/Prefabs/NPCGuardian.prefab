@@ -17,6 +17,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2123730072513909570, guid: 2d73eceb11ec7ad41afeef0d6c228239, type: 3}
     - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
+      propertyPath: movementSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: startingState
       value: 2
       objectReference: {fileID: 0}
@@ -37,8 +41,12 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
+      propertyPath: panickedMovementSpeed
+      value: 2.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: obstacleLayerMask.m_Bits
-      value: 64
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: onStunned.m_PersistentCalls.m_Calls.Array.size

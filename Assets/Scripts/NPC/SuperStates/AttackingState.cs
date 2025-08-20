@@ -29,7 +29,7 @@ public class AttackingState : INPCSuperState
     bool playerDetected = false;
 
     // Hunter configuration
-    float hunterSpeed = 6f;
+    float hunterSpeed = 2.1f;
     float hunterPursuitDuration = 6f;
     float hunterCircleDuration = 2f;
     float hunterRecoveryDuration = 1.5f;
@@ -38,7 +38,7 @@ public class AttackingState : INPCSuperState
     float hunterLoseRange = 12f;
 
     // Guardian configuration  
-    float guardianSpeed = 4f;
+    float guardianSpeed = 1.8f;
     float guardianPatrolDuration = 4f;
     float guardianInterceptDuration = 3f;
     float guardianDetectRange = 8f;
@@ -152,7 +152,9 @@ public class AttackingState : INPCSuperState
                     currentMoveDirection = Vector2.Lerp(currentMoveDirection,
                         machine.GetObstacleAvoidedDirection(predictiveDir), 0.3f).normalized;
 
-                    rb.MovePosition(rb.position + currentMoveDirection * hunterSpeed * Time.deltaTime);
+                    //rb.MovePosition(rb.position + currentMoveDirection * hunterSpeed * Time.deltaTime);
+                    rb.linearVelocity = currentMoveDirection * hunterSpeed;
+
                     animator?.SetAnimationParameters(currentMoveDirection.x, 1f);
                 }
                 break;
@@ -244,7 +246,8 @@ public class AttackingState : INPCSuperState
                     Vector2 interceptPos = guardianHomeBase + interceptDir * (guardianPatrolRadius * 0.8f);
 
                     Vector2 moveDir = (interceptPos - rb.position).normalized;
-                    rb.MovePosition(rb.position + moveDir * guardianSpeed * Time.deltaTime);
+                    //rb.MovePosition(moveDir * guardianSpeed * Time.deltaTime);
+                    rb.linearVelocity = moveDir * guardianSpeed;
                     animator?.SetAnimationParameters(moveDir.x, 0.8f);
                 }
                 break;
@@ -268,8 +271,8 @@ public class AttackingState : INPCSuperState
             circleAngle -= Time.deltaTime * 2.4f;
         }
 
-        rb.MovePosition(rb.position + actualMoveDir * speed * Time.deltaTime);
-
+        //rb.MovePosition(rb.position + actualMoveDir * speed * Time.deltaTime);
+        rb.linearVelocity = actualMoveDir * speed;
         float faceDir = player.position.x > rb.position.x ? 1 : -1;
         animator?.SetAnimationParameters(faceDir, 0.7f);
     }
@@ -295,7 +298,9 @@ public class AttackingState : INPCSuperState
         else
         {
             Vector2 moveDir = toTarget.normalized;
-            rb.MovePosition(rb.position + moveDir * guardianSpeed * 0.5f * Time.deltaTime);
+            //rb.MovePosition(rb.position + moveDir * guardianSpeed * 0.5f * Time.deltaTime);
+
+            rb.linearVelocity = moveDir * guardianSpeed * 0.5f;
             animator?.SetAnimationParameters(moveDir.x, 0.5f);
         }
     }
@@ -305,7 +310,9 @@ public class AttackingState : INPCSuperState
         // Simple wandering search
         float searchSpeed = behaviorType == AttackBehaviorType.Hunter ? hunterSpeed * 0.5f : guardianSpeed * 0.5f;
         Vector2 searchDir = new Vector2(Mathf.Sin(Time.time * 2f), Mathf.Cos(Time.time * 2f));
-        rb.MovePosition(rb.position + searchDir * searchSpeed * Time.deltaTime);
+        //rb.MovePosition(rb.position + searchDir * searchSpeed * Time.deltaTime);
+        rb.linearVelocity = searchDir * searchSpeed;
+
         animator?.SetAnimationParameters(searchDir.x, 0.3f);
     }
 

@@ -118,8 +118,8 @@ public class CalmState : INPCSuperState
         // Move with the avoided direction
         float directionX = actualDirection.x;
         Animator.SetAnimationParameters(directionX, 1);
-        rb.MovePosition(rb.position + actualDirection * machine.GetMovementSpeed() * Time.deltaTime);
-
+        //rb.MovePosition(rb.position + actualDirection * machine.GetMovementSpeed() * Time.deltaTime);
+        rb.linearVelocity = actualDirection * machine.GetMovementSpeed();
         // Check if reached destination OR if we're stuck going wrong way
         if (Vector2.Distance(rb.position, locationToMoveTo) < 0.1f ||
            Vector2.Dot(actualDirection, directionToTarget) < 0) // Going backwards = blocked
