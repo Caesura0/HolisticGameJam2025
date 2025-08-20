@@ -9,7 +9,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     public event Action OnTryCaptureEvent;
     public event Action OnFailedCaptureEvent;
 
-    [SerializeField] private Transform itemHolder;
+    [field: SerializeField] public Transform itemHolder {  get; private set; }
     [SerializeField] private LayerMask pickableItemsLayer;
     [SerializeField] private float pickUpRange = .7f;
     [SerializeField] private float throwForce = 10f;
@@ -56,7 +56,6 @@ public class PlayerInteractionHandler : MonoBehaviour
             if (!TryPickItemInRange(out pickedItem))
                 return;
 
-            OnTryCaptureEvent?.Invoke();
             staminaHandler.SpendStamina();
             if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
             {
@@ -64,6 +63,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                 {
                     Debug.Log("Shouldn't capture");
                     pickedItem = null;
+                    OnTryCaptureEvent?.Invoke();
                     OnFailedCaptureEvent?.Invoke();
                     return;
                 }
@@ -76,9 +76,14 @@ public class PlayerInteractionHandler : MonoBehaviour
                     FirstAttack = false;
                     HandlePickUp();
                 }
+                else
+                    OnTryCaptureEvent?.Invoke();
             }
             else
+            {
+                OnTryCaptureEvent?.Invoke();
                 pickedItem.Grab(itemHolder);
+            }
             #endregion
         }
     }

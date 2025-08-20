@@ -323,8 +323,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
                 break;
         }
 
-        if (item.DestroyOnHitNPC)
-            Destroy(other.gameObject);
+        //Moved PickableItem destruction logic to PickableItem script
     }
 
     private void OverwriteStatusEffect(float duration)

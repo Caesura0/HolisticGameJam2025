@@ -207,6 +207,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb6fc1d0921aaa743942ace42888e6e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <DestroyOnHitNPC>k__BackingField: 0
+  health: 3
+  OnHitVFX: 6
+  OnDeathVFX: 7
+  onHitShakeDuration: 0.3
+  onHitShakePower: 0.1
   <effectType>k__BackingField: 2
   <effectDuration>k__BackingField: 5

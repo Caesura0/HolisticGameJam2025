@@ -16,16 +16,16 @@ public class HungerHandler : MonoBehaviour
         }
     }
 
-
-
-
-    public event Action<int> OnHungerUpdate;
+    public event Action OnDropHeart;
+    public event Action OnGainHeart;
     public event Action OnDeathTrigger;
+
     [SerializeField] private TextMeshProUGUI timerUI;
     [SerializeField] private RectTransform hungerIconDisplayContainer;
-    private IconDisplay[] displayIcons;
     [SerializeField] private int hungerRagePoint;
     [SerializeField] private float hungerResetTime;
+    private IconDisplay[] displayIcons;
+
     public int currentHunger { get; private set; }
     public float remainingResetTime { get; private set; }
     public bool InHungerRage() => currentHunger <= hungerRagePoint;
@@ -58,7 +58,7 @@ public class HungerHandler : MonoBehaviour
             if (IsDead())
                 OnDeathTrigger?.Invoke();
             UpdateDisplay();
-            OnHungerUpdate?.Invoke(currentHunger);
+            OnDropHeart?.Invoke();
         }
         timerUI.text = TimeSpan.FromSeconds(remainingResetTime).ToString(@"mm\:ss");
     }
@@ -94,6 +94,7 @@ public class HungerHandler : MonoBehaviour
         foodValue = Math.Abs(foodValue);
         currentHunger = Mathf.Clamp(currentHunger + foodValue, 0, displayIcons.Length);
         UpdateDisplay();
+        OnGainHeart?.Invoke();
         ResetTimer();
     }
 }
