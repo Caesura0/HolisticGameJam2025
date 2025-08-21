@@ -13,8 +13,9 @@ public class GrannyProfileHandler : MonoBehaviour
 
     private Image profileFrame; 
     private float remainingTimer = 0;
-    private bool initialized, isHungry;
-
+    private bool 
+        initialized, 
+        isHungry;
 
     private void Start()
     {
@@ -42,6 +43,9 @@ public class GrannyProfileHandler : MonoBehaviour
 
     private void Update()
     {
+        if (!initialized)
+            return;
+
         if (remainingTimer > 0)
         {
             remainingTimer -= Time.deltaTime;

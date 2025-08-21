@@ -23,7 +23,6 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void HandlePickUp()
     {
-        StaminaHandler staminaHandler = StaminaHandler.Instance;
         if (pickedItem)
         {
             if (pickedItem.TryGetComponent<IAttackable>(out _))
@@ -36,12 +35,8 @@ public class PlayerInteractionHandler : MonoBehaviour
             }
             else
             {
-                if (!staminaHandler || !staminaHandler.HasStamina())
-                    return;
-
                 pickedItem.Throw(playerMovementHandler.Velocity.normalized * throwForce);
                 OnThrowEvent?.Invoke();
-                staminaHandler.SpendStamina();
                 Debug.Log($"Threw {pickedItem.name}");
             }
             pickedItem = null;
@@ -50,13 +45,9 @@ public class PlayerInteractionHandler : MonoBehaviour
         else
         {
             #region If holding nothing
-            if (!staminaHandler || !staminaHandler.HasStamina())
-                return;
-
             if (!TryPickItemInRange(out pickedItem))
                 return;
 
-            staminaHandler.SpendStamina();
             if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
             {
                 if (!enemy.IsCapturable())

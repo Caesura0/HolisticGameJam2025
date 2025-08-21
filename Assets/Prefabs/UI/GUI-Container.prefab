@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6973240674418409315}
   - component: {fileID: 3833303722984491700}
-  - component: {fileID: 8051323693349886066}
   m_Layer: 5
   m_Name: GUI-Container
   m_TagString: Untagged
@@ -55,21 +54,6 @@ MonoBehaviour:
   hungerIconDisplayContainer: {fileID: 4325084924974515491}
   hungerRagePoint: 2
   hungerResetTime: 20
---- !u!114 &8051323693349886066
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 393093627487427213}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d1a8eae6c8c27e459370e695a5212ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  displayImage: {fileID: 5566722686743055897}
-  maxStamina: 5
-  staminaRecoveryTime: 5
 --- !u!1 &626008822580375595
 GameObject:
   m_ObjectHideFlags: 0
@@ -357,7 +341,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 1
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -543,7 +527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7912611464834662273}
   m_Layer: 5
-  m_Name: StaminaDisplay
+  m_Name: RemainingGameplayTimer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
