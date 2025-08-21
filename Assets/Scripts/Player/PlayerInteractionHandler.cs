@@ -15,7 +15,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     [SerializeField] private float throwForce = 10f;
 
     private PlayerMovementHandler playerMovementHandler;
-    private PickableItem pickedItem;
+    private Interactable pickedItem;
     bool FirstAttack = true;
 
     private void Awake() => playerMovementHandler = GetComponent<PlayerMovementHandler>();
@@ -25,7 +25,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     {
         if (pickedItem)
         {
-            if (pickedItem.TryGetComponent<IAttackable>(out _))
+            if (pickedItem.IsEatable)
             {
                 pickedItem.Release();
                 pickedItem.gameObject.SetActive(false);
@@ -80,7 +80,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         }
     }
 
-    private bool TryPickItemInRange(out PickableItem chosenItem)
+    private bool TryPickItemInRange(out Interactable chosenItem)
     {
         Collider2D[] others =
             Physics2D.OverlapCircleAll(transform.position, pickUpRange, pickableItemsLayer);
@@ -93,16 +93,12 @@ public class PlayerInteractionHandler : MonoBehaviour
         float distance = float.MaxValue;
         foreach (Collider2D other in others)
         {
-            if (!other.TryGetComponent<PickableItem>(out PickableItem item))
+            if (!other.TryGetComponent<Interactable>(out Interactable item))
                 continue;
 
-            if (chosenItem
-                && (chosenItem.TryGetComponent<IAttackable>(out _)
-                && !other.TryGetComponent<IAttackable>(out _)))
+            if (chosenItem && (chosenItem.IsEatable && !item.IsEatable))
                 continue;
-            else if (chosenItem
-                && (!chosenItem.TryGetComponent<IAttackable>(out _)
-                && other.TryGetComponent<IAttackable>(out _)))
+            else if (chosenItem && (!chosenItem.IsEatable && item.IsEatable))
             {
                 chosenItem = item;
                 continue;
