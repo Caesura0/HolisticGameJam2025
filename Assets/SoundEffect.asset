@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ed5fc1cc7d10644885d7ba69a3b4908, type: 3}
   m_Name: SoundEffect
   m_EditorClassIdentifier: 
+  slimeHit: {fileID: 8300000, guid: 0666e0568337da246be23b206e50c5c0, type: 3}
+  tableHit: {fileID: 8300000, guid: c5f14e7856273f845a1c25d194bfaaa4, type: 3}
+  logHit: {fileID: 8300000, guid: fa1e87eaff23f3e458c59e8021a78667, type: 3}
   boulderSound: {fileID: 0}
   footstepSound: {fileID: 0}
   hitSound: {fileID: 8300000, guid: 84c5b4616f77a7c4890e4d9b7065ff20, type: 3}
@@ -19,11 +22,11 @@ MonoBehaviour:
   pickupBigPointsSound: {fileID: 0}
   pickupSpeedSound: {fileID: 0}
   jumpSound: {fileID: 0}
-  buttonClick: {fileID: 0}
+  buttonClick: {fileID: 8300000, guid: cfc37fcd407e6774fafb9c80a7bdbbcf, type: 3}
   switchButtonClick: {fileID: 0}
-  closeClick: {fileID: 0}
+  closeClick: {fileID: 8300000, guid: 226672686b0230043a13cd66a61a25e2, type: 3}
   invalidClick: {fileID: 0}
-  pauseClick: {fileID: 0}
+  pauseClick: {fileID: 8300000, guid: 67f9ab12eee39d346b6ee40ffdf77d68, type: 3}
   resumeClick: {fileID: 0}
   changeVolumeClick: {fileID: 0}
   loseSound: {fileID: 0}

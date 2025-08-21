@@ -14,7 +14,7 @@ public class MainMenuController : MonoBehaviour
     {
         // Load the "Gameplay" scene
         Loader.Load(Loader.Scene.Gameplay);
-        //AudioManager.Instance.PlayButtonClick();
+        AudioManager.Instance.PlayButtonClick();
     }
 
 
@@ -24,14 +24,14 @@ public class MainMenuController : MonoBehaviour
     #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
-        //AudioManager.Instance.PlayButtonClick();
+        AudioManager.Instance.PlayButtonClick();
         Application.Quit();
     }
 
 
     public void OpenOptionsWindow()
     {
-        //AudioManager.Instance.PlayButtonClick();
+        AudioManager.Instance.PlayButtonClick();
         optionsWindow.SetActive(true);
     }
 
