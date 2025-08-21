@@ -12,7 +12,7 @@ public class PlayerVFXHandler : MonoBehaviour
         if (HungerHandler.Instance)
         {
             HungerHandler.Instance.OnDeathTrigger += () =>
-            { VFXHandler.Instance.PlayVisualEffect(VFXType.SoulRelease, playerVFXPoint.position); };
+            { VFXHandler.Instance.PlayVisualEffect(VFXType.SoulRelease, transform.position); };
             HungerHandler.Instance.OnDropHeart += () =>
             { VFXHandler.Instance.PlayVisualEffect(VFXType.HeartBreak, playerVFXPoint.position); };
             HungerHandler.Instance.OnGainHeart += () =>

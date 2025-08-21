@@ -290,7 +290,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.TryGetComponent<PickableItem>(out PickableItem item))
+        if (!other.TryGetComponent<Interactable>(out Interactable item))
             return;
 
         if (item.BeingHeld)
