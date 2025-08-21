@@ -66,6 +66,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                 {
                     FirstAttack = false;
                     HandlePickUp();
+                    GameEvents.RaiseFirstEat();
                 }
                 else
                     OnTryCaptureEvent?.Invoke();
