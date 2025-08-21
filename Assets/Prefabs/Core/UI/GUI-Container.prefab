@@ -343,7 +343,7 @@ MonoBehaviour:
   m_FillMethod: 0
   m_FillAmount: 0
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!1 &5531376751624026226
@@ -526,8 +526,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7912611464834662273}
+  - component: {fileID: 85421164430290784}
   m_Layer: 5
-  m_Name: RemainingGameplayTimer
+  m_Name: SurvivalTimeHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -554,6 +555,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -23.619995}
   m_SizeDelta: {x: 180, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &85421164430290784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266830720006597031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 501408485bd4b34448c5cee0de59e984, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  display: {fileID: 5566722686743055897}
+  requiredSurvivalTime: 300
 --- !u!1 &8491608621991966865
 GameObject:
   m_ObjectHideFlags: 0
