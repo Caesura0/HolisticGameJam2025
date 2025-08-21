@@ -79,6 +79,23 @@ public class AudioManager : MonoBehaviour
 
 
     // Gameplay sounds
+
+    public void PlaySlimeSound()
+    {
+        audioSource.PlayOneShot(soundManager.slimeHit, soundEffectVolume);
+    }
+
+    public void PlayTableSound()
+    {
+        audioSource.PlayOneShot(soundManager.tableHit, soundEffectVolume);
+    }
+
+    public void PlayLogSound()
+    {
+        audioSource.PlayOneShot(soundManager.logHit, soundEffectVolume);
+    }
+
+
     public void PlayRockSounds()
     {
         audioSource.PlayOneShot(soundManager.boulderSound, soundEffectVolume);

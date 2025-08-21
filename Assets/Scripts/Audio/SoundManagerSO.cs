@@ -4,7 +4,22 @@ using UnityEngine;
 
 public class SoundManagerSO :  ScriptableObject
 {
-   
+
+
+    public AudioClip slimeHit;
+    public AudioClip tableHit;
+    public AudioClip logHit;
+
+
+
+
+    [Space]
+    [Space]
+    [Space]
+
+
+
+
 
     public AudioClip boulderSound;
     public AudioClip footstepSound;
