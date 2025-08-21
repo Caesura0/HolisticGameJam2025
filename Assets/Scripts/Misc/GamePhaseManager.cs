@@ -18,9 +18,6 @@ public class GamePhaseManager : MonoBehaviour
         Debug.Log($"[PhaseDirector] Phase -> {currentPhase}");
     }
 
-    // Optional: quick test keys
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.F1)) AdvancePhase();
-    }
+
+
 }

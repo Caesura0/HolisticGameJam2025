@@ -38,7 +38,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: panickedMovementSpeed
-      value: 2.2
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 3809134946355924265, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: obstacleLayerMask.m_Bits
