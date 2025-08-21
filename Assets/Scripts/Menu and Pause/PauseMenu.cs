@@ -4,8 +4,8 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
-    public GameObject pauseMenuUI; // Reference to the pause menu UI GameObject
-    private bool isPaused = false; // Flag to track whether the game is paused
+    public GameObject pauseMenuUI; 
+    private bool isPaused = false; 
 
     public bool speedUp;
     [SerializeField] float speedUpSpeed = 4;
@@ -13,6 +13,24 @@ public class PauseMenu : MonoBehaviour
 
 
     public static EventHandler OnRestart;
+
+
+    private void Start()
+    {
+        pauseMenuUI.SetActive(false); // Ensure the pause menu is initially inactive
+
+        Controls.Instance.OnPlayerPause += () =>
+        {
+            if (isPaused)
+            {
+                Resume(); // If the game is already paused, resume it
+            }
+            else
+            {
+                Pause(); // If the game is not paused, pause it
+            }
+        };
+    }
     void Update()
     {
 
@@ -28,17 +46,17 @@ public class PauseMenu : MonoBehaviour
         //{
         //    Time.timeScale = 2;
         //}
-        if (Input.GetKeyDown(KeyCode.Escape) /*&& !GameManager.Instance.GameOver*/)
-        {
-            if (isPaused)
-            {
-                Resume(); // If the game is already paused, resume it
-            }
-            else
-            {
-                Pause(); // If the game is not paused, pause it
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape) /*&& !GameManager.Instance.GameOver*/)
+        //{
+        //    if (isPaused)
+        //    {
+        //        Resume(); // If the game is already paused, resume it
+        //    }
+        //    else
+        //    {
+        //        Pause(); // If the game is not paused, pause it
+        //    }
+        //}
     }
 
     public void Pause()
@@ -48,7 +66,7 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
         Debug.Log(Time.timeScale);
         pauseMenuUI.SetActive(true); // Activate the pause menu UI
-        //AudioManager.Instance.PlayPauseClick();
+        AudioManager.Instance.PlayPauseClick();
     }
 
     public void Resume()
@@ -56,7 +74,7 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f; // Resume the game by setting time scale to 1
         isPaused = false;
         pauseMenuUI.SetActive(false); // Deactivate the pause menu UI
-        //AudioManager.Instance.PlayResumeClick();
+        AudioManager.Instance.PlayResumeClick();
     }
 
     public void RestartScene()
@@ -75,6 +93,7 @@ public class PauseMenu : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu"); // Load the MainMenu scene
         Time.timeScale = 1f; // Ensure time scale is set to 1
+        AudioManager.Instance.PlayButtonClick();
     }
 
     public void OpenHighScoreWindow()

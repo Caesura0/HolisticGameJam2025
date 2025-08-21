@@ -33,6 +33,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                 OnDevourEvent?.Invoke();
                 int foodValue = 1;
                 HungerHandler.Instance.Feed(foodValue);
+                AudioManager.Instance.PlayEatSound();
             }
             else
             {

@@ -4,6 +4,13 @@ public class GamePhaseManager : MonoBehaviour
 {
     [SerializeField] int currentPhase = 1; // 1 Party, 2 Defense, 3 Hunters (harder)
 
+
+
+    private void Start()
+    {
+        AudioManager.Instance.PlayGameplayMusic();
+    }
+
     public void AdvancePhase()
     {
         currentPhase = Mathf.Clamp(currentPhase + 1, 1, 3);

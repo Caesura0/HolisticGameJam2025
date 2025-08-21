@@ -220,4 +220,9 @@ public class AudioManager : MonoBehaviour
     {
         audioSource.PlayOneShot(soundManager.addTimeSound, soundEffectVolume);
     }
+
+    public void PlayEatSound()
+    {
+        audioSource.PlayOneShot(soundManager.eatSound, soundEffectVolume);
+    }
 }

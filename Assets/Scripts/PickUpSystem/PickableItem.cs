@@ -6,6 +6,15 @@ public enum StatusEffectType
     Slowed,
     Stunned
 }
+
+public enum SoundType
+{
+    None,
+    Table,
+    Log,
+    Slime
+}
+
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
 public class PickableItem : MonoBehaviour
@@ -21,6 +30,9 @@ public class PickableItem : MonoBehaviour
     Collider2D collision;
     const float stopThreshold = 0.1f;
     bool beingHeld, isMoving, wasMoving, isStatic, isEatable;
+
+
+    [SerializeField] private SoundType impactSound = SoundType.Table;
 
     [field: SerializeField] public StatusEffectType effectType { get; private set; } = StatusEffectType.None;
     [field: SerializeField] public float effectDuration { get; private set; } = 5f;
@@ -135,6 +147,7 @@ public class PickableItem : MonoBehaviour
     private void OnHitEnemy()
     {
         rb.linearVelocity /= 2;
+        PlayImpactSound();
         VFXHandler.Instance.PlayVisualEffect(OnHitVFX, transform.position);
         CameraEffectsHandler.Instance.Shake(onHitShakeDuration, onHitShakePower);
     }
@@ -143,5 +156,23 @@ public class PickableItem : MonoBehaviour
     {
         VFXHandler.Instance.PlayVisualEffect(OnDeathVFX, transform.position);
         Destroy(gameObject);
+    }
+
+    private void PlayImpactSound()
+    {
+        switch(impactSound)
+        {
+            case SoundType.None:
+                return;
+            case SoundType.Table:
+                AudioManager.Instance.PlayTableSound();
+                break;
+            case SoundType.Log:
+                AudioManager.Instance.PlayLogSound();
+                break;
+            case SoundType.Slime:
+                AudioManager.Instance.PlaySlimeSound();
+                break;
+        }
     }
 }

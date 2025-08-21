@@ -9,7 +9,7 @@ public class SoundManagerSO :  ScriptableObject
     public AudioClip slimeHit;
     public AudioClip tableHit;
     public AudioClip logHit;
-
+    public AudioClip eatSound;
 
 
 
