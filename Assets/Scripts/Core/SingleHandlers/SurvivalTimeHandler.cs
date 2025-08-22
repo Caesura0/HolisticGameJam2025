@@ -53,11 +53,11 @@ public class SurvivalTimeHandler : MonoBehaviour
             return;
         }
 
-        requiredSurvivalTime -= Time.fixedDeltaTime;
+        remainingTime -= Time.fixedDeltaTime;
     }
 
     private void UpdateDisplay() =>
-        display.fillAmount = requiredSurvivalTime / remainingTime;
+        display.fillAmount = remainingTime / requiredSurvivalTime;
 
     private void EndTimer() => completed = true;
     public void PauseTimer() => paused = true;

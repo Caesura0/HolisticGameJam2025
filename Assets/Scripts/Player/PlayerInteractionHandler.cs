@@ -59,7 +59,7 @@ public class PlayerInteractionHandler : MonoBehaviour
 
             if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
             {
-                if (!enemy.IsCapturable())
+                if (!enemy.TryCapture())
                 {
                     Debug.Log("Shouldn't capture");
                     pickedItem = null;

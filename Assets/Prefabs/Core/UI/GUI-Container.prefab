@@ -568,7 +568,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   display: {fileID: 5566722686743055897}
-  requiredSurvivalTime: 300
+  requiredSurvivalTime: 185
 --- !u!1 &8491608621991966865
 GameObject:
   m_ObjectHideFlags: 0

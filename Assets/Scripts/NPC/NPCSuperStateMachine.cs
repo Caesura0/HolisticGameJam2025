@@ -249,8 +249,6 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         return Quaternion.Euler(0, 0, 180) * desiredDirection;
     }
 
-    public bool IsCapturable() => currentWeapon == null;
-
     public void SwitchState(SuperStateType newState)
     {
 
