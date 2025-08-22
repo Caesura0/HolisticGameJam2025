@@ -8,6 +8,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     public event Action OnThrowEvent;
     public event Action OnTryCaptureEvent;
     public event Action OnFailedCaptureEvent;
+    public event Action OnFirstEatEvent;
 
     [field: SerializeField] public Transform itemHolder {  get; private set; }
     [SerializeField] private LayerMask pickableItemsLayer;
@@ -21,6 +22,8 @@ public class PlayerInteractionHandler : MonoBehaviour
     private void Awake() => playerMovementHandler = GetComponent<PlayerMovementHandler>();
     private void Start() => Controls.Instance.OnPlayerAttack += HandlePickUp;
 
+    bool firstEat = false;
+
     private void HandlePickUp()
     {
         if (pickedItem)
@@ -33,6 +36,12 @@ public class PlayerInteractionHandler : MonoBehaviour
                 int foodValue = 1;
                 HungerHandler.Instance.Feed(foodValue);
                 AudioManager.Instance.PlayEatSound();
+                if(!firstEat)
+                {
+                    firstEat = true;
+                    OnFirstEatEvent?.Invoke();
+                }
+                Debug.Log($"Ate {pickedItem.name} for {foodValue} food value");
             }
             else
             {

@@ -16,7 +16,7 @@ public class AudioManager : MonoBehaviour
     const string SOUNDEFFECTFLOATNAME = "soundEffectVolume";
 
 
-    AudioSource audioSource;
+    public AudioSource audioSource;
     private void Awake()
     {
         if(Instance == null)
@@ -28,11 +28,12 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        
 
         //musicVolume = PlayerPrefs.GetFloat("MUSICFLOATNAME");
         //soundEffectVolume = PlayerPrefs.GetFloat("SOUNDEFFECTFLOATNAME");

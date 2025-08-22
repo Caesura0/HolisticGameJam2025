@@ -113,7 +113,7 @@ public class PanicState : INPCSuperState
             Debug.Log($"Fleeing in direction: {actualFleeDirection} at speed: {currentSpeed}");
         }
 
-        animator?.SetAnimationParameters(actualFleeDirection.x, currentSpeed > 0 ? 1f : 0);
+        animator?.SetAnimationParameters(actualFleeDirection.x, currentSpeed > 0 ? 2f : 0);
         animator?.SetIsCatchingBreath(false);
     }
 
