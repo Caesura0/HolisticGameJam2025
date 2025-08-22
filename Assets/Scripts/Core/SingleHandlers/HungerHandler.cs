@@ -46,7 +46,7 @@ public class HungerHandler : MonoBehaviour
 
     private void Update()
     {
-        if (IsDead())
+        if (IsDead() || GameplayManager.Instance.IsGamePaused())
             return;
 
         if (remainingResetTime > 0)

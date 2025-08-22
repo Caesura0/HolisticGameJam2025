@@ -63,4 +63,9 @@ public class GameplayManager : MonoBehaviour
                 break;
         }
     }
+
+    private bool gamePaused;
+    public void PauseGame() => gamePaused = true;
+    public void ResumeGame() => gamePaused = false;
+    public bool IsGamePaused() => gamePaused;
 }

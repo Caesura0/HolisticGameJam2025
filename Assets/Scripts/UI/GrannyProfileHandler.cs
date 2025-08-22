@@ -43,7 +43,7 @@ public class GrannyProfileHandler : MonoBehaviour
 
     private void Update()
     {
-        if (!initialized)
+        if (!initialized || GameplayManager.Instance.IsGamePaused())
             return;
 
         if (remainingTimer > 0)

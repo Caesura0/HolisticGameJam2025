@@ -11,11 +11,16 @@ public enum StatusEffectType
 [RequireComponent(typeof(Collider2D))]
 public class Interactable : MonoBehaviour
 {
+    private enum AudioType
+    {
+        Slime, Table, Log
+    }
     const float stopThreshold = 0.1f;
 
     [SerializeField, Range(1, 5)] private int health = 1;
     [SerializeField] private VFXType OnHitVFX = VFXType.Boom;
     [SerializeField] private VFXType OnDeathVFX = VFXType.None;
+    [SerializeField] private AudioType sfxType = AudioType.Table;
     [SerializeField] private float onHitShakeDuration = .3f;
     [SerializeField] private float onHitShakePower = .1f;
 
@@ -121,6 +126,18 @@ public class Interactable : MonoBehaviour
         rb.linearVelocity /= 2;
         VFXHandler.Instance.PlayVisualEffect(OnHitVFX, transform.position);
         CameraEffectsHandler.Instance.Shake(onHitShakeDuration, onHitShakePower);
+        switch (sfxType)
+        {
+            case AudioType.Table:
+                AudioManager.Instance.PlayTableSound();
+                break;
+            case AudioType.Log:
+                AudioManager.Instance.PlayLogSound();
+                break;
+            case AudioType.Slime:
+                AudioManager.Instance.PlaySlimeSound();
+                break;
+        }
     }
     private void OnHealthDown()
     {

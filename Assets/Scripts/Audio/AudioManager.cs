@@ -10,7 +10,7 @@ public class AudioManager : MonoBehaviour
     float musicVolume;
     float soundEffectVolume;
 
-    [SerializeField] SoundManagerSO soundManager;
+    [field: SerializeField] public SoundManagerSO soundManager {  get; private set; }
 
     const string MUSICFLOATNAME = "musicVolume";
     const string SOUNDEFFECTFLOATNAME = "soundEffectVolume";

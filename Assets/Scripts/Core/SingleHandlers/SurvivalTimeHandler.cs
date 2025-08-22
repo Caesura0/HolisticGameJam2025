@@ -35,7 +35,7 @@ public class SurvivalTimeHandler : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (paused || completed)
+        if (paused || completed || GameplayManager.Instance.IsGamePaused())
             return;
 
         if (!initialized)

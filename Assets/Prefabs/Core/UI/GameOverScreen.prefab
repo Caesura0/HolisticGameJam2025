@@ -96,5 +96,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   died: {fileID: 32900000, guid: e9173dd7b631b864e834ff2bf1ec783b, type: 3}
   captured: {fileID: 32900000, guid: e9173dd7b631b864e834ff2bf1ec783b, type: 3}
-  survived: {fileID: 0}
+  survived: {fileID: 32900000, guid: d393e0cb094ee314ba4579fbfe3f14f7, type: 3}
   startDelay: 2

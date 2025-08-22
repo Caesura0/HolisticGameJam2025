@@ -15,7 +15,7 @@ MonoBehaviour:
   slimeHit: {fileID: 8300000, guid: 0666e0568337da246be23b206e50c5c0, type: 3}
   tableHit: {fileID: 8300000, guid: c5f14e7856273f845a1c25d194bfaaa4, type: 3}
   logHit: {fileID: 8300000, guid: fa1e87eaff23f3e458c59e8021a78667, type: 3}
-  eatSound: {fileID: 8300000, guid: 7c4f4ed2cdc676e4298c9cee24ae351d, type: 3}
+  eatSound: {fileID: 8300000, guid: f3d21d422b1ea5b459837e9d8373fde4, type: 3}
   boulderSound: {fileID: 0}
   footstepSound: {fileID: 0}
   hitSound: {fileID: 8300000, guid: 84c5b4616f77a7c4890e4d9b7065ff20, type: 3}
