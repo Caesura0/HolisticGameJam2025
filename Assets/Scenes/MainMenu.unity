@@ -261,7 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34d562cd997382240ad4a07a888bee67, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  soundManager: {fileID: 11400000, guid: ad10ed5190ce02d40ae4aa1740cd1ca8, type: 2}
+  <soundManager>k__BackingField: {fileID: 11400000, guid: ad10ed5190ce02d40ae4aa1740cd1ca8, type: 2}
   audioSource: {fileID: 0}
 --- !u!1 &204735755
 GameObject:

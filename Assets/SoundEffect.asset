@@ -36,5 +36,5 @@ MonoBehaviour:
   addTimeSound: {fileID: 0}
   mainMenuMusic: {fileID: 8300000, guid: 1a13dfc02e2975641b668b3000d3a435, type: 3}
   gameplayMusic: {fileID: 8300000, guid: f41d0d2861b06914db8ee57dd000cda0, type: 3}
-  gameEndMusic: {fileID: 8300000, guid: 160a8897ce57bef43b8e08a6d22bb68c, type: 3}
+  gameEndMusic: {fileID: 8300000, guid: 8e49afc99677a6f44a5e472120538c59, type: 3}
   scoreScreenMusic: {fileID: 0}
