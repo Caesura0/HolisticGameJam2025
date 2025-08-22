@@ -10,6 +10,8 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     [Header("State Configuration")]
     [SerializeField] SuperStateType startingState = SuperStateType.Calm;
     [SerializeField] Transform player;
+    PlayerInteractionHandler playerInteractionHandler;
+    [SerializeField] Transform weaponTransform;
     [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter;
     [SerializeField] NotificationHandler notificationHandler;
     [SerializeField] private float movementSpeed = 1f;
@@ -61,24 +63,32 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     public PanicState panicState { get; private set; }
     public AttackingState attackingState { get; private set; }
 
+
+
+    public bool hasGrannyEatenSomeone = false;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
 
-        if (!player)
-        {
-            var player = FindFirstObjectByType<PlayerController>().transform;
-            if (player) this.player = player.transform;
-        }
+
     }
 
     void Start()
     {
+        if (!player)
+        {
+            var player = FindFirstObjectByType<PlayerController>().transform;
+            if (player) this.player = player.transform;
+            playerInteractionHandler = player.GetComponent<PlayerInteractionHandler>();
+        }
         animator = GetComponent<NPCAnimator>();
 
         calmState = new CalmState(this, rb, player, animator);
         panicState = new PanicState(this, rb, player, animator);
         attackingState = new AttackingState(this, rb, player, animator, attackBehaviorType);
+
+        playerInteractionHandler.OnFirstEatEvent += PlayerInteractionHandler_OnFirstEatEvent;
 
         // Spawn with weapon if configured
         if (startWithWeapon)
@@ -86,6 +96,14 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
             SpawnAndEquipWeapon();
         }
 
+
+        // this should actually be calm state
+        SwitchState(SuperStateType.Calm);
+    }
+
+    private void PlayerInteractionHandler_OnFirstEatEvent()
+    {
+        hasGrannyEatenSomeone = true;
         SwitchState(startingState);
     }
 
@@ -98,7 +116,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
             return;
         }
 
-        GameObject weaponObj = Instantiate(weaponPrefab, transform.position, Quaternion.identity);
+        GameObject weaponObj = Instantiate(weaponPrefab, weaponTransform.position, Quaternion.identity);
         NPCWeapon weapon = weaponObj.GetComponent<NPCWeapon>();
 
         if (weapon)
@@ -231,10 +249,14 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         return Quaternion.Euler(0, 0, 180) * desiredDirection;
     }
 
-    public bool IsCapturable() => currentWeapon == null;
-
     public void SwitchState(SuperStateType newState)
     {
+
+        if (!hasGrannyEatenSomeone)
+        {
+            return;
+        }
+        
         currentState?.Exit();
 
         switch (newState)
@@ -307,6 +329,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
                 {
                     OverwriteStatusEffect(item.effectDuration);
                     speedMultiplier = 0;
+                    rb.linearVelocity = Vector2.zero; // Stop movement
                     notificationHandler.PlayNotification(NotificationType.KO);
                     Debug.Log($"{gameObject.name} stunned");
                     DropWeapon();

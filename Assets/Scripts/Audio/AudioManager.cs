@@ -10,13 +10,13 @@ public class AudioManager : MonoBehaviour
     float musicVolume;
     float soundEffectVolume;
 
-    [SerializeField] SoundManagerSO soundManager;
+    [field: SerializeField] public SoundManagerSO soundManager {  get; private set; }
 
     const string MUSICFLOATNAME = "musicVolume";
     const string SOUNDEFFECTFLOATNAME = "soundEffectVolume";
 
 
-    AudioSource audioSource;
+    public AudioSource audioSource;
     private void Awake()
     {
         if(Instance == null)
@@ -28,11 +28,12 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
+        
 
         //musicVolume = PlayerPrefs.GetFloat("MUSICFLOATNAME");
         //soundEffectVolume = PlayerPrefs.GetFloat("SOUNDEFFECTFLOATNAME");
@@ -79,6 +80,23 @@ public class AudioManager : MonoBehaviour
 
 
     // Gameplay sounds
+
+    public void PlaySlimeSound()
+    {
+        audioSource.PlayOneShot(soundManager.slimeHit, soundEffectVolume);
+    }
+
+    public void PlayTableSound()
+    {
+        audioSource.PlayOneShot(soundManager.tableHit, soundEffectVolume);
+    }
+
+    public void PlayLogSound()
+    {
+        audioSource.PlayOneShot(soundManager.logHit, soundEffectVolume);
+    }
+
+
     public void PlayRockSounds()
     {
         audioSource.PlayOneShot(soundManager.boulderSound, soundEffectVolume);
@@ -202,5 +220,10 @@ public class AudioManager : MonoBehaviour
     public void PlayAddTimeSound()
     {
         audioSource.PlayOneShot(soundManager.addTimeSound, soundEffectVolume);
+    }
+
+    public void PlayEatSound()
+    {
+        audioSource.PlayOneShot(soundManager.eatSound, soundEffectVolume);
     }
 }

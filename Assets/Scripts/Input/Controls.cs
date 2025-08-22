@@ -52,6 +52,7 @@ public class Controls : MonoBehaviour, InputSystem_Actions.IPlayerActions
     public Vector2 MousePosition;
     public event Action OnPlayerAttack;
     public event Action OnPlayerInteract;
+    public event Action OnPlayerPause;
 
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -80,5 +81,11 @@ public class Controls : MonoBehaviour, InputSystem_Actions.IPlayerActions
     {
         if(context.performed)
             OnPlayerInteract?.Invoke();
+    }
+
+    public void OnPause(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+            OnPlayerPause?.Invoke();
     }
 }

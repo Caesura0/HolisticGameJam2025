@@ -35,7 +35,7 @@ public class SurvivalTimeHandler : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (paused || completed)
+        if (paused || completed || GameplayManager.Instance.IsGamePaused())
             return;
 
         if (!initialized)
@@ -53,11 +53,11 @@ public class SurvivalTimeHandler : MonoBehaviour
             return;
         }
 
-        requiredSurvivalTime -= Time.fixedDeltaTime;
+        remainingTime -= Time.fixedDeltaTime;
     }
 
     private void UpdateDisplay() =>
-        display.fillAmount = requiredSurvivalTime / remainingTime;
+        display.fillAmount = remainingTime / requiredSurvivalTime;
 
     private void EndTimer() => completed = true;
     public void PauseTimer() => paused = true;

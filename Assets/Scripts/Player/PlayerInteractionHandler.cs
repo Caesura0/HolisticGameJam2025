@@ -8,6 +8,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     public event Action OnThrowEvent;
     public event Action OnTryCaptureEvent;
     public event Action OnFailedCaptureEvent;
+    public event Action OnFirstEatEvent;
 
     [field: SerializeField] public Transform itemHolder {  get; private set; }
     [SerializeField] private LayerMask pickableItemsLayer;
@@ -21,6 +22,8 @@ public class PlayerInteractionHandler : MonoBehaviour
     private void Awake() => playerMovementHandler = GetComponent<PlayerMovementHandler>();
     private void Start() => Controls.Instance.OnPlayerAttack += HandlePickUp;
 
+    bool firstEat = false;
+
     private void HandlePickUp()
     {
         if (pickedItem)
@@ -32,6 +35,12 @@ public class PlayerInteractionHandler : MonoBehaviour
                 OnDevourEvent?.Invoke();
                 int foodValue = 1;
                 HungerHandler.Instance.Feed(foodValue);
+                if(!firstEat)
+                {
+                    firstEat = true;
+                    OnFirstEatEvent?.Invoke();
+                }
+                Debug.Log($"Ate {pickedItem.name} for {foodValue} food value");
             }
             else
             {
@@ -50,7 +59,7 @@ public class PlayerInteractionHandler : MonoBehaviour
 
             if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
             {
-                if (!enemy.IsCapturable())
+                if (!enemy.TryCapture())
                 {
                     Debug.Log("Shouldn't capture");
                     pickedItem = null;

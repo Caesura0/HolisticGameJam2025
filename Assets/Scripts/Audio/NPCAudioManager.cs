@@ -10,10 +10,10 @@ public class NPCAudioHandler : MonoBehaviour
         stateMachine = GetComponent<NPCSuperStateMachine>();
 
         // Subscribe to all NPC events
-        stateMachine.onSlimeHit.AddListener(OnSlimeHit);
-        stateMachine.onStunned.AddListener(OnStunned);
+        stateMachine.onSlimeHit?.AddListener(OnSlimeHit);
+        stateMachine.onStunned?.AddListener(OnStunned);
         // Subscribe to the duration versions if you want different sounds based on duration
-        stateMachine.onSlimeHitWithDuration.AddListener(OnSlimeHitWithDuration);
+        stateMachine.onSlimeHitWithDuration?.AddListener(OnSlimeHitWithDuration);
     }
 
     public void OnSlimeHit()
@@ -52,9 +52,9 @@ public class NPCAudioHandler : MonoBehaviour
         // Clean up listeners
         if (stateMachine != null)
         {
-            stateMachine.onSlimeHit.RemoveListener(OnSlimeHit);
-            stateMachine.onStunned.RemoveListener(OnStunned);
-            stateMachine.onSlimeHitWithDuration.RemoveListener(OnSlimeHitWithDuration);
+            stateMachine.onSlimeHit?.RemoveListener(OnSlimeHit);
+            stateMachine.onStunned?.RemoveListener(OnStunned);
+            stateMachine.onSlimeHitWithDuration?.RemoveListener(OnSlimeHitWithDuration);
         }
     }
 }

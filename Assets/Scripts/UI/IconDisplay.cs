@@ -16,7 +16,7 @@ public class IconDisplay : MonoBehaviour
 
     private void Update()
     {
-        if (!initialized)
+        if (!initialized || GameplayManager.Instance.IsGamePaused())
             return;
 
         if (blinkTimer > 0)

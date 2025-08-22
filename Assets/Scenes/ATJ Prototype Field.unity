@@ -27020,7 +27020,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1867869325
 Transform:
   m_ObjectHideFlags: 0
@@ -27221,6 +27221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5128259704825743953, guid: 4cde49d9812b5524dacabde918c8e428, type: 3}
+      propertyPath: Lens.OrthographicSize
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -27234,6 +27238,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 68913160829256995, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -960
+      objectReference: {fileID: 0}
+    - target: {fileID: 68913160829256995, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -540
+      objectReference: {fileID: 0}
+    - target: {fileID: 958483903250977369, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
+      propertyPath: orthographic size
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 2461971545036242327, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -27385,18 +27401,6 @@ PrefabInstance:
     - target: {fileID: 7618451584791035826, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7946364512540838578, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
-      propertyPath: hungerResetTime
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8023216725122724822, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
-      propertyPath: bearableSinLimit
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8023216725122724822, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
-      propertyPath: profileRefreshTime
-      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8332877743175782110, guid: 96f04545d280e5441bcd4f38f26a3d2e, type: 3}
       propertyPath: m_Name

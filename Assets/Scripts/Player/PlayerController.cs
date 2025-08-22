@@ -14,6 +14,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (GameplayManager.Instance.IsGamePaused())
+            return;
+
         if (HungerHandler.Instance.IsDead()) return;
 
         if(hasMovementHandler)

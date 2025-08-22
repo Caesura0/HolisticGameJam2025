@@ -178,6 +178,7 @@ MonoBehaviour:
   health: 3
   OnHitVFX: 6
   OnDeathVFX: 7
+  sfxType: 2
   onHitShakeDuration: 0.3
   onHitShakePower: 0.1
   <effectType>k__BackingField: 2
