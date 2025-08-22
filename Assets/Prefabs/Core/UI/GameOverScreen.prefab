@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2939529392943967357}
   - component: {fileID: 1641365360033143281}
   - component: {fileID: 5915434710131197227}
+  - component: {fileID: 7403532711229550835}
   m_Layer: 5
   m_Name: GameOverScreen
   m_TagString: Untagged
@@ -96,5 +97,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   died: {fileID: 32900000, guid: e9173dd7b631b864e834ff2bf1ec783b, type: 3}
   captured: {fileID: 32900000, guid: e9173dd7b631b864e834ff2bf1ec783b, type: 3}
-  survived: {fileID: 32900000, guid: d393e0cb094ee314ba4579fbfe3f14f7, type: 3}
+  survived: {fileID: 32900000, guid: 3be5605aa46d31940b95ad197fe50deb, type: 3}
   startDelay: 2
+--- !u!114 &7403532711229550835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1973809047944874393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb6d787aeb061e249a800e27401c0f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cutScene: {fileID: 32900000, guid: 00560b78ee67227438cc0e8f8b732a73, type: 3}
+  videoPlayer: {fileID: 1641365360033143281}
