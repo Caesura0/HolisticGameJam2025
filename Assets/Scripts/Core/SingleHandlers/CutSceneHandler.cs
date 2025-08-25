@@ -1,47 +1,58 @@
+using System;
 using System.Collections;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Video;
 
 public class CutSceneHandler : MonoBehaviour
 {
-    [SerializeField] private VideoClip cutScene;
     [SerializeField] private VideoPlayer videoPlayer;
-
-    [SerializeField] private string cutSceneUrl;
+    [SerializeField] private string fileName = "cutscene.mp4"; // put this in Assets/StreamingAssets/
 
     private void Start()
     {
         StartCoroutine(PlayCutScene());
+        Time.timeScale = 0f; // pause the game while the cutscene plays
+        videoPlayer.isLooping = false;
+        videoPlayer.loopPointReached += OnCutsceneEnded;
+    }
+
+    private string BuildStreamingAssetsUrl(string file)
+    {
+        var path = Path.Combine(Application.streamingAssetsPath, file);
+#if UNITY_WEBGL && !UNITY_EDITOR
+        // WebGL already needs a regular HTTP(S) URL; Unity provides it here.
+        return path; // e.g., https://<host>/Build/StreamingAssets/cutscene.mp4
+#else
+        // Editor/Windows: convert local path to file:// URL
+        return new Uri(path).AbsoluteUri; 
+#endif
     }
 
     private IEnumerator PlayCutScene()
     {
-//        Debug.Log("Starting Cutscene!");
-//        videoPlayer.timeUpdateMode = VideoTimeUpdateMode.UnscaledGameTime;
-//        videoPlayer.targetCamera = Camera.main;
-//        videoPlayer.isLooping = false;
-//        Time.timeScale = 0f;
-
-//#if UNITY_WEBGL && !UNITY_EDITOR
-        // WebGL path: use URL source
         videoPlayer.source = VideoSource.Url;
-        videoPlayer.url = cutSceneUrl;
+        videoPlayer.url = BuildStreamingAssetsUrl(fileName);
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.None; // optional: keep muted
+
         videoPlayer.Prepare();
         while (!videoPlayer.isPrepared) yield return null;
-        videoPlayer.Play();
 
-        // Wait until playback finishes
+        videoPlayer.Play();
         yield return new WaitUntil(() => !videoPlayer.isPlaying);
-//#else
-//        // Non-WebGL path: use VideoClip as before
-//        videoPlayer.source = VideoSource.VideoClip;
-//        videoPlayer.clip = cutScene;
-//        videoPlayer.Play();
-//        yield return new WaitForSecondsRealtime((float)cutScene.length);
-//#endif
 
         videoPlayer.Stop();
         AudioManager.Instance.PlayGameplayMusic();
         Time.timeScale = 1f;
+    }
+
+    private void OnCutsceneEnded(VideoPlayer vp)
+    {
+        vp.loopPointReached -= OnCutsceneEnded; // clean up
+        vp.Stop();
+        AudioManager.Instance.PlayGameplayMusic();
+        Time.timeScale = 1f;
+        // optionally hide the video overlay:
+        // vp.targetCameraAlpha = 0f;
     }
 }

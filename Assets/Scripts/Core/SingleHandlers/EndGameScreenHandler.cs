@@ -4,13 +4,12 @@ using UnityEngine.Video;
 
 public class EndGameScreenHandler : MonoBehaviour
 {
-    // --- WebGL sources (direct .mp4 URLs; H.264 + AAC recommended) ---
-    [Header("WebGL URLs (use direct mp4 links)")]
+    // These may be EITHER full URLs (https://...) OR just filenames that exist under Assets/StreamingAssets/
+    [Header("WebGL URLs or StreamingAssets filenames")]
     [SerializeField] private string diedUrl;
     [SerializeField] private string capturedUrl;
     [SerializeField] private string survivedUrl;
 
-    // --- Editor/Standalone sources ---
     [Header("Non-WebGL Clips")]
     [SerializeField] private VideoClip diedClip;
     [SerializeField] private VideoClip capturedClip;
@@ -24,16 +23,9 @@ public class EndGameScreenHandler : MonoBehaviour
     {
         if (!TryGetComponent(out videoPlayer)) return;
 
-        // Render on camera so targetCameraAlpha can fade in
         videoPlayer.renderMode = VideoRenderMode.CameraNearPlane;
         videoPlayer.targetCamera = Camera.main;
         videoPlayer.isLooping = true;
-
-        // Optional: route audio via AudioSource if you want mixer control
-        // (Create/assign an AudioSource on this GameObject)
-        // videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
-        // videoPlayer.EnableAudioTrack(0, true);
-        // videoPlayer.SetTargetAudioSource(0, GetComponent<AudioSource>());
 
         GameplayManager.Instance.OnStarvedToDeath += HandleStarvedEnding;
         GameplayManager.Instance.OnGotCaptured += HandleCapturedEnding;
@@ -90,9 +82,12 @@ public class EndGameScreenHandler : MonoBehaviour
 
     private IEnumerator PrepareThenPlay()
     {
-        // Optional pause of gameplay and music cue
         yield return new WaitForSecondsRealtime(startDelay);
         Time.timeScale = 0f;
+
+        // Keep video running while game is paused & avoid autoplay AudioContext issues
+        videoPlayer.timeUpdateMode = VideoTimeUpdateMode.UnscaledGameTime;
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.None;
 
         videoPlayer.Prepare();
         while (!videoPlayer.isPrepared) yield return null;
@@ -100,7 +95,6 @@ public class EndGameScreenHandler : MonoBehaviour
         videoPlayer.Play();
         AudioManager.Instance?.PlayGameEndMusic();
 
-        // Smooth fade-in
         yield return FadeInAlpha();
     }
 
@@ -118,17 +112,24 @@ public class EndGameScreenHandler : MonoBehaviour
         yield return PrepareThenPlay();
     }
 
-    // --- URL path (WebGL) ---
-    private IEnumerator StartPlayingUrl(string url)
+    // --- URL path (WebGL). Accepts full URLs or StreamingAssets filenames ---
+    private IEnumerator StartPlayingUrl(string urlOrFile)
     {
-        if (string.IsNullOrWhiteSpace(url))
+        if (string.IsNullOrWhiteSpace(urlOrFile))
         {
-            Debug.LogWarning("EndGameScreenHandler: URL is empty. Assign a direct mp4 URL in the inspector.");
+            Debug.LogWarning("EndGameScreenHandler: URL/filename is empty. Assign a direct mp4 URL or a StreamingAssets filename.");
             yield break;
         }
 
+        string u = urlOrFile.Trim();
+
+        // If not an absolute URL, treat it as a file inside StreamingAssets
+        if (!(u.StartsWith("http://") || u.StartsWith("https://")))
+            u = Application.streamingAssetsPath + "/" + u;
+
         videoPlayer.source = VideoSource.Url;
-        videoPlayer.url = url.Trim();
+        videoPlayer.url = u;
+
         yield return PrepareThenPlay();
     }
 }
