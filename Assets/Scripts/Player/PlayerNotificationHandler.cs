@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class PlayerNotificationHandler : MonoBehaviour
 {
-    [SerializeField] private float hungerNotificationTimer = 3f;
-    private float hungerNotificationTime = 0f;
+    [SerializeField] private float waitBetweenNotifications = 3f;
+    private float timeBeforeNextNotification = 0f;
 
     private NotificationHandler notificationHandler;
 
@@ -25,16 +25,12 @@ public class PlayerNotificationHandler : MonoBehaviour
 
     public void HandleHungerNotification()
     {
-        if (hungerNotificationTime > 0f)
+        if (timeBeforeNextNotification > 0f)
+            timeBeforeNextNotification -= Time.deltaTime;
+        else if (GameManager.Instance.GrannyHealthHandler.IsHealthCritical)
         {
-            hungerNotificationTime -= Time.deltaTime;
-            return;
+            PlayNotification(NotificationType.Hunger);
+            timeBeforeNextNotification = waitBetweenNotifications;
         }
-
-        if (!HungerHandler.Instance.InHungerRage())
-            return;
-
-        hungerNotificationTime = hungerNotificationTimer;
-        PlayNotification(NotificationType.Hunger);
     }
 }

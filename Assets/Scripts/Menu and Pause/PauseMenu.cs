@@ -32,7 +32,7 @@ public class PauseMenu : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0f;
-        GameplayManager.Instance.PauseGame();
+        GameManager.Instance.PauseGame();
         pauseMenuUI.SetActive(true); // Activate the pause menu UI
         AudioManager.Instance.PlayPauseClick();
     }
@@ -40,7 +40,7 @@ public class PauseMenu : MonoBehaviour
     public void Resume()
     {
         Time.timeScale = 1f;
-        GameplayManager.Instance.ResumeGame();
+        GameManager.Instance.ResumeGame();
         pauseMenuUI.SetActive(false); // Deactivate the pause menu UI
         AudioManager.Instance.PlayResumeClick();
     }

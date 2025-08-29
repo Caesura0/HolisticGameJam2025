@@ -40,9 +40,10 @@ public class PlayerAnimationHandler : MonoBehaviour
         }
         if (TryGetComponent<PlayerInteractionHandler>(out PlayerInteractionHandler interactionHandler))
             interactionHandler.OnDevourEvent += TriggerAttack;
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager)
+            gameManager.OnStarvedToDeath += HandleDeathTrigger;
     }
-
-    private void Start() => HungerHandler.Instance.OnDeathTrigger += HandleDeathTrigger;
 
     private void HandleMovementDirectionUpdate(float _)
     {

@@ -4,50 +4,73 @@ using UnityEngine.UI;
 public class IconDisplay : MonoBehaviour
 {
     [SerializeField] private Image iconImage;
-    [SerializeField] private float timeBetweenBlinks = .5f;
-    private float blinkTimer;
-    private bool blinkActive;
-    private bool initialized;
+    [SerializeField] private float timeBetweenBlinkSteps = .5f;
+
+    private bool isActive;
+    private bool isBlinkActive, hasBlinkStarted;
+    private float timeBeforeNextStep;
 
     private void Awake()
     {
-        initialized = iconImage;
-    }
+        isActive = iconImage;
 
+        GameManager gameManager = GameManager.Instance;
+        if (gameManager)
+            gameManager.OnGamePaused += HandleGamePaused;
+    }
     private void Update()
     {
-        if (!initialized || GameplayManager.Instance.IsGamePaused())
+        if (!isActive)
             return;
 
-        if (blinkTimer > 0)
-        {
-            blinkTimer -= Time.deltaTime;
-            return;
-        }
-
-        if (blinkActive)
-        {
-            iconImage.enabled = !iconImage.enabled;
-
-            blinkTimer = timeBetweenBlinks;
-        }
+        if (timeBeforeNextStep > 0)
+            timeBeforeNextStep -= Time.deltaTime;
+        else
+            HandleBlink();
     }
     
+    public void ShowIcon()
+    {
+        if(!isActive)
+            return;
+
+        iconImage.gameObject.SetActive(true);
+    }
     public void HideIcon()
     {
-        if (!initialized)
+        if (!isActive)
             return;
 
         iconImage.gameObject.SetActive(false);
     }
 
-    public void ShowIcon()
-    {
-        if(!initialized)
-            return;
+    public void SetBlinkActive(bool value) => isBlinkActive = value;
 
-        iconImage.gameObject.SetActive(true);
+    private void HandleBlink()
+    {
+        if (hasBlinkStarted)
+            BlinkStepTrigger();
+        else if (isBlinkActive)
+            BlinkStepTrigger();
+    }
+    private void BlinkStepTrigger()
+    {
+        iconImage.enabled = hasBlinkStarted;
+        timeBeforeNextStep = timeBetweenBlinkSteps;
+        hasBlinkStarted = !hasBlinkStarted;
     }
 
-    public void IsBlinkActive(bool assignedValue) => blinkActive = assignedValue;
+    private void HandleGamePaused()
+    {
+        if (!isActive)
+            return;
+
+        isActive = false;
+        GameManager.Instance.OnGameResumed += HandleGameResumed;
+    }
+    private void HandleGameResumed()
+    {
+        isActive = true;
+        GameManager.Instance.OnGameResumed -= HandleGameResumed;
+    }
 }

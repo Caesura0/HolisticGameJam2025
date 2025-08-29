@@ -24,8 +24,12 @@ public class GrannyProfileHandler : MonoBehaviour
 
         initialized = true;
 
-        HungerHandler.Instance.OnDropHeart += HandleHungerState;
-        HungerHandler.Instance.OnGainHeart += HandleHungerState;
+        HealthHandler healthHandler = GameManager.Instance?.GrannyHealthHandler;
+        if (healthHandler)
+        {
+            healthHandler.OnHealthDrop += HandleHungerState;
+            healthHandler.OnHealthGain += HandleHungerState;
+        }
 
         PlayerInteractionHandler player = FindFirstObjectByType<PlayerInteractionHandler>();
         player.OnDevourEvent += HandleDevourEvent;
@@ -33,17 +37,12 @@ public class GrannyProfileHandler : MonoBehaviour
 
     private void HandleDevourEvent() => sinCount++;
 
-    private void HandleHungerState()
-    {
-        if(HungerHandler.Instance.InHungerRage())
-            isHungry = true;
-        else
-            isHungry= false;
-    }
+    private void HandleHungerState() =>
+        isHungry = GameManager.Instance.GrannyHealthHandler.IsHealthCritical;
 
     private void Update()
     {
-        if (!initialized || GameplayManager.Instance.IsGamePaused())
+        if (!initialized || GameManager.Instance.IsGamePaused())
             return;
 
         if (remainingTimer > 0)

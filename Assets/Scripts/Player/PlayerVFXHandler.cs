@@ -9,13 +9,14 @@ public class PlayerVFXHandler : MonoBehaviour
             interactionHandler.OnDevourEvent += () =>
             { VFXHandler.Instance.PlayVisualEffect(VFXType.Blood, interactionHandler.itemHolder.position); };
 
-        if (HungerHandler.Instance)
+        HealthHandler healthHandler = GameManager.Instance?.GrannyHealthHandler;
+        if (healthHandler)
         {
-            HungerHandler.Instance.OnDeathTrigger += () =>
+            healthHandler.OnDeathTrigger += () =>
             { VFXHandler.Instance.PlayVisualEffect(VFXType.SoulRelease, transform.position); };
-            HungerHandler.Instance.OnDropHeart += () =>
+            healthHandler.OnHealthDrop += () =>
             { VFXHandler.Instance.PlayVisualEffect(VFXType.HeartBreak, playerVFXPoint.position); };
-            HungerHandler.Instance.OnGainHeart += () =>
+            healthHandler.OnHealthGain += () =>
             { VFXHandler.Instance.PlayVisualEffect(VFXType.HeartGain, playerVFXPoint.position); };
         }
     }

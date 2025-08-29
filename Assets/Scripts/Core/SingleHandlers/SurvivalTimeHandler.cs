@@ -10,7 +10,7 @@ public class SurvivalTimeHandler : MonoBehaviour
         get
         {
             if (instance == null)
-                Debug.LogError("SurvivalTimeHandler not found");
+                Debug.LogWarning("SurvivalTimeHandler not found");
             return instance;
         }
     }
@@ -35,7 +35,7 @@ public class SurvivalTimeHandler : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        if (paused || completed || GameplayManager.Instance.IsGamePaused())
+        if (paused || completed || GameManager.Instance.IsGamePaused())
             return;
 
         if (!initialized)

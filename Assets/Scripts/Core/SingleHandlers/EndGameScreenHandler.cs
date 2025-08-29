@@ -27,17 +27,17 @@ public class EndGameScreenHandler : MonoBehaviour
         videoPlayer.targetCamera = Camera.main;
         videoPlayer.isLooping = true;
 
-        GameplayManager.Instance.OnStarvedToDeath += HandleStarvedEnding;
-        GameplayManager.Instance.OnGotCaptured += HandleCapturedEnding;
-        GameplayManager.Instance.OnSurvivedTimer += HandleSurvivedEnding;
+        GameManager.Instance.OnStarvedToDeath += HandleStarvedEnding;
+        GameManager.Instance.OnGotCaptured += HandleCapturedEnding;
+        GameManager.Instance.OnSurvivedTimer += HandleSurvivedEnding;
     }
 
     private void OnDestroy()
     {
-        if (GameplayManager.Instance == null) return;
-        GameplayManager.Instance.OnStarvedToDeath -= HandleStarvedEnding;
-        GameplayManager.Instance.OnGotCaptured -= HandleCapturedEnding;
-        GameplayManager.Instance.OnSurvivedTimer -= HandleSurvivedEnding;
+        if (GameManager.Instance == null) return;
+        GameManager.Instance.OnStarvedToDeath -= HandleStarvedEnding;
+        GameManager.Instance.OnGotCaptured -= HandleCapturedEnding;
+        GameManager.Instance.OnSurvivedTimer -= HandleSurvivedEnding;
     }
 
     private void HandleStarvedEnding()

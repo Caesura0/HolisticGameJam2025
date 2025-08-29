@@ -34,7 +34,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                 pickedItem.gameObject.SetActive(false);
                 OnDevourEvent?.Invoke();
                 int foodValue = 1;
-                HungerHandler.Instance.Feed(foodValue);
+                GameManager.Instance?.GrannyHealthHandler?.RecoverHealthPoint();
                 if(!firstEat)
                 {
                     firstEat = true;

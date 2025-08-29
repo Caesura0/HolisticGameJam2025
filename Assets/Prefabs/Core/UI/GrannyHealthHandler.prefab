@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6973240674418409315}
-  - component: {fileID: 3833303722984491700}
+  - component: {fileID: 8652987104534190394}
+  - component: {fileID: 5876397482448474919}
   m_Layer: 5
-  m_Name: GUI-Container
+  m_Name: GrannyHealthHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,7 +39,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -25}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3833303722984491700
+--- !u!114 &8652987104534190394
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -47,13 +48,27 @@ MonoBehaviour:
   m_GameObject: {fileID: 393093627487427213}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af0b5092811e52048967bd1c04f315bb, type: 3}
+  m_Script: {fileID: 11500000, guid: c663ca9b2f9cd1349a11865c6d4c13eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timerUI: {fileID: 4920215942841082157}
-  hungerIconDisplayContainer: {fileID: 4325084924974515491}
-  hungerRagePoint: 2
-  hungerResetTime: 20
+  maxHealth: 5
+  criticalHealthPoint: 3
+  healthReductionTime: 15
+--- !u!114 &5876397482448474919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 393093627487427213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c19cb0b0c7ddb24ea85a2c1abd373de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthHandler: {fileID: 8652987104534190394}
+  healthIconsContainer: {fileID: 4325084924974515491}
+  displayWrapper: {fileID: 5531376751624026226}
 --- !u!1 &626008822580375595
 GameObject:
   m_ObjectHideFlags: 0
@@ -215,7 +230,7 @@ GameObject:
   - component: {fileID: 4325084924974515491}
   - component: {fileID: 4472215130023764608}
   m_Layer: 5
-  m_Name: HeartIconContainer
+  m_Name: HealthIconsContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -356,7 +371,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6618452470542630379}
   m_Layer: 5
-  m_Name: StatusDisplayBox
+  m_Name: GrannyHealthDisplayWrapper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -495,7 +510,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1289712881499467286
 RectTransform:
   m_ObjectHideFlags: 0
@@ -526,9 +541,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7912611464834662273}
-  - component: {fileID: 85421164430290784}
+  - component: {fileID: 3493521005984956476}
   m_Layer: 5
-  m_Name: SurvivalTimeHandler
+  m_Name: GrannyHealthTimerDisplay
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -555,7 +570,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: -23.619995}
   m_SizeDelta: {x: 180, y: 10}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &85421164430290784
+--- !u!114 &3493521005984956476
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -564,11 +579,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8266830720006597031}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 501408485bd4b34448c5cee0de59e984, type: 3}
+  m_Script: {fileID: 11500000, guid: 9c6c7c4da9a8b1e478923d31a508ae22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  display: {fileID: 5566722686743055897}
-  requiredSurvivalTime: 185
+  timerDisplay: {fileID: 5566722686743055897}
+  healthHandler: {fileID: 8652987104534190394}
 --- !u!1 &8491608621991966865
 GameObject:
   m_ObjectHideFlags: 0
