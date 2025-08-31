@@ -8,6 +8,7 @@ public class Quest
 {
     public Quest(QuestData data)
     {
+        Debug.Log($"Created new quest");
         this.data = data;
         objectives = new List<QuestObjective>();
         foreach(QuestObjective objective in data.objectives)

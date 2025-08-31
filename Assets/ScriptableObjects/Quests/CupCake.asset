@@ -12,3 +12,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dddd4af402fb667409f0ea13e460efdd, type: 3}
   m_Name: CupCake
   m_EditorClassIdentifier: 
+  questData:
+    <id>k__BackingField: 1
+    <prerequisite>k__BackingField: {fileID: 0}
+    <questName>k__BackingField: Cup Cake
+    <questDescription>k__BackingField: Pick up a cup cake and place it on an empty
+      table
+    <objectives>k__BackingField:
+    - objectiveType: 2
+      structure:
+        rid: 1133640089904349294
+    - objectiveType: 3
+      structure:
+        rid: -2
+    - objectiveType: 0
+      structure:
+        rid: -2
+    <sequentialCompletion>k__BackingField: 1
+    <reward>k__BackingField: {fileID: 0}
+    <isRepeatable>k__BackingField: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+    - rid: 1133640089904349294
+      type: {class: PickUpItem, ns: , asm: Assembly-CSharp}
+      data:
+        questItemId: 100
+        description: Pick up a cup cake

@@ -1,9 +1,12 @@
+using System;
+
 [System.Serializable]
 public class QuestObjectiveStructure
 {
-    public bool isCompleted { get; protected set; }
-    public virtual void UpdateProgress() { isCompleted = true; }
-
+    public event Action OnObjectiveAccomplished;
+    protected void CompleteObjective() => OnObjectiveAccomplished?.Invoke();
+    public virtual void UpdateProgress() => CompleteObjective();
+    public virtual QuestObjectiveStructure Clone() => throw new NotImplementedException("Override absent!");
     public static QuestObjectiveStructure GetStructureByType(QuestObjectiveType type)
     {
         switch (type)
