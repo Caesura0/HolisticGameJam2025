@@ -17,6 +17,7 @@ public class Interactable : MonoBehaviour
     }
     const float stopThreshold = 0.1f;
 
+    [field: SerializeField] public int itemId { get; private set; } = -1;
     [SerializeField, Range(1, 5)] private int health = 1;
     [SerializeField] private VFXType OnHitVFX = VFXType.Boom;
     [SerializeField] private VFXType OnDeathVFX = VFXType.None;

@@ -146,7 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9742a858761afa41ad7243a1685d4c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hungerNotificationTimer: 3
+  waitBetweenNotifications: 5
 --- !u!114 &3954989139122026612
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,8 +308,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -1283848757
-  m_SortingLayer: 2
+  m_SortingLayerID: -1610774927
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 1198725758, guid: cd80619c47bded34dadbf00a19021f24, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -455,7 +455,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5618226568796529232, guid: d7e20b2ecb846e24ab53fc5789c9e5e7, type: 3}
       propertyPath: m_SortingLayer
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 5618226568796529232, guid: d7e20b2ecb846e24ab53fc5789c9e5e7, type: 3}
       propertyPath: m_SortingOrder

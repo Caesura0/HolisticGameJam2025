@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5592330405933742704}
   - component: {fileID: 811872230436137483}
   - component: {fileID: 7268513356309973141}
+  - component: {fileID: 4594107505488655564}
   m_Layer: 5
   m_Name: GameManager
   m_TagString: Untagged
@@ -135,6 +136,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseMenuUI: {fileID: 6025103230597850003}
   speedUp: 0
+--- !u!114 &4594107505488655564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8332877743175782110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ced278645efc6dd40b07ae2caa8b9edf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questDataRegistry:
+  - {fileID: 11400000, guid: c0f762caa5fb8d24fbe29ac0f9b2edc7, type: 2}
 --- !u!1001 &1672947011324891457
 PrefabInstance:
   m_ObjectHideFlags: 0

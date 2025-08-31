@@ -7,6 +7,7 @@ public class PlayerInteractionHandler : MonoBehaviour
     public event Action OnDevourEvent;
     public event Action OnThrowEvent;
     public event Action OnTryCaptureEvent;
+    public event Action<int> OnItemPicked;
     public event Action OnFailedCaptureEvent;
     public event Action OnFirstEatEvent;
 
@@ -82,7 +83,7 @@ public class PlayerInteractionHandler : MonoBehaviour
             }
             else
             {
-                OnTryCaptureEvent?.Invoke();
+                OnItemPicked?.Invoke(pickedItem.itemId);
                 pickedItem.Grab(itemHolder);
             }
             #endregion

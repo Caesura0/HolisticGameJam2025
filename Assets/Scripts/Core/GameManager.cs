@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     private HealthHandler healthHandler = null;
     public HealthHandler GrannyHealthHandler => healthHandler;
     private PlayerInteractionHandler playerInteractionHandler = null;
+    public PlayerInteractionHandler PlayerInteractionHandler => playerInteractionHandler;
     private void Awake()
     {
         Time.timeScale = 1.0f;
