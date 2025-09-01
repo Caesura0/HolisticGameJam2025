@@ -30,10 +30,9 @@ public class PickUpItem : QuestObjectiveStructure
     }
     private void HandleOnItemPicked(int itemId)
     {
-        Debug.Log("Item Pick Up detected");
+        Debug.Log($"Item Pick Up detected (id: {itemId})");
         if (questItemId != itemId)
             return;
-        Debug.Log("Quest item picked up");
 
         GameManager.Instance.PlayerInteractionHandler.OnItemPicked -= HandleOnItemPicked;
         CompleteObjective();

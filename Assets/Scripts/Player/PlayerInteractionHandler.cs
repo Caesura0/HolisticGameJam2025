@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerNotificationHandler))]
@@ -8,119 +9,153 @@ public class PlayerInteractionHandler : MonoBehaviour
     public event Action OnThrowEvent;
     public event Action OnTryCaptureEvent;
     public event Action<int> OnItemPicked;
-    public event Action OnFailedCaptureEvent;
-    public event Action OnFirstEatEvent;
+    public event Action<int> OnItemPositioned;
+    public event Action<int> OnHitTarget;
 
-    [field: SerializeField] public Transform itemHolder {  get; private set; }
-    [SerializeField] private LayerMask pickableItemsLayer;
-    [SerializeField] private float pickUpRange = .7f;
-    [SerializeField] private float throwForce = 10f;
-
-    private PlayerMovementHandler playerMovementHandler;
-    private Interactable pickedItem;
     bool FirstAttack = true;
+    [field: SerializeField] public Transform itemHolder {  get; private set; }
+    [SerializeField] private float throwPower = 10f;
+    [SerializeField] private PlayerMovementHandler movementHandler;
 
-    private void Awake() => playerMovementHandler = GetComponent<PlayerMovementHandler>();
-    private void Start() => Controls.Instance.OnPlayerAttack += HandlePickUp;
+    private BoxCollider2D triggerCollider;
+    private List<InteractableItem> inRangeTargets = new List<InteractableItem>();
+    private InteractableItem selectedTarget = null;
+    private InteractableItem pickedUpItem = null;
 
-    bool firstEat = false;
+    private void Start() => Controls.Instance.OnPlayerAttack += HandleInteraction;
 
-    private void HandlePickUp()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (pickedItem)
+        if (!other.TryGetComponent<InteractableItem>(out InteractableItem target))
+            return;
+
+        if (inRangeTargets.Contains(target))
+            return;
+
+        inRangeTargets.Add(target);
+    }
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.TryGetComponent<InteractableItem>(out InteractableItem target))
+            return;
+
+        inRangeTargets.Remove(target);
+    }
+
+    private void Update() => UpdateSelection();
+
+    private void UpdateSelection()
+    {
+        if (pickedUpItem)
+            return;
+
+        if (inRangeTargets.Count == 0)
         {
-            if (pickedItem.IsEatable)
+            selectedTarget = null;
+            return;
+        }
+
+        float distance = float.MaxValue;
+        InteractableItem[] targetsList = inRangeTargets.ToArray();
+        foreach (InteractableItem target in targetsList)
+        {
+            //Select only pickable items
+            if (!target.Is<PickableItem>())
+                continue;
+
+            if (selectedTarget && (selectedTarget.Is<ConsumableItem>() && !target.Is<ConsumableItem>()))
+                continue;
+
+            else if (selectedTarget && (!selectedTarget.Is<ConsumableItem>() && target.Is<ConsumableItem>()))
             {
-                pickedItem.Release();
-                pickedItem.gameObject.SetActive(false);
+                selectedTarget = target;
+                continue;
+            }
+
+            float itemDistance = Vector2.Distance(target.transform.position, transform.position);
+            if (itemDistance < distance)
+            {
+                distance = itemDistance;
+                selectedTarget = target;
+            }
+        }
+    }
+
+    private void HandleInteraction()
+    {
+        if (pickedUpItem)
+        {
+            if (pickedUpItem.Is<ConsumableItem>())
+            {
+                pickedUpItem.ConvertTo<ConsumableItem>().Consume();
                 OnDevourEvent?.Invoke();
-                int foodValue = 1;
                 GameManager.Instance?.GrannyHealthHandler?.RecoverHealthPoint();
-                if(!firstEat)
-                {
-                    firstEat = true;
-                    OnFirstEatEvent?.Invoke();
-                }
-                Debug.Log($"Ate {pickedItem.name} for {foodValue} food value");
             }
             else
             {
-                pickedItem.Throw(playerMovementHandler.Velocity.normalized * throwForce);
-                OnThrowEvent?.Invoke();
-                Debug.Log($"Threw {pickedItem.name}");
+                Vector2 throwForce = movementHandler.Velocity.normalized * throwPower;
+                if (throwForce.magnitude > .1f)
+                {
+                    pickedUpItem.ConvertTo<ThrowableItem>().Throw(throwForce);
+                    pickedUpItem.ConvertTo<ThrowableItem>().OnTargetHit -= HandleHitTarget;
+                    pickedUpItem.ConvertTo<ThrowableItem>().OnTargetHit += HandleHitTarget;
+                    OnThrowEvent?.Invoke();
+                }
+                else
+                {
+                    pickedUpItem.ConvertTo<ThrowableItem>().Release(!pickedUpItem.TryGetComponent<ItemHolder>(out _));
+                    pickedUpItem.ConvertTo<PickableItem>().OnFoundPlacement += HandleItemPlacement;
+                }
             }
-            pickedItem = null;
+            pickedUpItem = null;
             return;
         }
         else
         {
-            #region If holding nothing
-            if (!TryPickItemInRange(out pickedItem))
+            //If nothing is selected, then stop.
+            if (!selectedTarget)
                 return;
 
-            if (pickedItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
+            //Since something is selected, start to pick it up
+            pickedUpItem = selectedTarget;
+
+            //
+            if (pickedUpItem.TryGetComponent<NPCSuperStateMachine>(out NPCSuperStateMachine enemy))
             {
+                //If the target is an armed NPC, cancel action
                 if (!enemy.TryCapture())
                 {
-                    Debug.Log("Shouldn't capture");
-                    pickedItem = null;
+                    pickedUpItem = null;
                     OnTryCaptureEvent?.Invoke();
-                    OnFailedCaptureEvent?.Invoke();
                     return;
                 }
 
-                // Only pick up if capturable
-                pickedItem.Grab(itemHolder);
+                //Since it is an unarmed NPC, capture it
+                pickedUpItem.ConvertTo<PickableItem>().PickUp(itemHolder);
 
                 if (FirstAttack)
-                {
-                    FirstAttack = false;
-                    HandlePickUp();
-                    GameEvents.RaiseFirstEat();
-                }
+                    HandleFirstCaptureEvent();
                 else
                     OnTryCaptureEvent?.Invoke();
             }
             else
             {
-                OnItemPicked?.Invoke(pickedItem.itemId);
-                pickedItem.Grab(itemHolder);
+                //Since the target is not an NPC, directly pick it up
+                pickedUpItem.ConvertTo<PickableItem>().PickUp(itemHolder);
+                OnItemPicked?.Invoke(pickedUpItem.itemId);
             }
-            #endregion
         }
     }
-
-    private bool TryPickItemInRange(out Interactable chosenItem)
+    private void HandleItemPlacement(PickableItem item)
     {
-        Collider2D[] others =
-            Physics2D.OverlapCircleAll(transform.position, pickUpRange, pickableItemsLayer);
-
-        chosenItem = null;
-
-        if (others.Length == 0)
-            return false;
-
-        float distance = float.MaxValue;
-        foreach (Collider2D other in others)
-        {
-            if (!other.TryGetComponent<Interactable>(out Interactable item))
-                continue;
-
-            if (chosenItem && (chosenItem.IsEatable && !item.IsEatable))
-                continue;
-            else if (chosenItem && (!chosenItem.IsEatable && item.IsEatable))
-            {
-                chosenItem = item;
-                continue;
-            }
-
-            float itemDistance = Vector2.Distance(item.transform.position, transform.position);
-            if (itemDistance < distance)
-            {
-                distance = itemDistance;
-                chosenItem = item;
-            }
-        }
-        return true;
+        OnItemPositioned?.Invoke(item.id);
+        item.OnFoundPlacement -= HandleItemPlacement;
+    }
+    private void HandleHitTarget(int targetId) => OnHitTarget?.Invoke(targetId);
+    private void HandleFirstCaptureEvent()
+    {
+        FirstAttack = false;
+        HandleInteraction();
+        GameEvents.RaiseFirstEat();
     }
 }

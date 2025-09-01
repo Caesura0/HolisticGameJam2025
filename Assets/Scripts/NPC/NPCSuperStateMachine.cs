@@ -88,7 +88,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         panicState = new PanicState(this, rb, player, animator);
         attackingState = new AttackingState(this, rb, player, animator, attackBehaviorType);
 
-        playerInteractionHandler.OnFirstEatEvent += PlayerInteractionHandler_OnFirstEatEvent;
+        playerInteractionHandler.OnDevourEvent += HandleFirstEatEvent;
 
         // Spawn with weapon if configured
         if (startWithWeapon)
@@ -101,8 +101,9 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         SwitchState(SuperStateType.Calm);
     }
 
-    private void PlayerInteractionHandler_OnFirstEatEvent()
+    private void HandleFirstEatEvent()
     {
+        playerInteractionHandler.OnDevourEvent -= HandleFirstEatEvent;
         hasGrannyEatenSomeone = true;
         SwitchState(startingState);
     }
