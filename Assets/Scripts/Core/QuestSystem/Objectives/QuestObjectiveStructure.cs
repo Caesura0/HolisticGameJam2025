@@ -16,6 +16,8 @@ public class QuestObjectiveStructure
                 return null;
             case QuestObjectiveType.PickUpItem:
                 return new PickUpItem();
+            case QuestObjectiveType.PlaceItemDown:
+                return new PlaceDownItem();
         }
     }
 }

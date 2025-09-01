@@ -24,18 +24,18 @@ MonoBehaviour:
         rid: 1133640089904349294
     - objectiveType: 3
       structure:
-        rid: -2
-    - objectiveType: 0
-      structure:
-        rid: -2
+        rid: 645677238363619534
     <sequentialCompletion>k__BackingField: 1
     <reward>k__BackingField: {fileID: 0}
     <isRepeatable>k__BackingField: 0
   references:
     version: 2
     RefIds:
-    - rid: -2
-      type: {class: , ns: , asm: }
+    - rid: 645677238363619534
+      type: {class: PlaceDownItem, ns: , asm: Assembly-CSharp}
+      data:
+        questItemId: 100
+        description: Place the cake on an empty table
     - rid: 1133640089904349294
       type: {class: PickUpItem, ns: , asm: Assembly-CSharp}
       data:

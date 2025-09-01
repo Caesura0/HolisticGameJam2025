@@ -8,8 +8,8 @@ public class PickUpItem : QuestObjectiveStructure
     [SerializeField] private string description;
 
     private bool initialized;
-    public PickUpItem() { initialized = false; }
-    public PickUpItem(PickUpItem original)
+    public PickUpItem() => initialized = false;
+    private PickUpItem(PickUpItem original)
     {
         questItemId = original.questItemId;
         description = original.description;

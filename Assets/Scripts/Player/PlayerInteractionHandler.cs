@@ -94,17 +94,18 @@ public class PlayerInteractionHandler : MonoBehaviour
             else
             {
                 Vector2 throwForce = movementHandler.Velocity.normalized * throwPower;
+                ThrowableItem item = pickedUpItem.ConvertTo<ThrowableItem>();
                 if (throwForce.magnitude > .1f)
                 {
-                    pickedUpItem.ConvertTo<ThrowableItem>().Throw(throwForce);
-                    pickedUpItem.ConvertTo<ThrowableItem>().OnTargetHit -= HandleHitTarget;
-                    pickedUpItem.ConvertTo<ThrowableItem>().OnTargetHit += HandleHitTarget;
+                    item.OnTargetHit -= HandleHitTarget;
+                    item.OnTargetHit += HandleHitTarget;
+                    item.Throw(throwForce);
                     OnThrowEvent?.Invoke();
                 }
                 else
                 {
-                    pickedUpItem.ConvertTo<ThrowableItem>().Release(!pickedUpItem.TryGetComponent<ItemHolder>(out _));
-                    pickedUpItem.ConvertTo<PickableItem>().OnFoundPlacement += HandleItemPlacement;
+                    item.OnFoundPlacement += HandleItemPlacement;
+                    item.Release(!pickedUpItem.TryGetComponent<ItemHolder>(out _));
                 }
             }
             pickedUpItem = null;
@@ -148,8 +149,9 @@ public class PlayerInteractionHandler : MonoBehaviour
     }
     private void HandleItemPlacement(PickableItem item)
     {
-        OnItemPositioned?.Invoke(item.id);
+        Debug.Log("Triggering OnItemPositioned Event");
         item.OnFoundPlacement -= HandleItemPlacement;
+        OnItemPositioned?.Invoke(item.id);
     }
     private void HandleHitTarget(int targetId) => OnHitTarget?.Invoke(targetId);
     private void HandleFirstCaptureEvent()
