@@ -6,7 +6,7 @@ public class PlayerVFXHandler : MonoBehaviour
     private void Start()
     {
         if (TryGetComponent<PlayerInteractionHandler>(out PlayerInteractionHandler interactionHandler))
-            interactionHandler.OnDevourEvent += () =>
+            interactionHandler.OnDevourEvent += (ConsumableItem _) =>
             { VFXHandler.Instance.PlayVisualEffect(VFXType.Blood, interactionHandler.itemHolder.position); };
 
         HealthHandler healthHandler = GameManager.Instance?.GrannyHealthHandler;

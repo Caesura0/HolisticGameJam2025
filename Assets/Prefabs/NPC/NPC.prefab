@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6191215477474630396}
   - component: {fileID: 3809134946355924265}
   - component: {fileID: 6529581856493849807}
-  - component: {fileID: 2488399781898151959}
   - component: {fileID: 6086866717076491251}
+  - component: {fileID: 4088469913198773884}
   m_Layer: 12
   m_Name: NPC
   m_TagString: Untagged
@@ -79,9 +79,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startingState: 0
   player: {fileID: 0}
+  weaponTransform: {fileID: 0}
+  attackBehaviorType: 0
   notificationHandler: {fileID: 623107238127559113}
   movementSpeed: 4
   panickedMovementSpeed: 10
+  speedMultiplier: 1
+  debuffed: 0
   onSlimeHit:
     m_PersistentCalls:
       m_Calls: []
@@ -91,6 +95,13 @@ MonoBehaviour:
   OnPlayerCaught:
     m_PersistentCalls:
       m_Calls: []
+  startWithWeapon: 1
+  weaponPrefab: {fileID: 0}
+  obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  obstacleCheckDistance: 10
+  hasGrannyEatenSomeone: 0
 --- !u!70 &6529581856493849807
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -128,21 +139,6 @@ CapsuleCollider2D:
   m_Offset: {x: 0.0428499, y: -0.0028567314}
   m_Size: {x: 0.5057132, y: 0.8114605}
   m_Direction: 0
---- !u!114 &2488399781898151959
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4991977505083280278}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ccf9a7d359e0cd4687426bb1b27a90d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <DestroyOnHitNPC>k__BackingField: 0
-  <effectType>k__BackingField: 0
-  <effectDuration>k__BackingField: 5
 --- !u!114 &6086866717076491251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +152,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animator: {fileID: 1463187381390446442}
+--- !u!114 &4088469913198773884
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4991977505083280278}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ab37635ae46afb46be38b094804b3aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 0}
+  selectedType: 1
 --- !u!1 &8359736527609527507
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +241,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1283848757
-  m_SortingLayer: 2
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 1200854696, guid: 5953614338649934785ba9a9ba0936dc, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

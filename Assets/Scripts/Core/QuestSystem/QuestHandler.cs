@@ -87,7 +87,7 @@ public class QuestHandler : MonoBehaviour
         if (!IsQuestActive(quest.id))
             return;
 
-        Debug.Log($"{quest} completed");
+        Debug.Log($"{quest.name} quest completed");
         quest.TriggerReward();
 
         if (!completedQuests.Contains(quest.id))

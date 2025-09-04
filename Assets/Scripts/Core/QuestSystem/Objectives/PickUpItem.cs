@@ -4,14 +4,20 @@ using UnityEngine;
 [Serializable]
 public class PickUpItem : QuestObjectiveStructure
 {
-    [SerializeField] private int questItemId;
+    private enum IdentificationType
+    {
+        Id,
+        Type
+    }
+    [SerializeField] private IdentificationType identifyBy = IdentificationType.Id;
+    [SerializeField] private ItemData questItem;
     [SerializeField] private string description;
 
     private bool initialized;
     public PickUpItem() => initialized = false;
     private PickUpItem(PickUpItem original)
     {
-        questItemId = original.questItemId;
+        questItem = original.questItem;
         description = original.description;
         initialized = false;
     }
@@ -21,20 +27,30 @@ public class PickUpItem : QuestObjectiveStructure
         {
             initialized = true;
             GameManager.Instance.PlayerInteractionHandler.OnItemPicked += HandleOnItemPicked;
-            Debug.Log($"Waiting to pick up item (id: {questItemId})");
+            Debug.Log($"Waiting to pick up item (id: {questItem.Id})");
         }
     }
     public override QuestObjectiveStructure Clone()
     {
         return new PickUpItem(this);
     }
-    private void HandleOnItemPicked(int itemId)
+    private void HandleOnItemPicked(PickableItem pickedItem)
     {
-        Debug.Log($"Item Pick Up detected (id: {itemId})");
-        if (questItemId != itemId)
-            return;
+        Debug.Log($"Item Pick Up detected (id: {pickedItem.id} type: {pickedItem.type})");
+        switch (identifyBy)
+        {
+            case IdentificationType.Id:
+                if (questItem.Id != pickedItem.id)
+                    return;
+                break;
+            case IdentificationType.Type:
+                if (questItem.Type != pickedItem.type)
+                    return;
+                break;
+        }
 
         GameManager.Instance.PlayerInteractionHandler.OnItemPicked -= HandleOnItemPicked;
+        Debug.Log($"Completed {this} Objective");
         CompleteObjective();
     }
 }

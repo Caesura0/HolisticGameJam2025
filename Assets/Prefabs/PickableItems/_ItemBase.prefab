@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3050927497527317710}
-  - component: {fileID: 1380380853188422086}
   - component: {fileID: 1792180917996264442}
   - component: {fileID: 4373127595979406108}
+  - component: {fileID: 8595374280679638040}
   m_Layer: 12
   m_Name: _ItemBase
   m_TagString: Untagged
@@ -35,27 +35,6 @@ Transform:
   - {fileID: 7884404303169361474}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1380380853188422086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2398338930210276449}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb6fc1d0921aaa743942ace42888e6e7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <itemId>k__BackingField: -1
-  health: 3
-  OnHitVFX: 6
-  OnDeathVFX: 7
-  sfxType: 1
-  onHitShakeDuration: 0.3
-  onHitShakePower: 0.1
-  <effectType>k__BackingField: 2
-  <effectDuration>k__BackingField: 5
 --- !u!61 &1792180917996264442
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -129,6 +108,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &8595374280679638040
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2398338930210276449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ab37635ae46afb46be38b094804b3aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 0}
+  selectedType: 0
 --- !u!1 &3911363078991145392
 GameObject:
   m_ObjectHideFlags: 0

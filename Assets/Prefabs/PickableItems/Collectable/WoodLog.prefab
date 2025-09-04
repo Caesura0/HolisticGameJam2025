@@ -34,7 +34,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2398338930210276449, guid: 2b5fcfbb7842a1f46a943b6dc660dda2, type: 3}
       propertyPath: m_Name
-      value: WoodPiece
+      value: WoodLog
       objectReference: {fileID: 0}
     - target: {fileID: 3050927497527317710, guid: 2b5fcfbb7842a1f46a943b6dc660dda2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -80,6 +80,18 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 22ef7f1d0b2a28442af58d24e46e5962, type: 3}
+    - target: {fileID: 3650539999687944389, guid: 2b5fcfbb7842a1f46a943b6dc660dda2, type: 3}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8595374280679638040, guid: 2b5fcfbb7842a1f46a943b6dc660dda2, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: c2eb8edb8740c494ea773892e2af22be, type: 2}
+    - target: {fileID: 8595374280679638040, guid: 2b5fcfbb7842a1f46a943b6dc660dda2, type: 3}
+      propertyPath: effectType
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1792180917996264442, guid: 2b5fcfbb7842a1f46a943b6dc660dda2, type: 3}
     m_RemovedGameObjects: []

@@ -107,6 +107,10 @@ PrefabInstance:
       propertyPath: onSlimeHit.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 4088469913198773884, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: f13609b3b5cbc484a952862264aa3a65, type: 2}
     - target: {fileID: 4991977505083280278, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: m_Name
       value: NPCCalm

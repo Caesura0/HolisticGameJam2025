@@ -5,6 +5,16 @@ public class ItemHolder : MonoBehaviour
     [SerializeField] private Transform holderTransform;
     private InteractableItem item;
     private bool holdingItem;
+    public int Id
+    {
+        get
+        {
+            if (item)
+                return item.id;
+            else
+                return -1;
+        }
+    }
 
     private void Start()
     {

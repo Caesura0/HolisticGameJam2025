@@ -51,12 +51,12 @@ public class NPCStateBehavior : MonoBehaviour
 
     void OnEnable()
     {
-        GameEvents.OnFirstEat += HandleFirstEat;
+        GameEvents.OnFirstKill += HandleFirstEat;
         GameEvents.OnPhaseChanged += HandlePhaseChanged;
     }
     void OnDisable()
     {
-        GameEvents.OnFirstEat -= HandleFirstEat;
+        GameEvents.OnFirstKill -= HandleFirstEat;
         GameEvents.OnPhaseChanged -= HandlePhaseChanged;
     }
 
