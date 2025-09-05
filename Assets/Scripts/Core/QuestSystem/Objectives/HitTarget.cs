@@ -4,14 +4,12 @@ public class HitTarget : QuestObjectiveStructure
 {
     [SerializeField] private StatusEffectType effectType;
     [SerializeField] private ItemData targetToHit;
-    [SerializeField] private string description;
 
     private bool initialized;
     public HitTarget() => initialized = false;
     private HitTarget(HitTarget original)
     {
         targetToHit = original.targetToHit;
-        description = original.description;
         initialized = false;
     }
     public override void UpdateProgress()

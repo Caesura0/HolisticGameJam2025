@@ -3,14 +3,12 @@ using UnityEngine;
 public class MoveToPosition : QuestObjectiveStructure
 {
     [SerializeField] private ItemData checkInPoint;
-    [SerializeField] private string description;
 
     private bool initialized;
     public MoveToPosition() => initialized = false;
     private MoveToPosition(MoveToPosition original)
     {
         checkInPoint = original.checkInPoint;
-        description = original.description;
         initialized = false;
     }
     public override void UpdateProgress()

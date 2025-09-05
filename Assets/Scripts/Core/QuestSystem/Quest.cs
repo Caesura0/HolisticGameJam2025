@@ -1,6 +1,5 @@
+using System;
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [System.Serializable]
@@ -16,20 +15,23 @@ public class Quest
         isCompleted = false;
     }
 
+    public event Action<Quest> OnQuestCompleted;
+
     [SerializeField] private QuestData data;
+
     #region QuestData
-    
     public int id => data.id;
     public string name => data.questName;
     public string description => data.questDescription;
-    public List<QuestObjective> objectives { get; private set; }
     public bool sequentialCompletion => data.sequentialCompletion;
     public QuestReward reward => data.reward;
     public bool canBeRepeated => data.isRepeatable;
-
     #endregion
+
     private bool isCompleted;
     public bool IsCompleted => isCompleted;
+
+    public List<QuestObjective> objectives { get; private set; }
 
     public void UpdateProgress()
     {
@@ -46,8 +48,11 @@ public class Quest
             if (data.sequentialCompletion)
                 break;
         }
-        isCompleted = incompleteObjectiveNotFound;
+        if (!incompleteObjectiveNotFound)
+            return;
 
+        isCompleted = incompleteObjectiveNotFound;
+        OnQuestCompleted?.Invoke(this);
     }
     public void TriggerReward() => reward?.TriggerReward();
 }

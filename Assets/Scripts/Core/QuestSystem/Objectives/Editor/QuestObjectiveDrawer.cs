@@ -5,8 +5,9 @@ using UnityEngine;
 public class QuestObjectiveDrawer : PropertyDrawer
 {
     private string propertyPath = "";
-    private SerializedProperty structure;
     private SerializedProperty objectiveType;
+    private SerializedProperty structure;
+    private SerializedProperty description;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
     {
@@ -37,6 +38,8 @@ public class QuestObjectiveDrawer : PropertyDrawer
         else
             DrawStructureProperties(ref currentPosition);
 
+        MovePositionForward(ref currentPosition);
+        EditorGUI.PropertyField(currentPosition, description);
         EditorGUI.EndProperty();
     }
 
@@ -44,6 +47,7 @@ public class QuestObjectiveDrawer : PropertyDrawer
     {
         objectiveType = property.FindPropertyRelative(nameof(objectiveType));
         structure = property.FindPropertyRelative(nameof(structure));
+        description = property.FindPropertyRelative(nameof(description));
         propertyPath = property.propertyPath;
     }
 
@@ -66,30 +70,6 @@ public class QuestObjectiveDrawer : PropertyDrawer
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
     {
-        SerializedProperty structureProp = property.FindPropertyRelative("structure");
-
-        float height = EditorGUIUtility.singleLineHeight;
-
-        if (structureProp != null && structureProp.managedReferenceValue != null)
-        {
-            height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-
-
-            SerializedProperty iterator = structureProp.Copy();
-            bool enterChildren = true;
-            while (iterator.NextVisible(enterChildren))
-            {
-                enterChildren = false;
-                if (SerializedProperty.EqualContents(iterator, structureProp.GetEndProperty()))
-                    break;
-
-                height += EditorGUI.GetPropertyHeight(iterator, true) + EditorGUIUtility.standardVerticalSpacing;
-            }
-        }
-        else
-        {
-            height += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-        }
-        return height;
+        return EditorGUI.GetPropertyHeight(property, label, true);
     }
 }

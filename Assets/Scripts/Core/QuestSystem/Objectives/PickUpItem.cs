@@ -11,14 +11,12 @@ public class PickUpItem : QuestObjectiveStructure
     }
     [SerializeField] private IdentificationType identifyBy = IdentificationType.Id;
     [SerializeField] private ItemData questItem;
-    [SerializeField] private string description;
 
     private bool initialized;
     public PickUpItem() => initialized = false;
     private PickUpItem(PickUpItem original)
     {
         questItem = original.questItem;
-        description = original.description;
         initialized = false;
     }
     public override void UpdateProgress()

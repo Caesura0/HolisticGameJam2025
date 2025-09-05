@@ -4,13 +4,11 @@ using UnityEngine;
 public class ThrowItem : QuestObjectiveStructure
 {
     [SerializeField] private ItemData questItem;
-    [SerializeField] private string description;
     private bool initialized;
     public ThrowItem() => initialized = false;
     private ThrowItem(ThrowItem original)
     {
         questItem = original.questItem;
-        description = original.description;
         initialized = false;
     }
     public override void UpdateProgress()

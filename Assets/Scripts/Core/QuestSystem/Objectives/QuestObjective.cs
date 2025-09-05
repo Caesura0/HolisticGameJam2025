@@ -1,13 +1,18 @@
+using System;
 using UnityEngine;
 
 [System.Serializable]
 public class QuestObjective
 {
-    [SerializeField] private QuestObjectiveType objectiveType;
+    public event Action OnObjectiveCompleted;
 
+    [SerializeField] private QuestObjectiveType objectiveType;
     [SerializeReference] private QuestObjectiveStructure structure;
-    private bool initialized = false, isCompleted = false;
+    [SerializeField] private string description;
+    private bool initialized = false;
+    private bool isCompleted = false;
     public bool IsCompleted => isCompleted;
+    public string Description => description;
     public void UpdateProgress()
     {
         if (structure == null)
@@ -25,12 +30,17 @@ public class QuestObjective
         structure.UpdateProgress();
     }
 
-    private void CompleteObjective() => isCompleted = true;
+    private void CompleteObjective()
+    {
+        isCompleted = true;
+        OnObjectiveCompleted?.Invoke();
+    }
 
     public QuestObjective(QuestObjective original)
     {
         Debug.Log("Created new quest objective");
         objectiveType = original.objectiveType;
         structure = original.structure?.Clone();
+        description = original.description;
     }
 }

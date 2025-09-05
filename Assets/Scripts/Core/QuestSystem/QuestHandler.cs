@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class QuestHandler : MonoBehaviour
 {
+    public event Action<Quest> OnActiveQuestAdded;
     [field: SerializeField] private List<QuestDataWrapper> questDataRegistry = new List<QuestDataWrapper>();
     private Dictionary<int, Quest> activeQuests;
     private List<int> completedQuests;
@@ -80,8 +82,12 @@ public class QuestHandler : MonoBehaviour
         CheckAvailableQuests();
     }
 
-    private void ActivateQuest(QuestDataWrapper dataWrapper) =>
-        activeQuests.Add(dataWrapper.GetData().id, new Quest(dataWrapper.GetData()));
+    private void ActivateQuest(QuestDataWrapper dataWrapper)
+    {
+        Quest quest = new Quest(dataWrapper.GetData());
+        activeQuests.Add(dataWrapper.GetData().id, quest);
+        OnActiveQuestAdded?.Invoke(quest);
+    }
     private void CompleteQuest(Quest quest)
     {
         if (!IsQuestActive(quest.id))

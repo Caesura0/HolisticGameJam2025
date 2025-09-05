@@ -4,14 +4,12 @@ using UnityEngine;
 public class DisarmTarget : QuestObjectiveStructure
 {
     [SerializeField] private ItemData targetToDisarm;
-    [SerializeField] private string description;
 
     private bool initialized;
     public DisarmTarget() => initialized = false;
     private DisarmTarget(DisarmTarget original)
     {
         targetToDisarm = original.targetToDisarm;
-        description = original.description;
         initialized = false;
     }
     public override void UpdateProgress()

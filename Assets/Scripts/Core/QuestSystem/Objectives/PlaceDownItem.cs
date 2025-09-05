@@ -5,14 +5,12 @@ public class PlaceDownItem : QuestObjectiveStructure
 {
     [SerializeField] private ItemData itemHolder;
     [SerializeField] private ItemData questItem;
-    [SerializeField] private string description;
 
     private bool initialized;
     public PlaceDownItem() => initialized = false;
     private PlaceDownItem(PlaceDownItem original)
     {
         questItem = original.questItem;
-        description = original.description;
         initialized = false;
     }
 
