@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public class CutSceneHandler : MonoBehaviour
 {
     [SerializeField] private VideoPlayer videoPlayer;
     [SerializeField] private string fileName = "cutscene.mp4"; // put this in Assets/StreamingAssets/
+    [SerializeField] private Button skipButton;
 
     private void Start()
     {
@@ -31,6 +33,7 @@ public class CutSceneHandler : MonoBehaviour
 
     private IEnumerator PlayCutScene()
     {
+        skipButton.gameObject.SetActive(true);
         videoPlayer.source = VideoSource.Url;
         videoPlayer.url = BuildStreamingAssetsUrl(fileName);
         videoPlayer.audioOutputMode = VideoAudioOutputMode.None; // optional: keep muted
@@ -41,7 +44,7 @@ public class CutSceneHandler : MonoBehaviour
         videoPlayer.Play();
         yield return new WaitUntil(() => !videoPlayer.isPlaying);
 
-        videoPlayer.Stop();
+        SkipVideo();
         AudioManager.Instance.PlayGameplayMusic();
         Time.timeScale = 1f;
     }
@@ -54,5 +57,11 @@ public class CutSceneHandler : MonoBehaviour
         Time.timeScale = 1f;
         // optionally hide the video overlay:
         // vp.targetCameraAlpha = 0f;
+    }
+
+    public void SkipVideo()
+    {
+        skipButton.gameObject.SetActive(false);
+        videoPlayer.Stop();
     }
 }

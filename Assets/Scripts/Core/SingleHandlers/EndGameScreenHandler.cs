@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Video;
 
 public class EndGameScreenHandler : MonoBehaviour
@@ -16,6 +17,7 @@ public class EndGameScreenHandler : MonoBehaviour
     [SerializeField] private VideoClip survivedClip;
 
     [SerializeField] private float startDelay = 1f;
+    [SerializeField] private Button skipButton;
 
     private VideoPlayer videoPlayer;
 
@@ -106,7 +108,7 @@ public class EndGameScreenHandler : MonoBehaviour
             Debug.LogWarning("EndGameScreenHandler: VideoClip is not assigned.");
             yield break;
         }
-
+        skipButton.gameObject.SetActive(true);
         videoPlayer.source = VideoSource.VideoClip;
         videoPlayer.clip = clip;
         yield return PrepareThenPlay();
@@ -121,6 +123,7 @@ public class EndGameScreenHandler : MonoBehaviour
             yield break;
         }
 
+        skipButton.gameObject.SetActive(true);
         string u = urlOrFile.Trim();
 
         // If not an absolute URL, treat it as a file inside StreamingAssets

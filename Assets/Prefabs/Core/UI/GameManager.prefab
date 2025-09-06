@@ -38,8 +38,8 @@ RectTransform:
   - {fileID: 5748826741908516771}
   - {fileID: 3706543357177697563}
   - {fileID: 4519807953032169157}
-  - {fileID: 2619268829160968854}
   - {fileID: 7300833556406418228}
+  - {fileID: 2619268829160968854}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -986,6 +986,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4258615416357711638}
     m_Modifications:
+    - target: {fileID: 1641365360033143281, guid: 4d7cd86de9158b749b8796e68472597d, type: 3}
+      propertyPath: m_RenderMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1641365360033143281, guid: 4d7cd86de9158b749b8796e68472597d, type: 3}
+      propertyPath: m_TargetCameraAlpha
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1973809047944874393, guid: 4d7cd86de9158b749b8796e68472597d, type: 3}
       propertyPath: m_Name
       value: VideoPlayerScreen

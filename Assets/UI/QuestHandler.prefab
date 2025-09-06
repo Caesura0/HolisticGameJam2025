@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questDataRegistry:
+  - {fileID: 11400000, guid: 65793df581a79ea489c005a304b396dd, type: 2}
   - {fileID: 11400000, guid: c0f762caa5fb8d24fbe29ac0f9b2edc7, type: 2}
 --- !u!1 &2470812788800909297
 GameObject:

@@ -16,6 +16,7 @@ public class PickUpItem : QuestObjectiveStructure
     public PickUpItem() => initialized = false;
     private PickUpItem(PickUpItem original)
     {
+        identifyBy = original.identifyBy;
         questItem = original.questItem;
         initialized = false;
     }

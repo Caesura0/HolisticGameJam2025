@@ -14,6 +14,8 @@ public class QuestObjectiveStructure
             case QuestObjectiveType.None:
             default:
                 return null;
+            case QuestObjectiveType.MoveToPosition:
+                return new MoveToPosition();
             case QuestObjectiveType.PickUpItem:
                 return new PickUpItem();
             case QuestObjectiveType.PlaceItemDown:

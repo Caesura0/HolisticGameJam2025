@@ -16,6 +16,7 @@ public class DevourTarget : QuestObjectiveStructure
     public DevourTarget() => initialized = false;
     private DevourTarget(DevourTarget original)
     {
+        identifyBy = original.identifyBy;
         questItem = original.questItem;
         initialized = false;
     }

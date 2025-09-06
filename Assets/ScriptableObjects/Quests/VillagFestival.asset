@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dddd4af402fb667409f0ea13e460efdd, type: 3}
+  m_Name: VillagFestival
+  m_EditorClassIdentifier: 
+  questData:
+    <id>k__BackingField: 0
+    <prerequisite>k__BackingField: {fileID: 0}
+    <questName>k__BackingField: Village Festival
+    <questDescription>k__BackingField: The festival must be at it's peak now. I should
+      go south to the village center and enjoy the sight
+    <objectives>k__BackingField:
+    - objectiveType: 1
+      structure:
+        rid: 645677357234651236
+      description: Go to the village center
+    <sequentialCompletion>k__BackingField: 0
+    <reward>k__BackingField: {fileID: 0}
+    <isRepeatable>k__BackingField: 0
+  references:
+    version: 2
+    RefIds:
+    - rid: 645677357234651236
+      type: {class: MoveToPosition, ns: , asm: Assembly-CSharp}
+      data:
+        checkInPoint: {fileID: 11400000, guid: 530b3dd9c18fdec4abe10ce94b59df93, type: 2}

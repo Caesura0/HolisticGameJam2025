@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questData:
     <id>k__BackingField: 1
-    <prerequisite>k__BackingField: {fileID: 0}
+    <prerequisite>k__BackingField: {fileID: 11400000, guid: 65793df581a79ea489c005a304b396dd, type: 2}
     <questName>k__BackingField: Cup Cake
     <questDescription>k__BackingField: Pick up a cup cake and place it on an empty
       table
