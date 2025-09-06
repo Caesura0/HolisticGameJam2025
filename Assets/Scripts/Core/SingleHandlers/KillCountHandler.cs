@@ -14,7 +14,7 @@ public class KillCountHandler : MonoBehaviour
         UpdateVisual();
     }
 
-    private void IncreaseKillCount()
+    private void IncreaseKillCount(ConsumableItem _)
     {
         killCount++;
         UpdateVisual();

@@ -18,6 +18,14 @@ public class QuestObjectiveStructure
                 return new PickUpItem();
             case QuestObjectiveType.PlaceItemDown:
                 return new PlaceDownItem();
+            case QuestObjectiveType.ThrowItem:
+                return new ThrowItem();
+            case QuestObjectiveType.DisarmTarget:
+                return new DisarmTarget();
+            case QuestObjectiveType.HitTarget:
+                return new HitTarget();
+            case QuestObjectiveType.DevourTarget:
+                return new DevourTarget();
         }
     }
 }
@@ -29,6 +37,7 @@ public enum QuestObjectiveType
     PickUpItem,
     PlaceItemDown,
     ThrowItem,
-    CaptureTarget,
+    DisarmTarget,
+    HitTarget,
     DevourTarget
 }

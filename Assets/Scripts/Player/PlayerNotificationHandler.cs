@@ -21,7 +21,7 @@ public class PlayerNotificationHandler : MonoBehaviour
     private void PlayNotification(NotificationType type) => 
         notificationHandler.PlayNotification(type);
     private void HandleCaptureNotification() => PlayNotification(NotificationType.Capture);
-    private void HandleDevourNotification() => PlayNotification(NotificationType.Eat);
+    private void HandleDevourNotification(ConsumableItem _) => PlayNotification(NotificationType.Eat);
 
     public void HandleHungerNotification()
     {

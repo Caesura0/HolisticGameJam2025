@@ -187,6 +187,10 @@ PrefabInstance:
       propertyPath: onSlimeHit.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 4088469913198773884, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: 96bee5e3234a7e64ca58601fceb1e5ce, type: 2}
     - target: {fileID: 4991977505083280278, guid: 50555c249da5bf24084cf20de12afcaf, type: 3}
       propertyPath: m_Name
       value: NPCGuardian

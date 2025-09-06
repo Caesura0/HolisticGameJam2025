@@ -3,14 +3,13 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class NPCSuperStateMachine : MonoBehaviour, IWeapon
+public class NPCSuperStateMachine : MonoBehaviour
 {
     public enum SuperStateType { Calm, Panic, Attacking }
 
     [Header("State Configuration")]
     [SerializeField] SuperStateType startingState = SuperStateType.Calm;
-    [SerializeField] Transform player;
-    PlayerInteractionHandler playerInteractionHandler;
+    [SerializeField] PlayerInteractionHandler player;
     [SerializeField] Transform weaponTransform;
     [SerializeField] AttackingState.AttackBehaviorType attackBehaviorType = AttackingState.AttackBehaviorType.Hunter;
     [SerializeField] NotificationHandler notificationHandler;
@@ -57,6 +56,7 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     Rigidbody2D rb;
     INPCSuperState currentState;
     NPCAnimator animator;
+    InteractableItem item;
 
     // States
     public CalmState calmState { get; private set; }
@@ -66,29 +66,32 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
 
 
     public bool hasGrannyEatenSomeone = false;
-
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
 
-
+        if (!player)
+            player = FindFirstObjectByType<PlayerInteractionHandler>();
+        
+        player.OnDevourEvent += HandleFirstEatEvent;
+    }
+    private void OnEnable()
+    {
+        player.OnHitTarget += HandleOnHitTarget;  
+    }
+    private void OnDisable()
+    {
+        player.OnHitTarget -= HandleOnHitTarget;
     }
 
     void Start()
     {
-        if (!player)
-        {
-            var player = FindFirstObjectByType<PlayerController>().transform;
-            if (player) this.player = player.transform;
-            playerInteractionHandler = player.GetComponent<PlayerInteractionHandler>();
-        }
         animator = GetComponent<NPCAnimator>();
 
-        calmState = new CalmState(this, rb, player, animator);
-        panicState = new PanicState(this, rb, player, animator);
-        attackingState = new AttackingState(this, rb, player, animator, attackBehaviorType);
+        calmState = new CalmState(this, rb, player.transform, animator);
+        panicState = new PanicState(this, rb, player.transform, animator);
+        attackingState = new AttackingState(this, rb, player.transform, animator, attackBehaviorType);
 
-        playerInteractionHandler.OnDevourEvent += HandleFirstEatEvent;
 
         // Spawn with weapon if configured
         if (startWithWeapon)
@@ -101,9 +104,9 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         SwitchState(SuperStateType.Calm);
     }
 
-    private void HandleFirstEatEvent()
+    private void HandleFirstEatEvent(ConsumableItem _)
     {
-        playerInteractionHandler.OnDevourEvent -= HandleFirstEatEvent;
+        player.OnDevourEvent -= HandleFirstEatEvent;
         hasGrannyEatenSomeone = true;
         SwitchState(startingState);
     }
@@ -129,6 +132,15 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
             SwitchState(SuperStateType.Attacking);
         }
     }
+    public void DropWeapon()
+    {
+        if (!currentWeapon)
+            return;
+
+        currentWeapon.Drop();
+        currentWeapon = null;
+        GameEvents.InvokeOnDisarmed(item);
+    }
 
     void Update()
     {
@@ -137,24 +149,6 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
         CheckIfStuck();
     }
 
-    public void DropWeapon()
-    {
-        if (!currentWeapon) return;
-        currentWeapon.Drop();
-        currentWeapon = null;
-        Debug.Log($"{gameObject.name} dropped weapon!");
-    }
- 
-    public void OnWeaponLost()
-    {
-        Debug.Log("Weapon was lost! NPC becomes capturable again.");
-        if (currentWeapon != null)
-        {
-            currentWeapon = null;
-        }
-
-        Debug.Log("Weapon cleared, NPC is now capturable.");
-    }
 
     private void CheckIfStuck()
     {
@@ -277,20 +271,22 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
     }
 
     // Hit Handling
-
-    public void ApplySlow(float duration = 2f)
+    public void HandleOnHitTarget(InteractableItem sender, InteractableItem target)
     {
-        Debug.Log("PlayerHit by thrown item");
-        // Fire any desired events (vfx, sfx, etc)
-        onSlimeHit?.Invoke();
-        onSlimeHitWithDuration?.Invoke(duration);
-
-        //exit since already in panic mode
-        if (currentState == panicState)
+        if (target != item)
             return;
 
-        //Switch to panic state from whatever other state
-        SwitchState(SuperStateType.Panic);
+        switch (sender.EffectType)
+        {
+            case StatusEffectType.None:
+                break;
+            case StatusEffectType.Stunned:
+                Stun(sender.EffectDuration);
+                break;
+            case StatusEffectType.Slowed:
+                Slow(sender.EffectDuration);
+                break;
+        }
     }
 
     public bool TryCapture()
@@ -311,43 +307,22 @@ public class NPCSuperStateMachine : MonoBehaviour, IWeapon
 
     private bool IsWeaponEquipped() => currentWeapon != null;
 
-    private void OnTriggerEnter2D(Collider2D other)
+    public void Stun(float duration)
     {
-        if (!other.TryGetComponent<Interactable>(out Interactable item))
-            return;
-
-        if (item.BeingHeld)
-            return;
-
-        if (item.effectType == StatusEffectType.None)
-            return;
-
-        switch (item.effectType)
-        {
-            case StatusEffectType.None:
-                break;
-            case StatusEffectType.Stunned:
-                {
-                    OverwriteStatusEffect(item.effectDuration);
-                    speedMultiplier = 0;
-                    rb.linearVelocity = Vector2.zero; // Stop movement
-                    notificationHandler.PlayNotification(NotificationType.KO);
-                    Debug.Log($"{gameObject.name} stunned");
-                    DropWeapon();
-                }
-                break;
-            case StatusEffectType.Slowed:
-                {
-                    OverwriteStatusEffect(item.effectDuration);
-                    speedMultiplier = .4f;
-                    notificationHandler.PlayNotification(NotificationType.Slow);
-                    Debug.Log($"{gameObject.name} slowed");
-                    DropWeapon();
-                }
-                break;
-        }
-
-        //Moved PickableItem destruction logic to PickableItem script
+        OverwriteStatusEffect(duration);
+        speedMultiplier = 0;
+        rb.linearVelocity = Vector2.zero; // Stop movement
+        notificationHandler.PlayNotification(NotificationType.KO);
+        Debug.Log($"{gameObject.name} stunned");
+        DropWeapon();
+    }
+    public void Slow(float duration)
+    {
+        OverwriteStatusEffect(duration);
+        speedMultiplier = .4f;
+        notificationHandler.PlayNotification(NotificationType.Slow);
+        Debug.Log($"{gameObject.name} slowed");
+        DropWeapon();
     }
 
     private void OverwriteStatusEffect(float duration)

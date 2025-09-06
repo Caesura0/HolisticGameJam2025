@@ -35,7 +35,7 @@ public class GrannyProfileHandler : MonoBehaviour
         player.OnDevourEvent += HandleDevourEvent;
     }
 
-    private void HandleDevourEvent() => sinCount++;
+    private void HandleDevourEvent(ConsumableItem _) => sinCount++;
 
     private void HandleHungerState() =>
         isHungry = GameManager.Instance.GrannyHealthHandler.IsHealthCritical;

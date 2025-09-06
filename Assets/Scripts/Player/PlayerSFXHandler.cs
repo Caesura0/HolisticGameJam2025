@@ -6,7 +6,7 @@ public class PlayerSFXHandler : MonoBehaviour
     {
         AudioManager sfxManager = AudioManager.Instance;
         if (TryGetComponent<PlayerInteractionHandler>(out PlayerInteractionHandler interactionHandler))
-            interactionHandler.OnDevourEvent += () =>
+            interactionHandler.OnDevourEvent += (ConsumableItem _) =>
             { sfxManager.PlayEatSound(); };
     }
 }

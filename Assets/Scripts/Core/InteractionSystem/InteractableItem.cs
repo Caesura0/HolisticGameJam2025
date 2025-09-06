@@ -1,12 +1,25 @@
 using System;
 using UnityEngine;
-
+public enum StatusEffectType
+{
+    None,
+    Slowed,
+    Stunned
+}
 public sealed class InteractableItem : MonoBehaviour
 {
-    [field: SerializeField] public int itemId { get; private set; } = -1;
+    [SerializeField] private ItemData item;
     [SerializeField] private InteractableType selectedType;
+    [SerializeField] private StatusEffectType effectType = StatusEffectType.None;
+    [SerializeField] private float effectDuration = 5f;
     private InteractableStructure structure;
     private bool interactionEnabled;
+
+    public int id => item.Id;
+    public new string name => item.Name;
+    public ItemType type => item.Type;
+    public StatusEffectType EffectType => effectType;
+    public float EffectDuration => effectDuration;
 
     private void Awake()
     {

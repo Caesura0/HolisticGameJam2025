@@ -23,7 +23,7 @@ public class PlayerAnimationHandler : MonoBehaviour
 
     [SerializeField] private Animator animator;
 
-    private void TriggerAttack() => animator.SetTrigger(attackTriggerId);
+    private void TriggerAttack(ConsumableItem _) => animator.SetTrigger(attackTriggerId);
     private void TriggerDeath() => animator.SetTrigger(deathTriggerId);
     //private void TriggerPickUp() => animator.SetTrigger(pickUpTriggerId);
     //private void TriggerThrow() => animator.SetTrigger(throwTriggerId);

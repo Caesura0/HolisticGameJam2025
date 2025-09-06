@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
             playerInteractionHandler.OnDevourEvent += HandleFirstKillEvent;
     }
 
-    private void HandleFirstKillEvent()
+    private void HandleFirstKillEvent(ConsumableItem _)
     {
         OnFirstKill?.Invoke();
         playerInteractionHandler.OnDevourEvent -= HandleFirstKillEvent;

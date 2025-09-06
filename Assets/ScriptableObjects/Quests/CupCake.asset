@@ -22,9 +22,11 @@ MonoBehaviour:
     - objectiveType: 2
       structure:
         rid: 1133640089904349294
+      description: pick up a cup cake
     - objectiveType: 3
       structure:
         rid: 645677238363619534
+      description: place it on an empty table
     <sequentialCompletion>k__BackingField: 1
     <reward>k__BackingField: {fileID: 0}
     <isRepeatable>k__BackingField: 0
@@ -34,10 +36,10 @@ MonoBehaviour:
     - rid: 645677238363619534
       type: {class: PlaceDownItem, ns: , asm: Assembly-CSharp}
       data:
-        questItemId: 100
-        description: Place the cake on an empty table
+        itemHolder: {fileID: 11400000, guid: a354cd24158bb884082fd7c236bb5ac6, type: 2}
+        questItem: {fileID: 11400000, guid: 91ce80d20e9e0474ebd7c2548f273106, type: 2}
     - rid: 1133640089904349294
       type: {class: PickUpItem, ns: , asm: Assembly-CSharp}
       data:
-        questItemId: 100
-        description: Pick up a cup cake
+        identifyBy: 0
+        questItem: {fileID: 11400000, guid: 91ce80d20e9e0474ebd7c2548f273106, type: 2}

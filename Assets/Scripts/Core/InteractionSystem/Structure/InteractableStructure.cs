@@ -10,7 +10,8 @@ public class InteractableStructure
         this.item = item;
         Initialize();
     }
-    public int id => item.itemId;
+    public int id => item.id;
+    public ItemType type => item.type;
     protected Transform transform;
     protected InteractableItem item;
     public virtual void Initialize() => throw new NotImplementedException();

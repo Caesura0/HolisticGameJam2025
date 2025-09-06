@@ -5,7 +5,7 @@ using UnityEngine;
 public class PickableItem : InteractableStructure
 {
     public event Action OnPickedUp;
-    public event Action<PickableItem> OnFoundPlacement;
+    public event Action<ItemHolder, PickableItem> OnFoundPlacement;
 
     private Transform holder;
     private bool beingHeld;
@@ -81,7 +81,7 @@ public class PickableItem : InteractableStructure
             return;
         chosenHolder.HoldItem(item);
         Debug.Log("placement found");
-        OnFoundPlacement?.Invoke(this);
+        OnFoundPlacement?.Invoke(chosenHolder, this);
     }
     private void EnableCollision() => collision.enabled = true;
     private void DisableCollision() => collision.enabled = false;

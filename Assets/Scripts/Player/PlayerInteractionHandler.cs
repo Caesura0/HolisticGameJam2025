@@ -5,12 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerNotificationHandler))]
 public class PlayerInteractionHandler : MonoBehaviour
 {
-    public event Action OnDevourEvent;
-    public event Action OnThrowEvent;
+    public event Action<ConsumableItem> OnDevourEvent;
+    public event Action<int> OnThrowEvent;
     public event Action OnTryCaptureEvent;
-    public event Action<int> OnItemPicked;
-    public event Action<int> OnItemPositioned;
-    public event Action<int> OnHitTarget;
+    public event Action<PickableItem> OnItemPicked;
+    public event Action<ItemHolder, int> OnItemPositioned;
+    public event Action<InteractableItem, InteractableItem> OnHitTarget;
 
     bool FirstAttack = true;
     [field: SerializeField] public Transform itemHolder {  get; private set; }
@@ -87,8 +87,9 @@ public class PlayerInteractionHandler : MonoBehaviour
         {
             if (pickedUpItem.Is<ConsumableItem>())
             {
-                pickedUpItem.ConvertTo<ConsumableItem>().Consume();
-                OnDevourEvent?.Invoke();
+                ConsumableItem target = pickedUpItem.ConvertTo<ConsumableItem>();
+                target.Consume();
+                OnDevourEvent?.Invoke(target);
                 GameManager.Instance?.GrannyHealthHandler?.RecoverHealthPoint();
             }
             else
@@ -100,7 +101,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                     item.OnTargetHit -= HandleHitTarget;
                     item.OnTargetHit += HandleHitTarget;
                     item.Throw(throwForce);
-                    OnThrowEvent?.Invoke();
+                    OnThrowEvent?.Invoke(item.id);
                 }
                 else
                 {
@@ -142,18 +143,19 @@ public class PlayerInteractionHandler : MonoBehaviour
             else
             {
                 //Since the target is not an NPC, directly pick it up
-                pickedUpItem.ConvertTo<PickableItem>().PickUp(itemHolder);
-                OnItemPicked?.Invoke(pickedUpItem.itemId);
+                PickableItem item = pickedUpItem.ConvertTo<PickableItem>();
+                item.PickUp(itemHolder);
+                OnItemPicked?.Invoke(item);
             }
         }
     }
-    private void HandleItemPlacement(PickableItem item)
+    private void HandleItemPlacement(ItemHolder holder, PickableItem item)
     {
-        Debug.Log("Triggering OnItemPositioned Event");
+        //Debug.Log("Triggering OnItemPositioned Event");
         item.OnFoundPlacement -= HandleItemPlacement;
-        OnItemPositioned?.Invoke(item.id);
+        OnItemPositioned?.Invoke(holder, item.id);
     }
-    private void HandleHitTarget(int targetId) => OnHitTarget?.Invoke(targetId);
+    private void HandleHitTarget(InteractableItem sender, InteractableItem target) => OnHitTarget?.Invoke(sender, target);
     private void HandleFirstCaptureEvent()
     {
         FirstAttack = false;

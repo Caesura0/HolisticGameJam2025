@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class ThrowableItem : PickableItem
 {
-    public event Action<int> OnTargetHit;
+    public event Action<InteractableItem, InteractableItem> OnTargetHit;
     public event Action OnMovementStopped;
 
     const float stopThreshold = 0.1f;
@@ -39,7 +39,7 @@ public class ThrowableItem : PickableItem
             return;
 
         rb.linearVelocity /= 2;
-        OnTargetHit?.Invoke(target.itemId);
+        OnTargetHit?.Invoke(item, target);
     }
 
     public void Throw(Vector2 velocity)
