@@ -16,7 +16,7 @@ public class InteractableStructure
     protected InteractableItem item;
     public virtual void Initialize() => throw new NotImplementedException();
     public virtual void Tick() => throw new NotImplementedException();
-    public virtual void OnTriggerEnter2D(Collider2D other) => throw new NotImplementedException();
+    public virtual void OnTriggerEnter2D(Collider2D other) { }
 }
 
 public enum InteractableType

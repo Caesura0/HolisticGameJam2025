@@ -419,7 +419,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7232764804025817258, guid: 1a2aea9005f46e942903976b5c8fb802, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 150
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7232764804025817258, guid: 1a2aea9005f46e942903976b5c8fb802, type: 3}
       propertyPath: m_LocalPosition.x
@@ -451,7 +451,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7232764804025817258, guid: 1a2aea9005f46e942903976b5c8fb802, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 85
+      value: 95
       objectReference: {fileID: 0}
     - target: {fileID: 7232764804025817258, guid: 1a2aea9005f46e942903976b5c8fb802, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -469,6 +469,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 7339781535501580044, guid: 1a2aea9005f46e942903976b5c8fb802, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 6545382614753218560, guid: d69cebd684056c44ab12bd259babbc5f, type: 3}
     - target: {fileID: 8794329428314296512, guid: 1a2aea9005f46e942903976b5c8fb802, type: 3}
       propertyPath: m_Name
       value: GrannyKillCountHandler

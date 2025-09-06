@@ -11,13 +11,14 @@ public class PlayerInteractionHandler : MonoBehaviour
     public event Action<PickableItem> OnItemPicked;
     public event Action<ItemHolder, int> OnItemPositioned;
     public event Action<InteractableItem, InteractableItem> OnHitTarget;
+    public event Action<InteractableItem> OnSelectionUpdated;
 
     bool FirstAttack = true;
+    bool huntingEnabled = false;
     [field: SerializeField] public Transform itemHolder {  get; private set; }
     [SerializeField] private float throwPower = 10f;
     [SerializeField] private PlayerMovementHandler movementHandler;
 
-    private BoxCollider2D triggerCollider;
     private List<InteractableItem> inRangeTargets = new List<InteractableItem>();
     private InteractableItem selectedTarget = null;
     private InteractableItem pickedUpItem = null;
@@ -30,6 +31,9 @@ public class PlayerInteractionHandler : MonoBehaviour
             return;
 
         if (inRangeTargets.Contains(target))
+            return;
+
+        if (!huntingEnabled && target.Is<ConsumableItem>())
             return;
 
         inRangeTargets.Add(target);
@@ -51,7 +55,11 @@ public class PlayerInteractionHandler : MonoBehaviour
 
         if (inRangeTargets.Count == 0)
         {
+            if (!selectedTarget)
+                return;
+
             selectedTarget = null;
+            OnSelectionUpdated?.Invoke(selectedTarget);
             return;
         }
 
@@ -79,6 +87,7 @@ public class PlayerInteractionHandler : MonoBehaviour
                 selectedTarget = target;
             }
         }
+        OnSelectionUpdated?.Invoke(selectedTarget);
     }
 
     private void HandleInteraction()
@@ -162,4 +171,6 @@ public class PlayerInteractionHandler : MonoBehaviour
         HandleInteraction();
         GameEvents.RaiseFirstEat();
     }
+
+    public void EnableHunting() => huntingEnabled = true;
 }

@@ -171,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <itemHolder>k__BackingField: {fileID: 5244851791686211444}
   throwPower: 10
-  movementHandler: {fileID: 0}
+  movementHandler: {fileID: 4376741318400193513}
 --- !u!114 &7925592293039213890
 MonoBehaviour:
   m_ObjectHideFlags: 0
