@@ -38,7 +38,7 @@ public class QuestsHandlerUI : MonoBehaviour
 
     private void RemoveQuest(Quest quest)
     {
-        Destroy(activeQuests[quest]);
+        activeQuests[quest].DeleteQuestUI();
         activeQuests.Remove(quest);
         quest.OnQuestCompleted -= RemoveQuest;
 

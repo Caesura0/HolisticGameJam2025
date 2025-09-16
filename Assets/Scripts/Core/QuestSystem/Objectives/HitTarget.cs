@@ -9,6 +9,7 @@ public class HitTarget : QuestObjectiveStructure
     public HitTarget() => initialized = false;
     private HitTarget(HitTarget original)
     {
+        effectType = original.effectType;
         targetToHit = original.targetToHit;
         initialized = false;
     }

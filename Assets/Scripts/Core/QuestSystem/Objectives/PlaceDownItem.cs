@@ -11,6 +11,7 @@ public class PlaceDownItem : QuestObjectiveStructure
     private PlaceDownItem(PlaceDownItem original)
     {
         questItem = original.questItem;
+        itemHolder = original.itemHolder;
         initialized = false;
     }
 
@@ -29,7 +30,7 @@ public class PlaceDownItem : QuestObjectiveStructure
 
     private void HandleOnItemPositioned(ItemHolder holder, int positionedItemId)
     {
-        Debug.Log($"Item placement detected (id: {questItem?.Id})");
+        Debug.Log($"Item placement detected (id: {questItem?.Id}) on {holder.name}");
         if (questItem.Id != positionedItemId )
             return;
         if (itemHolder && itemHolder.Id != holder.Id)
