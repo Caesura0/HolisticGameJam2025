@@ -67,6 +67,7 @@ public class PlayerInteractionHandler : MonoBehaviour
         InteractableItem[] targetsList = inRangeTargets.ToArray();
         foreach (InteractableItem target in targetsList)
         {
+
             //Select only pickable items
             if (!target.Is<PickableItem>())
                 continue;
@@ -92,6 +93,8 @@ public class PlayerInteractionHandler : MonoBehaviour
 
     private void HandleInteraction()
     {
+        
+
         if (pickedUpItem)
         {
             if (pickedUpItem.Is<ConsumableItem>())
@@ -123,9 +126,26 @@ public class PlayerInteractionHandler : MonoBehaviour
         }
         else
         {
+            var hits = Physics2D.CircleCastAll(transform.position, 3, Vector2.zero);
+
+            foreach(var hit in hits)
+            {
+                if (hit.transform.TryGetComponent<IInteractable>(out IInteractable interactable))
+                {
+                    interactable.Interact(this);
+                    break;
+                }
+
+            }
+
+
+
             //If nothing is selected, then stop.
             if (!selectedTarget)
                 return;
+
+
+
 
             //Since something is selected, start to pick it up
             pickedUpItem = selectedTarget;

@@ -42,7 +42,7 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
     }
 
 
-    public void Interact(PlayerController interactor)
+    public void Interact(PlayerInteractionHandler interactor)
     {
 
         foreach (Dialogue dialogue in GetDialogueToSay())
