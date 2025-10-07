@@ -8,28 +8,17 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
 
     [SerializeField] List<Dialogue> dialogueList;
     [SerializeField] List<Dialogue> questStartedDialogueList;
-
     [SerializeField] List<Dialogue> questCompleteDialogueList;
 
 
 
     [SerializeField] string conversantName;
-
-
-
     [SerializeField] bool finishQuestByTalking;
-
-
-    //[SerializeField] bool shouldRandomize;
 
 
     List<Dialogue> validDialogueList;
 
-    Quest NPCQuest;
-    bool questGiven = false;
-    bool rewardGiven = false;
 
-    bool blownup = false;
     private void Start()
     {
         validDialogueList = new List<Dialogue>();
@@ -44,6 +33,7 @@ public class DialogueTrigger : MonoBehaviour, IInteractable
 
     public void Interact(PlayerInteractionHandler interactor)
     {
+        if(SimpleDialogueManager.Instance.InDialogue) { return; }  
 
         foreach (Dialogue dialogue in GetDialogueToSay())
         {

@@ -12,13 +12,14 @@ public class SimpleDialogueManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField] TextMeshProUGUI conversantName;
-  
+
 
     [SerializeField] float textSpeed;
 
     [SerializeField] Dialogue defaultDialogue;
 
     [SerializeField] private float animationDuration = 0.5f; // Duration for the animation
+
     [SerializeField] private Vector2 initialPosition = new Vector2(-1000, -1000); // Initial off-screen position
     [SerializeField] private Vector2 finalPosition = new Vector2(0, 0);
 
@@ -42,7 +43,7 @@ public class SimpleDialogueManager : MonoBehaviour
         {
             Instance = this;
         }
-        
+
     }
 
     private void Start()
@@ -51,34 +52,36 @@ public class SimpleDialogueManager : MonoBehaviour
         transform.transform.DOScale(0, .01f);
         gameObject.SetActive(false);
 
-        
+
 
     }
     void OnEnable()
     {
-        Controls.Instance.OnPlayerInteract += PlayerInput_OnInteractAction;
+        Controls.Instance.OnPlayerAttack += PlayerInput_OnInteractAction;
     }
     void OnDisable()
     {
-        Controls.Instance.OnPlayerInteract -= PlayerInput_OnInteractAction;
+        Controls.Instance.OnPlayerAttack -= PlayerInput_OnInteractAction;
     }
 
     private void PlayerInput_OnInteractAction()
     {
 
-            Debug.Log("skipping");
-            if (currentDialogue != null && InDialogue)
+        Debug.Log("skipping");
+        if (currentDialogue != null && InDialogue)
+        {
+            if (dialogueText.text == currentDialogue.dialogueLines[index])
             {
-                if (dialogueText.text == currentDialogue.dialogueLines[index])
-                {
-                    NextLine();
-                }
-                else
-                {
-                    StopAllCoroutines();
-                    dialogueText.text = currentDialogue.dialogueLines[index];
-                }
+                Debug.Log("going to next line");
+                NextLine();
             }
+            else
+            {
+                Debug.Log("skipping to full line");
+                StopAllCoroutines();
+                dialogueText.text = currentDialogue.dialogueLines[index];
+            }
+        }
 
     }
 
@@ -88,10 +91,13 @@ public class SimpleDialogueManager : MonoBehaviour
 
     public void StartDialogue(Dialogue dialogue, DialogueTrigger conversant)
     {
+
+        
         InDialogue = true;
+        Debug.Log("Starting conversation with " + conversant.GetName());
         //InputAction += PlayerInput_OnInteractAction;
         //SoundManager.Instance.PlayOpenDialogueSound();
-        
+
         gameObject.SetActive(true);
 
         //add dialogue open animation with dotween
@@ -141,20 +147,20 @@ public class SimpleDialogueManager : MonoBehaviour
             //SoundManager.Instance.PlayOpenDialogueSound();
             //add dialogue open animation with dotween
             AnimateTextBoxClose();
-            
-            
+
+
         }
     }
     void AnimateTextBoxOpen()
     {
-        gameObject.transform.DOScale(1,  .25f);
+        gameObject.transform.DOScale(1, .25f);
 
     }
 
     void AnimateTextBoxClose()
     {
         gameObject.transform.DOScale(0, .23f).OnComplete(() => {
-         gameObject.SetActive(false);
+            gameObject.SetActive(false);
             conversant.OnDialogueEnd();
             currentDialogue = null;
             InDialogue = false;

@@ -13,6 +13,8 @@ public class PlayerInteractionHandler : MonoBehaviour
     public event Action<InteractableItem, InteractableItem> OnHitTarget;
     public event Action<InteractableItem> OnSelectionUpdated;
 
+    
+
     bool FirstAttack = true;
     bool huntingEnabled = false;
     [field: SerializeField] public Transform itemHolder {  get; private set; }

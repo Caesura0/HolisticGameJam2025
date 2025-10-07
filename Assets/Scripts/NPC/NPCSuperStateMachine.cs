@@ -115,7 +115,7 @@ public class NPCSuperStateMachine : MonoBehaviour
     {
         if (!weaponPrefab)
         {
-            Debug.LogWarning($"{gameObject.name}: No weapon prefab assigned!");
+            //Debug.LogWarning($"{gameObject.name}: No weapon prefab assigned!");
             SwitchState(startingState);
             return;
         }
@@ -128,7 +128,7 @@ public class NPCSuperStateMachine : MonoBehaviour
             currentWeapon = weapon;
             weapon.Pickup(transform); // Will position above head
 
-            Debug.Log($"{gameObject.name} is armed!");
+            //Debug.Log($"{gameObject.name} is armed!");
             SwitchState(SuperStateType.Attacking);
         }
     }
@@ -166,7 +166,7 @@ public class NPCSuperStateMachine : MonoBehaviour
                 // We're stuck! Apply unstuck force
                 Vector2 unstuckDirection = GetUnstuckDirection();
                 rb.AddForce(unstuckDirection * unstuckForce, ForceMode2D.Impulse);
-                Debug.Log($"{gameObject.name} was stuck, applying unstuck force");
+                //Debug.Log($"{gameObject.name} was stuck, applying unstuck force");
 
                 // Also notify the current state it might want to recalculate
                 OnStuckDetected();
@@ -299,7 +299,7 @@ public class NPCSuperStateMachine : MonoBehaviour
         }
         else
         {
-            Debug.Log("Oh no; I'm dead");
+            //Debug.Log("Oh no; I'm dead");
             OnPlayerCaught?.Invoke();
             return true;
         }
@@ -313,7 +313,7 @@ public class NPCSuperStateMachine : MonoBehaviour
         speedMultiplier = 0;
         rb.linearVelocity = Vector2.zero; // Stop movement
         notificationHandler.PlayNotification(NotificationType.KO);
-        Debug.Log($"{gameObject.name} stunned");
+        //Debug.Log($"{gameObject.name} stunned");
         DropWeapon();
     }
     public void Slow(float duration)
@@ -321,7 +321,7 @@ public class NPCSuperStateMachine : MonoBehaviour
         OverwriteStatusEffect(duration);
         speedMultiplier = .4f;
         notificationHandler.PlayNotification(NotificationType.Slow);
-        Debug.Log($"{gameObject.name} slowed");
+        //Debug.Log($"{gameObject.name} slowed");
         DropWeapon();
     }
 
